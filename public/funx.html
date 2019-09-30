@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>HTML5 Lottie.js 行走的定时炸药包动画</title>
+<title>Lottie.js</title>
 <style>
 body {
     background-color: rgba(132, 185, 190, 0);
@@ -11,31 +11,109 @@ body {
 }
 body,
 html {
-    height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
 }
-#animationWindow {
-    width: 100%;
-    height: 100%;
+
+
+#bg,#atsuko,#sky {
+   position: absolute;
+   width: 750px;
+   height: 550px;
+   left:0;
+   top:0;
+}
+#atsuko{
+   z-index: 10;
+}
+#bg{
+   /* background-image: radial-gradient(rgba(223, 246, 203, 0.243) 0%, rgba(48, 194, 243, 0.25) 20%, rgba(48, 194, 243, 0) 80%); */
+   transition: 1.5s all;
+}
+#atsuko{
+   animation: up 7s cubic-bezier(0.215, 0.715, 0.925, 0.005) forwards;
+}
+#logo{
+   top:-550px;
+}
+@keyframes up{
+   from{
+      top:-450px;
+   }
+   to{
+      top:550px;
+   }
 }
 </style>
 </head>
 <body>
-<div id="animationWindow">
+<div id="svg-wrapper">
+   <div id="atsuko"></div>
+   <div id="bg"></div>
+   <div id="logo"></div>
 </div>
+
 
 <script src='lottie.min.js'></script>
 <script>
-lottie.loadAnimation({
-        wrapper:document.querySelector('#animationWindow'),
+var bg = lottie.loadAnimation({
+        wrapper:document.querySelector('#bg'),
         animType: 'svg',
         loop: true,
         prerender: true,
         autoplay: true,
+        path: './svg-bg.json',
+        speed:0.5
+    });
+var atsuko = lottie.loadAnimation({
+        wrapper:document.querySelector('#atsuko'),
+        animType: 'svg',
+        loop: false,
+        prerender: true,
+        autoplay: true,
         path: './svg.json'
     });
+var logo = lottie.loadAnimation({
+        wrapper:document.querySelector('#logo'),
+        animType: 'svg',
+        loop: false,
+        prerender: true,
+        autoplay: false,
+        path: './svg-logo.json',
+        speed:1
+    });
+var speed = 0.5;
+atsuko.addEventListener('complete',()=>{
+   //console.log('over了');
+   speed = -speed;
+   atsuko.setSpeed(speed)
+   //console.log(speed)
+   atsuko.play();
+})
+var time = 0;
+var loaded = 0;
+setTimeout(function(){
+   bg.setSpeed(0.2)
+   speed = 0.1
+},1500)
+setTimeout(function(){
+   bg.setSpeed(0.8)
+   speed = 0.8
+},5500)
+setTimeout(function(){
+   document.querySelector('#logo').style.top = "0"
+},6750)
+setTimeout(function(){
+   logo.play()
+   // bg.autoplay=false;
+   // bg.loop=false;
+   document.querySelector('#bg').style.opacity = "0"
+   document.querySelector('#atsuko').style.display="none"
+   
+},7000)
+
+
 </script>
 </body>
 </html>

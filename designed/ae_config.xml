@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<NewtonSettings majorVersion="1" minorVersion="2">
+    <preview zoom="285" panX="-2.5942511559" panY="-0.0746546462" bgColorR="1" bgColorG="1" bgColorB="1" />
+    <solver />
+    <gravity />
+    <bodies>
+        <body layerID="678" index="1" name="形状图层 2" type="0" friction="0.3849999905" restitution="0.1049999967" colorR="0.097447291" colorG="0.097447291" colorB="0.097447291" positionX="0.0599999987" positionY="-0.0354178213" angle="0" />
+        <body layerID="762" index="2" name="“FUNX.PRO”轮廓 - F 2" type="4" colorR="0.8745098114" colorG="0.2901960909" colorB="0.4549019635" positionX="-1.9902911186" positionY="-0.1279316097" angle="0" aematicAnchorX="-0.0274672508" aematicAnchorY="-0.3436953425" />
+        <body layerID="761" index="3" name="“FUNX.PRO”轮廓 - U 2" type="4" colorR="0.8823529482" colorG="0.380392164" colorB="0.4784313738" positionX="-1.4550879002" positionY="-0.1564924121" angle="0" aematicAnchorX="0.091993928" aematicAnchorY="-0.3605973721" />
+        <body layerID="760" index="4" name="“FUNX.PRO”轮廓 - N 2" type="4" colorR="0.8980392218" colorG="0.4823529422" colorB="0.4980392158" positionX="-0.8813297749" positionY="-0.1980367005" angle="0" aematicAnchorX="0.1474410295" aematicAnchorY="-0.3612095714" />
+        <body layerID="759" index="5" name="“FUNX.PRO”轮廓 - X 2" type="4" colorR="0.9019607902" colorG="0.5333333611" colorB="0.4941176474" positionX="-0.2390141934" positionY="-0.1542591453" angle="0" aematicAnchorX="0.2078979313" aematicAnchorY="-0.3211702108" />
+        <body layerID="758" index="6" name="“FUNX.PRO”轮廓 - . 2" type="4" colorR="0.9019607902" colorG="0.5333333611" colorB="0.4941176474" positionX="0.1974506825" positionY="0.085020192" angle="0" aematicAnchorX="0.0549714118" aematicAnchorY="-0.0774900913" />
+        <body layerID="757" index="7" name="“FUNX.PRO”轮廓 - P 2" type="4" colorR="0.9294117689" colorG="0.6784313917" colorB="0.4941176474" positionX="0.6751820445" positionY="-0.1925501823" angle="0" aematicAnchorX="-0.0763970017" aematicAnchorY="-0.385438621" />
+        <body layerID="756" index="8" name="“FUNX.PRO”轮廓 - R 2" type="4" colorR="0.9647058845" colorG="0.7490196228" colorB="0.5294117928" positionX="1.2517853975" positionY="-0.1692252755" angle="0" aematicAnchorX="0.00673908" aematicAnchorY="-0.3675298691" />
+        <body layerID="755" index="9" name="“FUNX.PRO”轮廓 - O 2" type="4" colorR="0.9960784316" colorG="0.870588243" colorB="0.5686274767" positionX="1.9022638798" positionY="-0.0994574726" angle="0" aematicAnchorX="-0.0004935265" aematicAnchorY="-0.3878170848" />
+        <body layerID="659" index="10" name="“1.0”轮廓" colorR="0.8823529482" colorG="0.380392164" colorB="0.4784313738" positionX="1.4579590559" positionY="-3.039305687" angle="0" />
+        <body layerID="661" index="11" name="“点击查看更新日志”轮廓 - 点" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.8745098114" colorG="0.2901960909" colorB="0.4549019635" positionX="4.2693972588" positionY="2.0191059113" angle="-0.4053911269" />
+        <body layerID="662" index="12" name="“点击查看更新日志”轮廓 - 击" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.8823529482" colorG="0.380392164" colorB="0.4784313738" positionX="4.8291368484" positionY="1.6229054928" angle="-0.4053911269" />
+        <body layerID="663" index="13" name="“点击查看更新日志”轮廓 - 查" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.8980392218" colorG="0.4823529422" colorB="0.4980392158" positionX="5.3605499268" positionY="1.5001060963" angle="-0.4053911269" />
+        <body layerID="664" index="14" name="“点击查看更新日志”轮廓 - 看" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.9019607902" colorG="0.5333333611" colorB="0.4941176474" positionX="5.8944768906" positionY="1.5704929829" angle="-0.4053911269" />
+        <body layerID="665" index="15" name="“点击查看更新日志”轮廓 - 更" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.9019607902" colorG="0.5333333611" colorB="0.4941176474" positionX="6.451570034" positionY="1.8034859896" angle="-0.4053911269" />
+        <body layerID="666" index="16" name="“点击查看更新日志”轮廓 - 新" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.9294117689" colorG="0.6784313917" colorB="0.4941176474" positionX="6.958220005" positionY="1.9530897141" angle="-0.4053911269" />
+        <body layerID="667" index="17" name="“点击查看更新日志”轮廓 - 日" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.9647058845" colorG="0.7490196228" colorB="0.5294117928" positionX="7.4621477127" positionY="1.9324455261" angle="-0.4053911269" />
+        <body layerID="668" index="18" name="“点击查看更新日志”轮廓 - 志" friction="0.4250000119" restitution="0.1049999967" linearVelocityMagnitude="7.4255757332" linearVelocityDirection="183.954788208" colorR="0.9960784316" colorG="0.870588243" colorB="0.5686274767" positionX="7.9449696541" positionY="2.0295639038" angle="-0.4053911269" />
+    </bodies>
+    <joints />
+    <presets />
+</NewtonSettings>

@@ -1,31 +1,12 @@
-# testvue
+# Funx Blog
+## By the rookie , who struggled in Front-End
+## Built in Vue-cli without UI framework
 
-## Project setup
-```
-npm install
-```
+#Planning and Logging
+###2019/9/30
+1.AI绘制atusko矢量图
+2.AE结合实现About页面动画
+3.Category页面实现navi引导的搜索
+4.About页面 动画过后的版本信息
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-# funxBlog
-# funxBlog
