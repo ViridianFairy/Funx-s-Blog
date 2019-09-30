@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTML5 Lottie.js 行走的定时炸药包动画</title>
+<style>
+body {
+    background-color: rgba(132, 185, 190, 0);
+    overflow: hidden;
+    text-align: center;
+}
+body,
+html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+#animationWindow {
+    width: 100%;
+    height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="animationWindow">
+</div>
+
+<script src='lottie.min.js'></script>
+<script>
+lottie.loadAnimation({
+        wrapper:document.querySelector('#animationWindow'),
+        animType: 'svg',
+        loop: true,
+        prerender: true,
+        autoplay: true,
+        path: './svg.json'
+    });
+</script>
+</body>
+</html>
