@@ -548,7 +548,7 @@
       padding-bottom: 1.1rem;
       float: left;
       user-select: none;
-      color: #7d7d7d;
+      color: #373737;
       position: relative;
       text-align: center;
       transition: 0.2s all;
