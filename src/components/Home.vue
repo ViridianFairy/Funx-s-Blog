@@ -4,6 +4,7 @@
          <img
             @click="$router.push('/read?id=' + item._id)"
             :src="item.image"
+            v-if="item.image!=''"
          />
          <router-link :to="'/read?id='+item._id">
             <h1>{{ item.title }}</h1>

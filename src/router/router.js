@@ -9,6 +9,8 @@ import Category from "../components/Category.vue";
 import sideDefault from "../components/side-default.vue";
 import sideEdit from "../components/side-edit.vue";
 import sideCategory from "../components/side-category.vue"
+import Collection from "../components/Collection";
+import Demo from "../components/Demo";
 Vue.use(VueRouter);
 const routes = [
    {
@@ -51,6 +53,20 @@ const routes = [
       components: {
          left: Category,
          right: sideCategory,
+      }
+   },
+   {
+      path: "/collection",
+      components: {
+         left: Collection,
+         right: sideDefault,
+      }
+   },
+   {
+      path: "/demo",
+      components: {
+         left: Demo,
+         right: sideDefault,
       }
    }
 ];

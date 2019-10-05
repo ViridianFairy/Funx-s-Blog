@@ -1,4 +1,5 @@
 import Vue from "vue";
+
 import App from "./App";
 import router from "./router/router";
 import axios from "axios";
@@ -15,8 +16,8 @@ Vue.directive("highlight", function(el) {
       hljs.highlightBlock(block);
    });
 });
-Vue.prototype.$http = axios.create({
-   baseURL: "http://192.168.31.115:3001/api"
+Vue.prototype.$http = axios.create({ //日常 127.0.0.1
+   baseURL: "http://127.0.0.1:3001/api" //dist 106.15.200.151 
 });
 Vue.prototype.Cookies = Cookies;
 //通过_id存储并拿到当前的用户信息
@@ -60,7 +61,7 @@ Vue.prototype.$alert = function(msg, type) {
    document.body.appendChild(a.$el);
    setTimeout(()=>{
       document.body.removeChild(a.$el);
-   },2000)
+   },1700)
 };
 router.afterEach((to,from,next)=>{
 

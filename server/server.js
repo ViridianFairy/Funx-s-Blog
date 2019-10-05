@@ -2,16 +2,16 @@ const express = require("express");
 const app = express();
 const cors = require('cors');
 const Router= require("./api")
+const Router_upload= require("./upload")
 app.use(require("cors")());
 app.use(express.json());
 
 app.use(Router)
-
+app.use(Router_upload)
 app.listen(3001, () => {
-   console.log("http://localhost:3001");
+   console.log("success");
 });
-//自定义的通用函数
-
+//最初版本的遍历评论树，现已废弃
 // String.prototype.len = function() {
 //    var len = 0;
 //    for (var i=0; i<this.length; i++) {

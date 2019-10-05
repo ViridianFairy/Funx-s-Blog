@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const saslprep = require("saslprep")
 const Time = require("./commonFunc");
-mongoose.connect("mongodb://127.0.0.1:27017/MyBlog", {
+mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
    useNewUrlParser: true,
-   useUnifiedTopology: true
+   useUnifiedTopology: true 
 });
+ 
 const Article = mongoose.model("Article",new mongoose.Schema({
    title: String,
    body: String,
@@ -18,11 +20,13 @@ const Article = mongoose.model("Article",new mongoose.Schema({
    {collection: "Article"})
 );
 const User = mongoose.model("User",new mongoose.Schema({
+   time:Object,
    user: String,
    pwd: String,
    type: String,
    quote: String,
    lookNum: Number,
+   sayNum: Number,
    avatar: String},{
    collection: "Account"})
 );
@@ -37,9 +41,11 @@ const Review = mongoose.model("Review",new mongoose.Schema({
    time: Object},
    {collection: "Review"})
 );
-
+router.get('/test',(req,res)=>{
+   res.send("test!")
+})
 router.post("/api/article", (req, res) => {
-   Article.find(req.body, function(err, data) {
+   Article.find({_id:req.body._id}, function(err, data) {
       if (typeof data == "undefined" || data.length == 0) {
          res.send([
             {
@@ -55,6 +61,15 @@ router.post("/api/article", (req, res) => {
          ]);
          return;
       }
+     // 处理用户
+      if(typeof req.body.user_id!="undefined")
+         User.findOne({_id:req.body.user_id},'lookNum',(err_user,data_user)=>{
+            if(data_user != null){
+               var a = data_user.lookNum + 1 ;
+               User.updateOne({_id:data_user._id},{$set:{lookNum:a}},err=>{if(err) throw err})
+            }
+         })
+     // 处理用户
       data[0].lookNum++;
       Article.updateOne(
          {_id: data[0]._id},
@@ -78,27 +93,37 @@ router.post("/api/article", (req, res) => {
    });
 });
 router.post("/api/article-save", (req, res) => {
-   Article.updateOne(
-      {_id: req.body._id},
-      {
-         $set: {
-            title: req.body.title,
-            body: req.body.body,
-            image: req.body.image,
-            label: req.body.label
+   User.findOne({_id:req.body.user_id},(err_u,data_u)=>{
+      if(data_u.type!="admin"){
+         res.send({success:0,msg:"不要瞎鸡儿乱点，求你了！"})
+         return;
+      }else{
+            req.body = req.body.article;
+            Article.updateOne(
+         {_id: req.body._id},
+         {
+            $set: {
+               title: req.body.title,
+               body: req.body.body,
+               image: req.body.image,
+               label: req.body.label
+            }
+         },
+         (err, data) => {
+            if (err) {
+               res.send({success: 0});
+               return;
+               throw err;
+            } else {
+               res.send({success: 1});
+               return;
+            }
          }
-      },
-      (err, data) => {
-         if (err) {
-            res.send({success: 0});
-            return;
-            throw err;
-         } else {
-            res.send({success: 1});
-            return;
-         }
+         );
       }
-   );
+      
+   })
+   
 });
 router.post("/api/article-delete", (req, res) => {
    Article.deleteOne({_id: req.body._id}, (err, data) => {
@@ -138,6 +163,37 @@ router.post("/api/articles", (req, res) => {
          
          return;
       });
+});
+router.post("/api/article-new", (req, res) => {
+   User.findOne({_id:req.body.user_id},(err_u,data_u)=>{
+      if(data_u.type!="admin"){
+         res.send({success:0,msg:"不要瞎鸡儿乱点，求你了！"})
+         return;
+      }else{
+          console.log(req.body)
+          let date = new Date();
+          var article = new Article({
+             title: req.body.article.title,
+             body: req.body.article.body,
+             time: date,
+             image: req.body.article.image,
+             label: req.body.article.label,
+             lookNum: 0,
+             sayNum: 0,
+             author: "viridian"}
+          )
+          article.save((err,data)=>{
+            console.log(data)
+            res.send({success:1,article_id:data._id})
+            return;
+          })
+         //  Article.findOne({time:date},(err,data)=>{
+             
+            
+         //  })
+      }
+   
+   })
 });
 //用户
 router.post("/api/login-in", (req, res) => {
@@ -227,7 +283,8 @@ router.post("/api/sign", (req, res) => {
          quote: req.body.quote,
          avatar: req.body.avatar,
          lookNum: 0,
-         sayNum: 0
+         sayNum: 0,
+         time:new Date(),
       }).save();
       res.send({success: 1, msg: "注册并登录成功！"});
       return;
@@ -315,6 +372,15 @@ router.post("/api/review", (req, res) => {
             });
       }
       function reviewIn() {
+         if(typeof req.body.user_id_obj != "undefined")
+         User.findOne({_id:req.body.user_id_obj},'sayNum',(err_user,data_user)=>{
+            console.log(req.body.user_id_obj+" "+data_user)
+            if(data_user != null){
+               var a = data_user.sayNum + 1 ;
+               console.log(a)
+               User.updateOne({_id:data_user._id},{$set:{sayNum:a}},err=>{if(err) throw err})
+            }
+         })
          new Review({
             _id:Time.getUniqueId(),
             reply_id_obj: req.body.reply_id_obj,
@@ -330,7 +396,7 @@ router.post("/api/review", (req, res) => {
       }
    });
 });
-router.post("/api/category", (req, res) => {
+router.post("/api/category-label", (req, res) => {
    Article.find({}).sort({time: -1}).exec(function(err, data) {
          let Type = [];
          //预定义
@@ -361,6 +427,17 @@ router.post("/api/category", (req, res) => {
                }            
          }
          res.send(Type)
+      });
+});
+router.post("/api/category-search", (req, res) => {
+   console.log(req.body.search)
+   var title = new RegExp(req.body.search)
+   Article.find({title}).sort({time: -1}).exec(function(err, data) {
+         for(let i of data){
+            i.time = Time.getTime(i.time)
+         }
+         res.send(data)
+         console.log(data);
       });
 });
 router.post("/api/getReviews", (req, res) => {

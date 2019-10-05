@@ -5,9 +5,10 @@
       </h1>
       <p>
          标签：
-         <router-link to="" v-for="label in article.label">
+         <router-link :to="'/category?label='+label" v-for="label in article.label">
             <img src="../assets/Common/label-blue.svg" />{{ label }}
          </router-link>
+        
          <button v-if="isAdmin" id="delete" @click="deleteIn" class="red">
             删除
          </button>
@@ -18,6 +19,11 @@
          >
             编辑
          </button>
+         <button v-if="isAdmin" id="edit" class="green"
+            @click="$router.push('/edit')">
+               新增
+         </button>
+         
       </p>
       <p>
          <span>{{ article.time }}</span>
@@ -48,13 +54,17 @@
          refresh() {
             var id = this.$route.query.id;
             this.$http
-               .post("/article", { _id: id })
+               .post("/article", { _id: id ,user_id:this.Cookies.get("_id")})
                .then(res => {
                   this.article = res.data[0];
                   //vuex
+                  this.$store.state.invalidArticle = false;
+                  if(this.article.lookNum == -1)
+                     this.$store.state.invalidArticle = true;
                   this.$store.state.title = this.article.title;
                   //vuex
                   
+
                })
                .catch(e => {});
             this.$http
@@ -74,7 +84,7 @@
                .then(res => {
                   if (res.data.success == 1) {
                      this.$alert(res.data.message,'true')
-                     this.$route.go(0);
+                     this.$router.go(-1);
                   }
                })
                .catch(e => {});

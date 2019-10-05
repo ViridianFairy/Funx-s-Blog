@@ -36,7 +36,7 @@
                   :class="{active:3==id}"
                >
                   <img src="../assets/Navi/48icon_Favorite.svg" />
-                  <p>收藏</p>
+                  <p>工具</p>
                </div>
             </transition>
             <transition name="slide-fade">
@@ -164,7 +164,7 @@
                            <input
                               maxlength="16"
                               v-model="sign.pwd"
-                              type="password"
+                              type="Epassword"
                               placeholder="3~16位的密码"
                            />
                         </div>
@@ -228,12 +228,12 @@
                               class="icn"
                               style="margin:0 0.4rem 0 0;width:2rem;vertical-align:-0.6rem"
                               src="../assets/Navi/looknum.svg"
-                           />{{ $store.state.login.lookNum }}
+                           />{{$store.state.login.lookNum>0?$store.state.login.lookNum:textRead}}
                            <img
                               class="icn"
                               style="margin:0 0.4rem;width:2rem;vertical-align:-0.6rem"
                               src="../assets/Navi/saynum.svg"
-                           />{{ $store.state.login.lookNum }}
+                           />{{$store.state.login.sayNum>0?$store.state.login.sayNum:textSay}}
                         </div>
                         <div
                            style="line-height: 1.5;text-align: center;color:#525252;min-height:3.8rem;margin-left:1.5rem;margin-right:1.5rem;"
@@ -292,7 +292,7 @@
                            <img
                               src="../assets/Navi/upload.svg"
                               class="icn"
-                           /><input v-model="mutate.avatar" />
+                           /><input type="file" @change="getFiles"/>
                         </div>
 
                         <button class="green" @click="mutateIn">
@@ -305,8 +305,8 @@
             </transition>
             <transition name="slide-fade">
                <div class="navi-other right" v-if="tog">
-                  <input placeholder="今天你吃了什么" slot="svg" />
-                  <button slot="p">搜索</button>
+                  <input placeholder="今天你吃了什么" v-model="search"/>
+                  <button @click="searchIn(search)">搜索</button>
                </div>
             </transition>
          </div>
@@ -322,6 +322,25 @@
       name: "navi",
       components: {},
       methods: {
+         getFiles(e){
+            console.log(e.target.files)
+            e.preventDefault();
+            var formData = new FormData()
+            formData.append('file',this.file)
+            var config = {
+               headers:{ 'Content-Type':'multipart/form-data'}
+            }
+            this.$http.post('/upload/avatar',formData,config,(err,data)=>{
+               console.log(data.data.code)
+            })
+         },
+         searchIn(msg){
+            if(msg!=""){
+               this.$router.push('/category?search='+msg)
+            }else{
+               this.$alert('搜索内容不能为空噢！','false');
+            }
+         },
          phonePull() {
             if (this.tog == true && this.loginTog == true) {
                this.loginTog = false;
@@ -374,9 +393,7 @@
                      this.$alert(res.data.msg, "true");
                      this.loginIn(false);
                      //this.loginTog = false;
-                     setTimeout(() => {
-                        this.tog = false;
-                     }, 75);
+
                   } else if (res.data.success == 0) {
                      this.$alert(res.data.msg, "false");
                      //tips
@@ -406,7 +423,27 @@
                   }
                })
                .catch();
+         },
+         changeBar(val){
+            switch(val){
+                  case '/home':
+                     this.id = 1;
+                     break;
+                  case '/category':
+                     this.id = 2;
+                     break;
+                  case '/collection':
+                     this.id = 3;
+                     break;
+                  case '/demo':
+                     this.id = 4;
+                     break;
+                  case '/about':
+                     this.id = 5;
+                     break;
+               }
          }
+         
       },
       data() {
          return {
@@ -432,10 +469,15 @@
                avatar: ""
             },
             loginTog: false,
-            loginState: 0
+            loginState: 0,
+            search:"",
+            textSay:"暂无评论",
+            textRead:"暂无阅读",
          };
       },
       created() {
+         //console.log(this.$route.path)
+         this.changeBar(this.$route.path)
          if (document.body.clientWidth <= 768) {
             this.tog = false;
          }
@@ -466,6 +508,7 @@
                if (jud(navi, t)||jud(phone,t)){
 
                      return;
+
                   }else{
                      this.loginTog = false;
                      setTimeout(() => {
@@ -505,6 +548,12 @@
             } else {
                a.style.maxHeight = "4.4rem";
                b.style.maxHeight = "4.4rem";
+            }
+         },
+         $route:{
+            handler(to){
+               console.log("11")
+               this.changeBar(to.path);
             }
          }
       }
@@ -587,16 +636,16 @@
       transition: all 0.2s;
    }
    .navi-item:hover::after {
-      width: 70%;
-      left: 16%;
+      width: 60%;
+      left: 21%;
    }
    .active {
       color: #2bbbdc;
    }
    .active::after {
       background-color: #2bbbdc;
-      width: 70%;
-      left: 16%;
+      width: 60%;
+      left: 21%;
    }
    .active:hover {
       color: #13abcd;

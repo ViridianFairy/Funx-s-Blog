@@ -1,0 +1,12 @@
+Adobe After Effects v14.0 Windows 64 为项目“about.aep”渲染日志
+
+渲染在“22:55:50”的“2019/10/4”上开始
+
+  “2019/10/4”“22:55:50”: 开始合成“tempConverterComp”。
+
+  输出到: C:\Users\VIRIDI~1\AppData\Local\Temp\Bodymovin\svvgwh4obl\img_5.png    “2019/10/4”“22:55:50”: 完成的合成“tempConverterComp”。
+
+
+  已用总时间: 1 秒
+日志在“22:55:50”的“2019/10/4”上关闭
+

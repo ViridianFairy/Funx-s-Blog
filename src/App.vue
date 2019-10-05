@@ -21,7 +21,10 @@
                </transition>
             </div>
             <div id="home-side" v-if="!expand">
-               <router-view name="right" :key="key"></router-view>
+               <transition name="slide-fade">
+                  <router-view name="right" :key="key"></router-view>
+               </transition>
+               
             </div>
          </div>
          <transition name="slide-fade">
@@ -323,5 +326,6 @@
    .init-leave {
       opacity: 0;
    }
+   
    
 </style>

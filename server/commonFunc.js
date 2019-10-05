@@ -3,7 +3,7 @@ function getTime(date) {
       if (String(d).length == 1) return "0" + d;
       return d;
    }
-   var a = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+   var a = date.getFullYear() + "-" + dual(date.getMonth()+1) + "-" + dual(date.getDate());
    return a + " " + dual(date.getHours()) + ":" + dual(date.getMinutes());
 };
 function getFuzzyTime(date) {

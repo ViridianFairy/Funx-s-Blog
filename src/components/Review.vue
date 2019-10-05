@@ -8,12 +8,12 @@
                <p class="say-name">{{ $store.state.login.user }}</p>
             </div>
             <textarea class="textarea"
-               :disabled="$store.state.login.avatar==''"
-               :placeholder="$store.state.login.avatar==''?'先点右上角登录嘛':'skr~skr~'"
+               :disabled="$store.state.login.avatar==''|| $store.state.invalidArticle"
+               :placeholder="$store.state.login.avatar==''?'先点右上角登录嘛':'来说点什么...'"
                v-model="msg">{{ msg }}</textarea>
             <button class="send"
                @click="reviewIn(-1)"
-               v-if="$store.state.login.avatar!=''">
+               v-if="$store.state.login.avatar!=''&& !$store.state.invalidArticle">
                发布评论
             </button>
          </div>
@@ -52,8 +52,8 @@
          </div>
          <div id="no-reviews" class="say" v-if="reviews.length==0">
             <div id="no-reviews-body">
-               <img src="" />
-               这里啥子也没有哦...
+               <img src="../assets/Common/nodata.svg" />
+               <span>评论？现在还没有哦</span>
             </div>
          </div>
       </div>
@@ -311,15 +311,24 @@
       text-align: center;
    }
    #no-reviews {
-      background-color: rgba(243, 243, 243, 0.333);
+      background-color: rgba(243, 243, 243, 0.034);
       border-bottom: none;
       margin-top: 3.5rem;
-      padding: 3rem 0;
+      padding: 0rem 0;
       font-size: 1.6rem;
       color: rgb(195, 195, 195);
    }
    #no-reviews-body {
       text-align: center;
+   }
+   #no-reviews-body img{
+      width: 15rem;
+      height: 15rem;
+      opacity: 0.35;
+   }
+   #no-reviews-body span{
+      vertical-align:6rem;
+      margin-left: 1.5rem;
    }
    .nest-wrapper{
       margin-top: 2rem;

@@ -3,7 +3,7 @@
       <span id="title-text">标题：</span>
       <input id="title" v-model="article.title" />
       <button @click="save" v-if="isAdmin">
-         保存
+         {{saveText}}
       </button>
       <p id="label">
          标签：
@@ -12,9 +12,12 @@
          </a>
          <input v-model="labelText" placeholder="添加标签" />
          <button @click="addLabel">+</button>
-
-         <span>ID：{{ article._id }}</span>
+         <span id="pic">
+               文章封面图：<input v-model="article.image" placeholder="输入外链" />
+               <img :src="article.image">
+            </span>
       </p>
+     
       <div id="editor" ref="editor"></div>
    </div>
 </template>
@@ -26,8 +29,9 @@
       data() {
          return {
             article: {},
-            labelText: "",
-            isAdmin:0
+            isAdmin:0,
+            labelText:"",
+            saveText:"保存"
          };
       },
       created() {
@@ -36,11 +40,29 @@
             .then(res => {
                if (res.data.success == 1) {
                   this.isAdmin = 1;
+               }else{
+                  alert("别瞎鸡儿乱进，求你了");
+                  this.$router.go(-1);
                }
             });
       },
       mounted() {
          var id = this.$route.query.id;
+         if(typeof id =="undefined"){
+            this.article = {}
+            this.article.title = "新的文章"
+            this.article.body = `<p>新的内容</p>`
+            this.article.label = ["JavaScript"]
+            this.article.image = ""
+            var editor = new E(this.$refs.editor);
+            editor.create();
+               editor.txt.html(this.article.body);
+               document.getElementsByClassName(
+                  "w-e-text-container"
+               )[0].style.height = window.innerHeight - 230 + "px";
+               this.saveText = "新增"
+            return;
+         }
          this.$http
             .post("/article", { _id: id })
             .then(res => {
@@ -64,7 +86,7 @@
                //迫不得已，这个库太垃圾了了
                document.getElementsByClassName(
                   "w-e-text-container"
-               )[0].style.height = window.innerHeight - 300 + "px";
+               )[0].style.height = window.innerHeight - 230 + "px";
             })
             .catch();
       },
@@ -78,10 +100,29 @@
          },
          save() {
             console.log(this.article)
-            this.$http
-               .post("/article-save", this.article)
+            if(typeof this.$route.query.id == "undefined"){
+               this.$http
+               .post("/article-new", {
+                  article:this.article,
+                  user_id:this.Cookies.get("_id")
+               })
                .then(res => {
                   if (res.data.success == 1) {
+                     this.$alert("添加新文章成功！",'true');
+                     this.$router.push("/read?id=" + res.data.article_id);
+                  }
+               })
+               .catch();
+               return;
+            }
+            this.$http
+               .post("/article-save",{
+                  article:this.article,
+                  user_id:this.Cookies.get("_id")
+               })
+               .then(res => {
+                  if (res.data.success == 1) {
+                     this.$alert("编辑成功！",'true');
                      this.$router.push("/read?id=" + this.article._id);
                   }
                })
@@ -93,7 +134,7 @@
 
 <style scoped>
    #edit-wrapper {
-      padding: 1.5rem 2rem 3rem 2rem;
+      padding: 1.5rem 2rem 2rem 2rem;
    }
    p:nth-of-type(1) img {
       vertical-align: -0.3rem;
@@ -157,5 +198,19 @@
    #label a button {
       margin-right: 0.5rem;
       background-color: rgb(243, 136, 136);
+   }
+   #pic input {
+      width: 15rem;
+      font-size: 1.2rem;
+   }
+   #pic img{
+      background-color: #e7e7e709;
+      width:calc(5rem * 1.67);
+      height: 5rem;
+      vertical-align: middle;
+      margin-top: -0.75rem;
+      margin-bottom: -0.75rem;
+      margin-left: 1.5rem;
+      border-color:transparent;
    }
 </style>

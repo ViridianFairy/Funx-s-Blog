@@ -1,16 +1,9 @@
 <template>
       <div>
          <img src="../assets/Common/avatar.png" />
-         <slot name="info">
-            <h1>ViridianFairy<img src="../assets/Common/male.svg"></img></h1>
-            <p>别看我，我害羞，求你了</p>
-            <div id="me">
-                  <img class="disable" src="../assets/Common/zhihu-line.svg">             
-                  <img class="able" src="../assets/Common/bilibili-line.svg">            
-                  <img class="disable" src="../assets/Common/github-fill.svg">
-                  <img class="disable" src="../assets/Common/qq-line.svg">
-            </div>
-         </slot>
+         <!-- <slot name="info"> -->
+           
+         <!-- </slot> -->
       </div>
    </template>
    

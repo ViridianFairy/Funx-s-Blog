@@ -1,10 +1,9 @@
 <template>
   <div id="wrapper">
      <h1>关于</h1>
-     <h2>我觉得没有什么好关于的</h2>
-     <div id="later-info">
-        <h3>使用vue-cli vue-router nodejs lottie.js</h3>
-     </div>
+     <transition name="init">
+         <h2 @click="">{{msgList[msgId]}}</h2>
+     </transition>
      <div id="sky"></div>
      <iframe :src="src" frameborder="0"></iframe>
   </div>
@@ -13,9 +12,20 @@
 <script>  
 export default {
   name: 'About',
+  methods: {
+     changeMsg(){
+        if(++this.msgId == this.msgList.length)
+            this.msgId = 0;
+     }
+  },
   data() {  
     return {
-      src:"/funx.html"
+      src:"/funx.html",
+      msgId:0,
+      msgList:[
+         "我觉得没有什么好关于的",
+         "vue-cli全家桶 node.js lottie-web.js",
+      ],
     }
   },mounted() {
       
@@ -28,7 +38,7 @@ export default {
       margin: 0 auto 2rem auto;
       text-align: center;
       color:rgb(48, 134, 137);
-      background-image: radial-gradient(rgba(223, 246, 203, 0.097) 0%, rgba(48, 194, 243, 0.166) 20%, rgba(48, 194, 243, 0) 70%);
+      background-image: radial-gradient(rgba(223, 246, 203, 0.097) 0%, rgba(48, 194, 243, 0.111) 20%, rgba(48, 194, 243, 0) 70%);
    }
    h1{
       font-size: 4rem;
@@ -36,7 +46,7 @@ export default {
    }
    h2{
       font-size: 2.5rem;
-      margin: 0.5rem 0 1.5rem 0;
+      margin: 0.5rem 0 0 0;
    }
    h3{
       font-size: 1.7rem;
@@ -58,7 +68,21 @@ export default {
          padding-left: 1rem;
          padding-right: 1rem;
       }
+      /* iframe{
+         width:35rem;
+         height:50rem;
+      } */
      
+   }
+   .init-enter-active {
+      transition: all 0.2s;
+   }
+   .init-leave-active {
+      transition: all 0.2s;
+   }
+   .init-enter,
+   .init-leave {
+      opacity: 0;
    }
 </style>
 
