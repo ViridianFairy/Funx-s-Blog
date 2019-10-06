@@ -17,47 +17,84 @@ html {
 }
 
 
-#bg,#atsuko,#sky {
+#boom,#atsuko,#bubble,#end {
    position: absolute;
    width: 750px;
    height: 550px;
    left:0;
    top:0;
 }
-#atsuko{
-   z-index: 10;
+#bubble:hover{
+   cursor: pointer;
 }
-#bg{
-   /* background-image: radial-gradient(rgba(223, 246, 203, 0.243) 0%, rgba(48, 194, 243, 0.25) 20%, rgba(48, 194, 243, 0) 80%); */
-   transition: 1.5s all;
-}
-#atsuko{
-   animation: up 7s cubic-bezier(0.215, 0.715, 0.925, 0.005) forwards;
-}
-#logo{
-   top:-550px;
-}
-@keyframes up{
-   from{
-      top:-450px;
-   }
-   to{
-      top:550px;
-   }
+#boom,#end{
+   opacity: 0;
 }
 </style>
 </head>
 <body>
 <div id="svg-wrapper">
    <div id="atsuko"></div>
-   <div id="bg"></div>
-   <div id="logo"></div>
+   
+   <div id="boom"></div>
+   <div id="end"></div>
+   <div id="bubble"></div>
 </div>
 
 
 <script src='lottie.min.js'></script>
 <script>
-var bg = lottie.loadAnimation({
+var main = lottie.loadAnimation({
+        wrapper:document.querySelector('#atsuko'),
+        animType: 'svg',
+        loop: true,
+        prerender: true,
+        autoplay: true,
+        path: './svg-atsuko1.json',
+        speed:0.5
+    });
+var bubble = lottie.loadAnimation({
+        wrapper:document.querySelector('#bubble'),
+        animType: 'svg',
+        loop: true,
+        prerender: true,
+        autoplay: true,
+        path: './svg-bubble1.json',
+        speed:0.5
+    });
+var boom = lottie.loadAnimation({
+        wrapper:document.querySelector('#boom'),
+        animType: 'svg',
+        prerender: true,
+        path: './svg-boom1.json',
+        autoplay: false,
+        speed:0.5
+    });
+var end = lottie.loadAnimation({
+        wrapper:document.querySelector('#end'),
+        animType: 'svg',
+        prerender: true,
+        autoplay: false,
+        path: './svg-end1.json',
+        speed:0.5
+    });
+document.onclick = function () {
+   
+   bubble.addEventListener('loopComplete',()=>{
+      document.querySelector('#bubble').style.display = 'none'
+      document.querySelector('#boom').style.opacity = '1';
+      boom.play()
+      boom.addEventListener('complete',()=>{
+         document.querySelector('#end').style.opacity = '1';
+         end.play()
+      })
+   })
+}
+</script>
+</body>
+</html>
+<!--
+   var bg = lottie.loadAnimation({
         wrapper:document.querySelector('#bg'),
         animType: 'svg',
         loop: true,
@@ -114,6 +151,4 @@ setTimeout(function(){
 },7000)
 
 
-</script>
-</body>
-</html>
+-->

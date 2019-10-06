@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const saslprep = require("saslprep")
 const Time = require("./commonFunc");
+var fs= require("fs");
 mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
    useNewUrlParser: true,
    useUnifiedTopology: true 
@@ -170,7 +171,7 @@ router.post("/api/article-new", (req, res) => {
          res.send({success:0,msg:"不要瞎鸡儿乱点，求你了！"})
          return;
       }else{
-          console.log(req.body)
+          //console.log(req.body)
           let date = new Date();
           var article = new Article({
              title: req.body.article.title,
@@ -183,7 +184,7 @@ router.post("/api/article-new", (req, res) => {
              author: "viridian"}
           )
           article.save((err,data)=>{
-            console.log(data)
+            //console.log(data)
             res.send({success:1,article_id:data._id})
             return;
           })
@@ -275,28 +276,44 @@ router.post("/api/sign", (req, res) => {
          return;
       }
       //开始注册
-      if (req.body.quote == "") req.body.quote = "这个人骚的一批，以至于ta什么也没有写";
-      new User({
+      req.body.quote = "";
+      //开始了
+
+      var newUser = new User({
          user: req.body.user,
          pwd: req.body.pwd,
          type: "user",
          quote: req.body.quote,
-         avatar: req.body.avatar,
+         avatar: "",
          lookNum: 0,
          sayNum: 0,
          time:new Date(),
-      }).save();
-      res.send({success: 1, msg: "注册并登录成功！"});
-      return;
+      })
+      newUser.save(function(err_n,res_n){
+         User.findOne({user:req.body.user},(err_a,res_a)=>{
+            //console.log(res_a)
+            User.updateOne({_id:res_a._id},{
+               $set: {avatar:'http://106.15.200.151/resource/user_avatars/' + res_a._id +'.png?a='+ Math.random()}
+            },(err_l, data_l) => {
+               if (err) {
+                  res.send({success: 0, msg: "更新出错"});
+                  throw err;
+               } else{
+                  var from = '../../resource/user_avatars/1.png'
+                  var to = '../../resource/user_avatars/'+ res_a._id + '.png'
+                  fs.writeFileSync(to, fs.readFileSync(from));
+                  res.send({success: 1, msg: "注册成功！"});
+               }
+               
+            });    
+         })
+      })
    });
 });
 router.post("/api/mutate", (req, res) => {
    // console.log(req.body.user+req.body.old);
    User.find({user: req.body.user}, function(err, data) {
-      var setObj = {
-         quote: req.body.quote,
-         avatar: req.body.avatar
-      };
+      
       if (req.body.old != "" || req.body.new != "") {
          User.find({user: req.body.user, pwd: req.body.old}, function(errt, datat) {
             if (datat.length == 0) {
@@ -320,6 +337,11 @@ router.post("/api/mutate", (req, res) => {
          res.send({success: 0, msg: "个性签名需要少于20字符！"});
          return;
       }
+      if (req.body.quote == "") req.body.quote = "还没有个性签名哦...";
+      var setObj = {
+         quote: req.body.quote,
+         avatar: req.body.avatar
+      };
       //开始注册
       // console.log(req.body.user+"-"+req.body.old);
       User.updateOne(
@@ -332,7 +354,29 @@ router.post("/api/mutate", (req, res) => {
                res.send({success: 0, msg: "更新时出错"});
                throw err;
             } else {
-               res.send({success: 1, msg: "修改成功！"});
+               res.send({success: 1, msg: "修改个人信息成功！"});
+               return;
+               // User.findOne({user:req.body.user},(err_a,res_a)=>{
+               //    var path ="../resource/user_avatars/" + res_a.user + res_a._id + '.png'
+               //    fs.exists(path, function(exists) {
+               //       if(exists){
+               //          User.updateOne({_id:res_a._id},{
+               //             $set: {avatar:path}
+               //          },(err_l, data_l) => {
+               //             if (err) {
+               //                res.send({success: 0, msg: "更新出错"});
+               //                throw err;
+               //             } else 
+               //             console.log(path)
+               //                res.send({success: 1, msg: "修改个人信息成功！"});
+               //          });
+               //       }else{
+
+               //       }
+                     
+               //    });
+                   
+               // })
             }
          }
       );
@@ -374,7 +418,7 @@ router.post("/api/review", (req, res) => {
       function reviewIn() {
          if(typeof req.body.user_id_obj != "undefined")
          User.findOne({_id:req.body.user_id_obj},'sayNum',(err_user,data_user)=>{
-            console.log(req.body.user_id_obj+" "+data_user)
+            //console.log(req.body.user_id_obj+" "+data_user)
             if(data_user != null){
                var a = data_user.sayNum + 1 ;
                console.log(a)

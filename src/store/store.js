@@ -17,7 +17,7 @@ const store = new Vuex.Store({
          avatar:""
       },
       alertNum:0,
-      invalidArticle:false
+      invalidArticle:false,
    }
 });
 export default store;

@@ -7,305 +7,199 @@
                <img src="../assets/Navi/48icon_Drafts.svg" />
             </div>
             <transition name="slide-fade">
-               <div
-                  class="navi-item no"
-                  v-if="tog"
-                  @click="$router.push('/home');id=1;"
-                  :class="{active:1==id}"
-               >
+               <div class="navi-item no" v-if="tog" @click="$router.push('/home');id=1;" :class="{active:1==id}">
                   <img src="../assets/Navi/48icon_Home.svg" />
                   <p>主页</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div
-                  class="navi-item"
-                  v-if="tog"
-                  @click="$router.push('/category');id=2;"
-                  :class="{active:2==id}"
-               >
+               <div class="navi-item" v-if="tog" @click="$router.push('/category');id=2;" :class="{active:2==id}">
                   <img src="../assets/Navi/48icon_Read.svg" />
                   <p>目录</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div
-                  class="navi-item"
-                  v-if="tog"
-                  @click="$router.push('/collection');id=3;"
-                  :class="{active:3==id}"
-               >
+               <div class="navi-item" v-if="tog" @click="$router.push('/collection');id=3;" :class="{active:3==id}">
                   <img src="../assets/Navi/48icon_Favorite.svg" />
                   <p>工具</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div
-                  class="navi-item"
-                  v-if="tog"
-                  @click="$router.push('/demo');id=4;"
-                  :class="{active:4==id}"
-               >
+               <div class="navi-item" v-if="tog" @click="$router.push('/demo');id=4;" :class="{active:4==id}">
                   <img src="../assets/Navi/48icon_Category.svg" />
                   <p>Demo</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div
-                  class="navi-item"
-                  v-if="tog"
-                  @click="$router.push('/about');id=5;"
-                  :class="{active:5==id}"
-               >
+               <div class="navi-item" v-if="tog" @click="$router.push('/about');id=5;" :class="{active:5==id}">
                   <img src="../assets/Navi/48icon_Message.svg" />
                   <p>关于</p>
                </div>
             </transition>
 
             <transition name="slide-fade">
-               <div
-                  class="navi-item right login-wrapper"
-                  v-if="tog"
-                  @click="loginTog=!loginTog"
-                  ref="loginButton"
-               >
-                  <img
-                     src="../assets/Navi/48icon_Userok.svg"
-                     v-if="loginState>=1"
-                     style="margin-right:0"
-                  />
-                  <p
-                     v-if="loginState>=1"
-                     style="font-size: 1.5rem;color:#09822c;"
-                  >
+               <div class="navi-item right login-wrapper" v-if="tog" @click="loginTog=!loginTog" ref="loginButton">
+                  <img src="../assets/Navi/48icon_Userok.svg" v-if="loginState>=1" style="margin-right:0" />
+                  <p v-if="loginState>=1" style="font-size: 1.5rem;color:#09822c;">
                      已登录
                   </p>
-                  <img
-                     src="../assets/Navi/48icon_User.svg"
-                     v-if="loginState<1"
-                     style="margin-right:0"
-                  />
-                  <p
-                     v-if="loginState<1"
-                     style="font-size: 1.5rem;color:#7d7d7d;"
-                  >
+                  <img src="../assets/Navi/48icon_User.svg" v-if="loginState<1" style="margin-right:0" />
+                  <p v-if="loginState<1" style="font-size: 1.5rem;color:#7d7d7d;">
                      未登录
                   </p>
                   <transition name="login">
                      <div class="triangle" v-if="loginTog"></div>
                   </transition>
+                  <!--开始面板-->
                   <transition name="login">
-                     <div
-                        class="login "
-                        v-if="loginTog&&loginState==0"
-                        @click.stop
-                     >
+                     <div class="login " v-if="loginTog&&loginState==0" @click.stop>
                         <div></div>
-                        <div
-                           class="header"
-                           style="font-weight: bold"
-                           id="login-msg"
-                        >
+                        <div class="header" style="font-weight: bold" id="login-msg">
                            {{ login.msg }}
+                        </div> 
+                        <div>
+                           <img src="../assets/Navi/user2.svg" class="icn" />
+                           <input placeholder="用户名" maxlength="10" v-model="login.user" @focus="$event.currentTarget.select()"/>
                         </div>
                         <div>
-                           <img
-                              src="../assets/Navi/user2.svg"
-                              class="icn"
-                           /><input
-                              placeholder="用户名"
-                              maxlength="10"
-                              v-model="login.user"
-                           />
-                        </div>
-                        <div>
-                           <img
-                              src="../assets/Navi/pwd2.svg"
-                              class="icn"
-                           /><input
-                              placeholder="密码"
-                              type="password"
-                              maxlength="16"
-                              v-model="login.pwd"
-                           />
+                           <img src="../assets/Navi/pwd2.svg" class="icn" />
+                           <input placeholder="密码" type="password" maxlength="16" v-model="login.pwd" @focus="$event.currentTarget.select()"/>
                         </div>
                         <button @click="loginIn(true)">登录</button>
                         <button @click="loginState=-1">点此注册</button>
                      </div>
                   </transition>
                   <transition name="login">
-                     <div
-                        class="login sign"
-                        v-if="loginTog&&loginState==-1"
-                        @click.stop
-                     >
+                     <div class="login sign" v-if="loginTog&&loginState==-1" @click.stop>
                         <div></div>
-                        <div
-                           class="header"
-                           style="font-weight: bold"
-                           id="sign-msg"
-                        >
+                        <div class="header" style="font-weight: bold" id="sign-msg">
                            {{ sign.msg }}
                         </div>
-                        <img id="avatar" :src="sign.avatar" />
+                        
+                        <!-- <img id="avatar" :src="sign.avatar" /> -->
                         <div>
-                           <span
-                              ><img
-                                 src="../assets/Navi/user2.svg"
-                                 class="icn"/></span
-                           ><input
-                              v-model="sign.user"
-                              maxlength="10"
-                              placeholder="推荐使用汉字用户名"
-                           />
+                           <span><img src="../assets/Navi/user2.svg" class="icn" /></span><input v-model="sign.user"
+                              maxlength="10" placeholder="推荐使用汉字用户名" @focus="$event.currentTarget.select()"/>
                         </div>
                         <div>
                            <img src="../assets/Navi/pwd2.svg" class="icn" />
-                           <input
-                              maxlength="16"
-                              v-model="sign.pwd"
-                              type="Epassword"
-                              placeholder="3~16位的密码"
-                           />
+                           <input maxlength="16" v-model="sign.pwd" type="password" placeholder="3~16位的密码" 
+                           @focus="$event.currentTarget.select()"/>
                         </div>
                         <div>
-                           <img
-                              src="../assets/Navi/quote.svg"
-                              class="icn"
-                           /><input
-                              v-model="sign.quote"
-                              maxlength="20"
-                              placeholder="个性签名"
-                           />
+                           <!--<img src="../assets/Navi/quote.svg" class="icn" /><input v-model="sign.quote" maxlength="20"
+                              placeholder="个性签名" />-->
                         </div>
-                        <div
-                           class="header"
-                           style="margin:0.2rem auto;font-size: 1.6rem"
-                        >
-                           个人头像（可选）
-                        </div>
-                        <div>
-                           <img
-                              src="../assets/Navi/upload.svg"
-                              class="icn"
-                           /><input v-model="sign.avatar" />
-                        </div>
+                        <!-- <div>
+                           <img src="../assets/Navi/upload.svg" class="icn" /><input v-model="sign.avatar" />
+                        </div> -->
                         <button class="green" @click="signIn">
                            注册并登录
                         </button>
                         <button @click="loginState=0">返回</button>
-                     </div></transition
-                  >
+                     </div>
+                  </transition>
                   <transition name="login">
-                     <div
-                        class="login logined"
-                        v-if="loginTog&&loginState==1"
-                        @click.stop
-                     >
+                     <div class="login logined" v-if="loginTog&&loginState==1" @click.stop>
                         <div></div>
-                        <div
-                           class="header"
-                           style="color:#4c875d;font-weight: bold"
-                        >
+                        <div class="header" style="color:#4c875d;font-weight: bold">
                            您已登录
                         </div>
-                        <img
-                           id="avatar"
-                           :src="this.$store.state.login.avatar"
-                        />
-                        <div
-                           class="logined-user"
-                           style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030"
-                        >
+                        <img id="avatar" :src="getAvatar" />
+                        <div class="logined-user"
+                           style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030">
                            {{ this.$store.state.login.user }}
                         </div>
 
-                        <div
-                           class="header"
-                           style="margin:-0.5rem 0;font-size: 1.4rem;color:rgb(205, 148, 94)"
-                        >
-                           <img
-                              class="icn"
-                              style="margin:0 0.4rem 0 0;width:2rem;vertical-align:-0.6rem"
-                              src="../assets/Navi/looknum.svg"
-                           />{{$store.state.login.lookNum>0?$store.state.login.lookNum:textRead}}
-                           <img
-                              class="icn"
-                              style="margin:0 0.4rem;width:2rem;vertical-align:-0.6rem"
-                              src="../assets/Navi/saynum.svg"
-                           />{{$store.state.login.sayNum>0?$store.state.login.sayNum:textSay}}
+                        <div class="header" style="margin:-0.5rem 0;font-size: 1.4rem;color:rgb(205, 148, 94)">
+                           <img class="icn" style="margin:0 0.4rem 0 0;width:2rem;vertical-align:-0.6rem"
+                              src="../assets/Navi/looknum.svg" />{{$store.state.login.lookNum>0?$store.state.login.lookNum:textRead}}
+                           <img class="icn" style="margin:0 0.4rem;width:2rem;vertical-align:-0.6rem"
+                              src="../assets/Navi/saynum.svg" />{{$store.state.login.sayNum>0?$store.state.login.sayNum:textSay}}
                         </div>
                         <div
-                           style="line-height: 1.5;text-align: center;color:#525252;min-height:3.8rem;margin-left:1.5rem;margin-right:1.5rem;"
-                        >
+                           style="line-height: 1.5;text-align: center;color:#525252;min-height:3.8rem;margin-left:1.5rem;margin-right:1.5rem;">
                            {{ this.$store.state.login.quote }}
                         </div>
 
                         <button @click="toMutate">修改资料</button>
                         <button class="red" @click="quit">退出用户</button>
-                     </div></transition
-                  >
+                     </div>
+                  </transition>
                   <transition name="login">
-                     <div
-                        class="login mutate"
-                        v-if="loginTog&&loginState==2"
-                        @click.stop
-                     >
+                     <div class="login mutate" v-if="loginTog&&loginState==2" @click.stop>
                         <div></div>
                         <div class="header" style="font-weight: bold">
                            修改个人资料
                         </div>
-                        <img id="avatar" :src="mutate.avatar" />
-                        <div
-                           class="logined-user"
-                           style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030"
-                        >
+                        <img id="avatar" :src="getAvatar" />
+                        <div class="logined-user"
+                           style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030">
                            {{ this.$store.state.login.user }}
                         </div>
 
                         <div>
                            <img src="../assets/Navi/pwd2.svg" class="icn" />
-                           <input
-                              type="password"
-                              maxlength="16"
-                              v-model="mutate.old"
-                              placeholder="旧密码"
-                           />
+                           <input type="password" maxlength="16" v-model="mutate.old" placeholder="旧密码" />
                         </div>
                         <div>
                            <img src="../assets/Navi/pwd2.svg" class="icn" />
-                           <input
-                              type="password"
-                              maxlength="16"
-                              v-model="mutate.new"
-                              placeholder="新密码"
-                           />
+                           <input type="password" maxlength="16" v-model="mutate.new" placeholder="新密码" />
                         </div>
                         <div class="header">若不修改密码，以上可留空</div>
                         <div>
-                           <img
-                              src="../assets/Navi/quote.svg"
-                              class="icn"
-                           /><input v-model="mutate.quote" />
+                           <img src="../assets/Navi/quote.svg" class="icn" />
+                           <input v-model="mutate.quote" @focus="$event.currentTarget.select()"/>
                         </div>
                         <div>
-                           <img
-                              src="../assets/Navi/upload.svg"
-                              class="icn"
-                           /><input type="file" @change="getFiles"/>
+                           <img src="../assets/Navi/upload.svg" class="icn" />
+                           <div class="upload-wrapper">
+                              <input type="file" @change="getFiles"name="avatar" ref="upload"/>
+                              <input class="upload-text" disabled :placeholder="fileName">
+                              <div class="upload"><button @click="$refs.upload.click()">上传头像</button></div>
+                           </div>
+                           
+
                         </div>
 
                         <button class="green" @click="mutateIn">
                            保存修改
                         </button>
                         <button @click="loginState=1">返回</button>
-                     </div></transition
-                  >
+                     </div>
+                  </transition>
+                  <transition name="login">
+                     <div class="login guide" v-if="loginTog&&loginState==3" @click.stop>
+                        <div></div>
+                        <div class="header" style="color:#4c875d;font-weight: bold">
+                           建议完善个人头像等信息
+                        </div>
+                        <img id="avatar" :src="getAvatar" />
+                        <div class="logined-user"
+                           style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030">
+                           {{ this.$store.state.login.user }}
+                        </div>
+                        <div>
+                           <img src="../assets/Navi/quote.svg" class="icn" />
+                           <input placeholder="个性签名" v-model="mutate.quote" @focus="$event.currentTarget.select()"/>
+                        </div>
+                        
+                        <div>
+                           <img src="../assets/Navi/upload.svg" class="icn" />
+                           <div class="upload-wrapper">
+                              <input type="file" @change="getFiles"name="avatar" ref="upload"/>
+                              <input class="upload-text" disabled :placeholder="fileName">
+                              <div class="upload"><button @click="$refs.upload.click()">上传头像</button></div>
+                           </div>
+                        </div>
+                        <button @click="mutateIn('sign')" class="green">完成</button>
+                     </div>
+                  </transition>
                </div>
             </transition>
             <transition name="slide-fade">
                <div class="navi-other right" v-if="tog">
-                  <input placeholder="今天你吃了什么" v-model="search"/>
+                  <input placeholder="今天你吃了什么" v-model="search" />
                   <button @click="searchIn(search)">搜索</button>
                </div>
             </transition>
@@ -321,24 +215,36 @@
    export default {
       name: "navi",
       components: {},
-      methods: {
-         getFiles(e){
-            console.log(e.target.files)
+      methods: {     
+         getFiles(e) {
             e.preventDefault();
-            var formData = new FormData()
-            formData.append('file',this.file)
-            var config = {
-               headers:{ 'Content-Type':'multipart/form-data'}
+            if(e.target.files[0].size >= 1024 * 1024){
+               this.$alert("头像文件大于1M啦","false");
+               return;
             }
-            this.$http.post('/upload/avatar',formData,config,(err,data)=>{
-               console.log(data.data.code)
+            var formData = new FormData()
+            this.fileName = e.target.files[0].name
+            formData.append('file', e.target.files[0])
+            formData.append('user_id', this.Cookies.get("_id"))
+            formData.append('user_name', this.$store.state.login.user)
+            var config = {
+               headers: { 'Content-Type': 'multipart/form-data' }
+            }
+            this.$http.post('/upload/avatar', formData, config ).then(res=>{
+               this.$store.state.login.avatar = res.data.path;
             })
          },
-         searchIn(msg){
-            if(msg!=""){
-               this.$router.push('/category?search='+msg)
-            }else{
-               this.$alert('搜索内容不能为空噢！','false');
+         clearAllMsg(){
+            // this.login.user = ""
+            // this.login.pwd = ""
+            // this.sign.user = ""
+            // this.sign.pwd = ""
+         },
+         searchIn(msg) {
+            if (msg != "") {
+               this.$router.push('/category?search=' + msg)
+            } else {
+               this.$alert('搜索内容不能为空噢！', 'false');
             }
          },
          phonePull() {
@@ -352,6 +258,7 @@
             }
          },
          loginIn(msg) {
+            this.clearAllMsg()
             this.$http
                .post("/login-in", this.login)
                .then(res => {
@@ -359,11 +266,12 @@
                      this.$emit("triggerLogin");
                      this.Cookies.set("_id", res.data._id);
                      this.$getUserInfo();
-                     this.loginState = 1;
+                     if (msg == true) this.loginState = 1;
+                        else this.loginState = 3;
                      if (msg == true) this.$alert(res.data.msg, "true");
-                     setTimeout(() => {
-                        this.$refs.loginButton.click();
-                     }, 850);
+                     // setTimeout(() => {
+                     //    this.$refs.loginButton.click();
+                     // }, 850);
                   } else if (res.data.success == 0) {
                      this.$alert(res.data.msg, "false");
                      //tips
@@ -372,6 +280,7 @@
                .catch();
          },
          quit() {
+            this.clearAllMsg()
             this.$emit("triggerLogin");
             this.loginState = 0;
             this.Cookies.set("_id", "");
@@ -390,7 +299,6 @@
                   if (res.data.success == 1) {
                      this.login.user = this.sign.user;
                      this.login.pwd = this.sign.pwd;
-                     this.$alert(res.data.msg, "true");
                      this.loginIn(false);
                      //this.loginTog = false;
 
@@ -406,10 +314,10 @@
             this.mutate.old = "";
             this.mutate.new = "";
             this.mutate.quote = this.$store.state.login.quote;
-            this.mutate.avatar = this.$store.state.login.avatar;
             this.mutate.user = this.$store.state.login.user;
          },
          mutateIn() {
+            this.mutate.avatar = this.$store.state.login.avatar;
             this.$http
                .post("/mutate", this.mutate)
                .then(res => {
@@ -424,26 +332,26 @@
                })
                .catch();
          },
-         changeBar(val){
-            switch(val){
-                  case '/home':
-                     this.id = 1;
-                     break;
-                  case '/category':
-                     this.id = 2;
-                     break;
-                  case '/collection':
-                     this.id = 3;
-                     break;
-                  case '/demo':
-                     this.id = 4;
-                     break;
-                  case '/about':
-                     this.id = 5;
-                     break;
-               }
+         changeBar(val) {
+            switch (val) {
+               case '/home':
+                  this.id = 1;
+                  break;
+               case '/category':
+                  this.id = 2;
+                  break;
+               case '/collection':
+                  this.id = 3;
+                  break;
+               case '/demo':
+                  this.id = 4;
+                  break;
+               case '/about':
+                  this.id = 5;
+                  break;
+            }
          }
-         
+
       },
       data() {
          return {
@@ -455,7 +363,7 @@
                pwd: ""
             },
             sign: {
-               msg: "注册为FunX用户",
+               msg: "仅需两步，注册到Funx",
                user: "",
                pwd: "",
                quote: "",
@@ -468,12 +376,22 @@
                quote: "",
                avatar: ""
             },
+            guide:{
+               
+            },
+            fileName:"还没有上传头像哦",
             loginTog: false,
             loginState: 0,
-            search:"",
-            textSay:"暂无评论",
-            textRead:"暂无阅读",
+            search: "",
+            textSay: "暂无评论",
+            textRead: "暂无阅读",
          };
+      },
+      computed: {
+         getAvatar(){
+            console.log(this.$store.state.login.avatar)
+            return this.$store.state.login.avatar;
+         }
       },
       created() {
          //console.log(this.$route.path)
@@ -489,9 +407,9 @@
          //棒棒的空白点击 移动端要复杂很多
          document.addEventListener("click", event => {
             function jud(dad, child) {
-               if(!child) 
+               if (!child)
                   return false;
-               if(!dad)
+               if (!dad)
                   return true;
                if (dad == child || dad.contains(child)) return true;
                return false;
@@ -499,26 +417,26 @@
             var area = document.querySelector(".login");
             var extra = document.querySelector(".login-wrapper");
             var navi = document.querySelector("#bg-navi");
-            var phone= document.querySelector(".phone");
+            var phone = document.querySelector(".phone");
             var t = event.target;
             //我干tmd草
-            if (t==null) return;
+            if (t == null) return;
             if (document.body.clientWidth <= 768) {
                //console.log(navi+"-"+t);
-               if (jud(navi, t)||jud(phone,t)){
+               if (jud(navi, t) || jud(phone, t)) {
 
-                     return;
+                  return;
 
-                  }else{
-                     this.loginTog = false;
-                     setTimeout(() => {
-                        this.tog = false;
-                     }, 50);
-                     return;
-                  }
-               if (area == null ) return;
+               } else {
+                  this.loginTog = false;
+                  setTimeout(() => {
+                     this.tog = false;
+                  }, 50);
+                  return;
+               }
+               if (area == null) return;
                if (jud(area, t) || jud(extra, t)) {
-                  
+
                } else {
                   if (jud(navi, t)) {
                      this.$refs.loginButton.click();
@@ -528,7 +446,7 @@
                      return;
                   }
                }
-               
+
             } else {
                if (jud(area, t) || jud(extra, t)) {
                   //
@@ -550,9 +468,8 @@
                b.style.maxHeight = "4.4rem";
             }
          },
-         $route:{
-            handler(to){
-               console.log("11")
+         $route: {
+            handler(to) {
                this.changeBar(to.path);
             }
          }
@@ -565,6 +482,7 @@
       position: relative;
       z-index: 500;
    }
+
    #bg-navi {
       top: 0;
       width: 100%;
@@ -574,6 +492,7 @@
       transition: 0.3s all;
       max-height: 6rem;
    }
+
    #navi {
       margin: 0 auto;
       padding-bottom: 0.2rem;
@@ -582,7 +501,8 @@
       transition: 0.3s all;
       max-height: 6rem;
    }
-   #navi > img {
+
+   #navi>img {
       padding-top: 0.5rem;
       height: 4rem;
       float: left;
@@ -592,6 +512,7 @@
       margin-left: 3rem;
       transition: 0.2s all;
    }
+
    .navi-item {
       padding-top: 1rem;
       padding-bottom: 1.1rem;
@@ -603,15 +524,18 @@
       transition: 0.2s all;
       width: 10rem;
    }
+
    #navi .right {
       float: right;
    }
-   .navi-item > img {
+
+   .navi-item>img {
       width: 28px;
       height: 28px;
       filter: invert(30%);
       margin-right: 0.5rem;
    }
+
    .navi-item p {
       margin: 0;
       display: inline;
@@ -624,6 +548,7 @@
       color: #5e5e5e;
       cursor: pointer;
    }
+
    .navi-item::after {
       opacity: 1;
       content: "";
@@ -635,24 +560,30 @@
       background-color: #a8b2b7;
       transition: all 0.2s;
    }
+
    .navi-item:hover::after {
       width: 60%;
       left: 21%;
    }
+
    .active {
       color: #2bbbdc;
    }
+
    .active::after {
       background-color: #2bbbdc;
       width: 60%;
       left: 21%;
    }
+
    .active:hover {
       color: #13abcd;
    }
+
    .active img {
       filter: invert(0);
    }
+
    .navi-other {
       padding-top: 0.5rem;
       user-select: none;
@@ -662,33 +593,41 @@
       transition: 0.2s all;
       width: 28rem;
    }
+
    .navi-other input {
       width: 15rem;
       margin-top: -2rem;
       margin-right: 1rem;
    }
+
    .navi-other button {
       margin-right: -2rem;
    }
+
    .phone {
       display: none;
    }
+
    @media screen and (max-width: 1200px) {
-      #navi > img {
+      #navi>img {
          margin-right: 1rem;
          margin-left: 2rem;
       }
+
       .navi-item {
          width: 8.4rem;
       }
+
       .navi-other {
          width: 20rem;
          margin-right: 1rem;
       }
+
       .navi-other input {
          width: 11rem;
       }
    }
+
    /*
    登录界面！
    */
@@ -705,9 +644,11 @@
       border-radius: 0.4rem;
       box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.75);
    }
+
    .login:hover {
       cursor: default;
    }
+
    .triangle::after {
       content: "";
       right: 4.5rem;
@@ -718,25 +659,33 @@
       border-color: transparent rgb(198, 198, 198) transparent transparent;
       transform: rotate(90deg);
    }
+
    .login div:not(.header) {
       margin: 1rem 0.5rem;
       text-align: left;
       font-size: 1.5rem;
    }
+
    .login input {
       width: 70%;
    }
+
    .login button {
       margin: 0.3rem 1rem;
    }
+
    .header {
       font-size: 1.8rem;
       margin: 1.4rem auto;
       text-align: center;
       color: #555555;
    }
+
    .sign {
-      height: 36.25rem;
+      height: 18.5rem;
+   }
+   .guide{
+      height: 27.2rem;
    }
    /* .sign div {
        white-space 
@@ -744,6 +693,7 @@
    .logined {
       height: 26rem;
    }
+
    .mutate {
       height: 40.5rem;
    }
@@ -754,9 +704,11 @@
       margin-right: 0.5rem;
       margin-left: 0.8rem;
    }
+
    #sign-msg {
       transition: 0.3s all;
    }
+
    #avatar {
       margin: 0 auto;
       text-align: center;
@@ -766,8 +718,34 @@
       margin: -0.5rem 0;
       border: 2px solid rgb(250, 209, 170);
    }
+
    .login-wrapper {
       position: relative;
+   }
+   input[type="file"]{
+      opacity: 0;
+      position: absolute;
+   }
+   .upload-wrapper{
+      height:3rem;
+      margin: 0 !important;
+      display: inline-block;
+      position: relative;
+   }
+   .upload{
+      margin: 0 !important;
+      position: relative;
+   }
+   input.upload-text{
+      position: absolute;
+      width: 17.5rem;
+      border: 1px solid rgb(253, 221, 190);
+   }
+   .upload button{
+      margin-top: 0.10rem;
+      margin-left:13.1rem;
+      padding: 0.7rem 1rem;
+      background-color: #FFB876;
    }
    @media screen and (max-width: 970px) and (min-width: 768px) {
       .navi-other {
@@ -775,14 +753,18 @@
          width: 0rem;
          visibility: hidden;
       }
+
       .navi-other input {
          display: none;
       }
+
       .navi-other button {
          display: none;
       }
    }
+
    @media screen and (max-width: 768px) {
+
       .navi-item,
       .navi-other {
          display: block;
@@ -790,12 +772,14 @@
          padding-left: 2rem;
          text-align: left;
       }
+
       /* .navi-other{
          
       } */
       .navi-other {
          padding-bottom: 1rem;
       }
+
       #navi .navi-item:not(.phone):not(.no):not(.login-wrapper)::before {
          content: "";
          position: absolute;
@@ -805,9 +789,11 @@
          top: 0;
          background-color: #e5ecf0;
       }
+
       #navi .right:not(.phone) {
          float: none;
       }
+
       .phone {
          display: block;
          margin-right: 1.5rem;
@@ -815,23 +801,28 @@
          padding-left: 0;
          margin-left: 2rem;
       }
+
       .phone::after {
          opacity: 0;
       }
+
       .navi-item:hover::after,
       .navi-other:hover::after,
       .phone:hover::after {
          width: 0;
       }
+
       .active::after {
          background-color: #2bbbdc;
          display: none;
       }
+
       .navi-item {
          padding-top: 0.8rem;
          padding-bottom: 0.2rem;
       }
-      #navi > img {
+
+      #navi>img {
          padding-top: 0.5rem;
          height: 3rem;
          float: left;
@@ -841,37 +832,46 @@
          transition: 0.2s all;
          padding-bottom: 1rem;
       }
+
       #bg-navi,
       #navi {
          max-height: 40rem;
       }
+
       #navi .login-wrapper {
          position: absolute;
          right: 5rem;
          top: 0;
          text-align: center;
       }
+
       .login {
          transform: translate(-55%, 2rem);
       }
    }
+
    .slide-fade-enter-active {
       transition: all 0.2s ease-in-out;
    }
+
    .slide-fade-leave-active {
       transition: all 0.2s ease-in-out;
    }
+
    .slide-fade-enter,
    .slide-fade-leave-to {
       transform: translateX(15px);
       opacity: 0;
    }
+
    .login-enter-active {
       transition: all 0.4s;
    }
+
    .login-leave-active {
       transition: all 0.2s;
    }
+
    .login-enter,
    .login-leave-to {
       height: 0;

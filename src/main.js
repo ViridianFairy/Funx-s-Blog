@@ -17,7 +17,7 @@ Vue.directive("highlight", function(el) {
    });
 });
 Vue.prototype.$http = axios.create({ //日常 127.0.0.1
-   baseURL: "http://127.0.0.1:3001/api" //dist 106.15.200.151 
+   baseURL: "http://106.15.200.151:3001/api" //dist 106.15.200.151 
 });
 Vue.prototype.Cookies = Cookies;
 //通过_id存储并拿到当前的用户信息
@@ -29,10 +29,9 @@ Vue.prototype.$getUserInfo = function() {
          if (res.data.success == 1) {
             this.$store.state.login.user = res.data.user;
             this.$store.state.login.quote = res.data.quote;
-            this.$store.state.login.avatar = res.data.avatar;
+            this.$store.state.login.avatar = res.data.avatar+"?a="+Math.random()
             this.$store.state.login.lookNum = res.data.lookNum;
             this.$store.state.login.sayNum = res.data.sayNum;
-            //alert(this.$store.state.login.lookNum+"-"+this.$store.state.login.sayNum)
          } else {
             this.$store.state.login.user = "";
             this.$store.state.login.quote = "";
