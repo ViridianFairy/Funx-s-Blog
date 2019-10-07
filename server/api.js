@@ -440,8 +440,28 @@ router.post("/api/review", (req, res) => {
       }
    });
 });
+router.post("/api/category-time", (req, res) => {
+   Article.find({},'title time').sort({time: -1}).exec(function(err, data) {
+         let Timer = [];
+         for(let item of data){
+            var year = item.time.getFullYear()
+            var month = item.time.getMonth()+1
+            if(Timer.length==0 || (Timer[0].year!=year || Timer[0].month!=month)){
+               var obj = {
+                  year:year,
+                  month:month,
+                  quant:1
+               }
+               Timer.unshift(obj)
+            }else{
+               Timer[0].quant++;
+            }       
+         }
+         res.send(Timer)
+      });
+});
 router.post("/api/category-label", (req, res) => {
-   Article.find({}).sort({time: -1}).exec(function(err, data) {
+   Article.find({},'title time label').sort({time: -1}).exec(function(err, data) {
          let Type = [];
          //预定义
          function hasType(str){

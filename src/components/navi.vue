@@ -740,6 +740,7 @@
    .upload{
       margin: 0 !important;
       position: relative;
+      color:rgb(255, 214, 175)
    }
    input.upload-text{
       position: absolute;
