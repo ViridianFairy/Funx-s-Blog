@@ -17,14 +17,14 @@ const routes = [
       path: "/",
       components: {
          left: Home,
-         right: sideDefault,
+         right: sideCategory,
       }
    }, //前两个是一样哒！
    {
       path: "/home",
       components: {
          left: Home,
-         right: sideDefault,
+         right: sideCategory,
       }
    },
    {

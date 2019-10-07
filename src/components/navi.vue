@@ -7,31 +7,31 @@
                <img src="../assets/Navi/48icon_Drafts.svg" />
             </div>
             <transition name="slide-fade">
-               <div class="navi-item no" v-if="tog" @click="$router.push('/home');id=1;" :class="{active:1==id}">
+               <div class="navi-item no" v-if="tog" @click="$router.push('/home');id=1;phoneClickClose();" :class="{active:1==id}">
                   <img src="../assets/Navi/48icon_Home.svg" />
                   <p>主页</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/category');id=2;" :class="{active:2==id}">
+               <div class="navi-item" v-if="tog" @click="$router.push('/category');id=2;phoneClickClose();" :class="{active:2==id}">
                   <img src="../assets/Navi/48icon_Read.svg" />
                   <p>目录</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/collection');id=3;" :class="{active:3==id}">
+               <div class="navi-item" v-if="tog" @click="$router.push('/collection');id=3;phoneClickClose();" :class="{active:3==id}">
                   <img src="../assets/Navi/48icon_Favorite.svg" />
                   <p>工具</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/demo');id=4;" :class="{active:4==id}">
+               <div class="navi-item" v-if="tog" @click="$router.push('/demo');id=4;phoneClickClose();" :class="{active:4==id}">
                   <img src="../assets/Navi/48icon_Category.svg" />
                   <p>Demo</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/about');id=5;" :class="{active:5==id}">
+               <div class="navi-item" v-if="tog" @click="$router.push('/about');id=5;phoneClickClose();" :class="{active:5==id}">
                   <img src="../assets/Navi/48icon_Message.svg" />
                   <p>关于</p>
                </div>
@@ -199,7 +199,7 @@
             </transition>
             <transition name="slide-fade">
                <div class="navi-other right" v-if="tog">
-                  <input placeholder="今天你吃了什么" v-model="search" />
+                  <input placeholder="搜索文章..." v-model="search" />
                   <button @click="searchIn(search)">搜索</button>
                </div>
             </transition>
@@ -233,6 +233,13 @@
             this.$http.post('/upload/avatar', formData, config ).then(res=>{
                this.$store.state.login.avatar = res.data.path;
             })
+         },
+         phoneClickClose(){
+            if (document.body.clientWidth > 768) return;
+            this.loginTog = false;
+                  setTimeout(() => {
+                     this.tog = false;
+                  }, 50);
          },
          clearAllMsg(){
             // this.login.user = ""
@@ -424,9 +431,7 @@
             if (document.body.clientWidth <= 768) {
                //console.log(navi+"-"+t);
                if (jud(navi, t) || jud(phone, t)) {
-
                   return;
-
                } else {
                   this.loginTog = false;
                   setTimeout(() => {

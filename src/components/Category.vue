@@ -159,6 +159,7 @@
       width: 1rem;
       height: 4rem;
       background-color: #4aacc2;
+      color:rgb(255, 239, 224)
    }
 
    #msgTog {

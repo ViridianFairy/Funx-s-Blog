@@ -2,8 +2,9 @@
   <div id="wrapper">
       <h1>关于...</h1>
       <div id="sky"></div>
-      <iframe :src="src" frameborder="0"></iframe>
-     
+      <div id="iframe-wrapper" :style={height:iHeight}>
+            <iframe :src="src" :style="{transform:'scale('+ long +')'}" frameborder="0"></iframe>
+      </div>   
       <div class="item" v-for="item,i in List">
          <h2><img src="../assets/About/list.svg" class="icn"> {{getVer(item.ver,i)}}
              <img src="../assets/About/time.svg" class="icn"> {{item.time}}
@@ -12,7 +13,7 @@
       </div>
       <div class="item" style="margin-bottom:1.5rem ;"><h2>
          <img src="../assets/About/overall.svg" class="icn" style="width: 3.1rem">
-         vue-cli vue-router vuex lottiejs(with AI AE) nodejs
+         vue-cli vue-router vuex nodejs lottie ZRender
       </h2>
       </div>
   </div>
@@ -21,6 +22,18 @@
 <script>  
 export default {
   name: 'About',
+  computed: {
+     iWidth(){
+         return document.body.clientWidth+'px'
+     },
+     iHeight(){
+         return 550 * this.long+'px'
+     },
+     long(){
+        var a = Number(document.body.clientWidth)/700
+        return (a>=1?1:a)
+     }
+  },
   methods: {
      getVer(v,i){
         if(v!="") return v;
@@ -35,8 +48,10 @@ export default {
       verBase:5,
       List:[
          {ver:"",time:"2019.10.06",body:[
-            "个人资料：头像上传后，立即刷新",
-            "关于页面：新的ae交互动画",
+            // "个人资料：头像上传后立即刷新",
+            // "关于页面：ae动画增加交互、移动端缩放",
+            // "侧边栏",
+            // "大图片改为外链",
          ]},
       ],
     }
@@ -48,6 +63,7 @@ export default {
 
 <style scoped>
    #wrapper{
+      overflow: hidden;
       margin: 0 auto 2rem auto;
       text-align: center;
       color:rgb(48, 134, 137);
@@ -69,13 +85,14 @@ export default {
       color:rgb(185, 185, 185)
    }
    iframe{
-      width:70rem;
-      height:50rem;
+      width: 70rem;
+      height: 55rem;
       margin:0 auto 3rem auto;
-   }
-   #later-info{
-      opacity: 0;
+      transform-origin: 0 0 0;
       
+   }
+   #iframe-wrapper{
+      margin-bottom: 3.25rem;
    }
    .icn{
       width: 2.2rem;
