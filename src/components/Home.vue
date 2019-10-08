@@ -1,21 +1,22 @@
 <template>
    <div>
       <div class="home-item" v-for="item in articles">
+            <router-link :to="'/read?id='+item._id">
+               <h1>{{ item.title }}</h1>
+            </router-link>
          <img
             @click="$router.push('/read?id=' + item._id)"
             :src="item.image"
             v-if="item.image!=''"
          />
-         <router-link :to="'/read?id='+item._id">
-            <h1>{{ item.title }}</h1>
-         </router-link>
+        
          <p>
             <router-link :to="'/category?label='+label" v-for="label in item.label">
                <img src="../assets/Common/label-blue.svg" />{{ label }}
             </router-link>
          </p>
          <p>
-            {{ item.body | noHtml }}
+            {{ item.body }}<!--| noHtml-->
          </p>
          <p>
             <span>{{ item.time }}</span>
@@ -45,9 +46,9 @@
             .catch(e => {});
       },
       filters: {
-         noHtml(a) {
-            return a.replace(/<[^>]+>/g, "").replace(/&nbsp/g, "");
-         }
+         // noHtml(a) {
+         //    return a.replace(/<[^>]+>/g, "").replace(/&nbsp/g, "");
+         // }
       }
    };
 </script>
@@ -67,6 +68,9 @@
       border-radius: 4px;
       border: 1px solid #f0f0f0;
       margin-left: 2rem;
+      margin-bottom: 2rem;
+      
+      
    }
    .home-item > img:hover {
       cursor: pointer;
@@ -84,11 +88,13 @@
       font-size: 1.4rem;
    }
    .home-item h1 {
+      width: calc(100% - 24rem);
       max-height: 2.6rem;
       overflow: hidden;
       color: #467176;
       transition: 0.1s all;
       margin-left:1.4rem;
+      display: inline-block;
    }
    .home-item p a:nth-child(1):before{
       position:relative;
@@ -149,10 +155,13 @@
          padding-right: 1rem;
       }
       .home-item > img {
-         height: 6rem;
-         width: 10rem;
-         margin-left: 0.5rem;
-         margin-top: -0.5rem;
+         height: 9rem;
+         width: 13.5rem;
+         margin:1.4rem 0.5rem 0 0.5rem
+      }
+      .home-item h1 {
+         width: 97%;
+         margin-left:1.4rem;
       }
    }
 </style>

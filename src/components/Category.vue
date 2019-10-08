@@ -20,10 +20,10 @@
             <span>好伤心，什么也没搜到哦...</span>
          </div>
       </div>
-      <div class="home-item" v-for="label in categories" v-if="mode=='label'">
+      <div class="home-item" v-for="label,i in categories" v-if="mode=='label'">
          <div @click="$router.push('/category?label='+label.label)" class="label-wrapper">
             <img class="label-img" src="../assets/Common/label-blue.svg">
-            <span class="label">{{label.label}} 标签：</span>
+            <span class="label" :style="{color:pieColor[i]}">{{label.label}} 标签：</span>
          </div>
          <div v-for="item in label.data">
             <div class="item-wrapper">
@@ -44,7 +44,8 @@
             categories: [],
             msg: "",
             msgTog: "",
-            mode: 'label'
+            mode: 'label',
+            pieColor: ['#FFB876', '#FFD476', '#FF8076', '#899CD6',"#7CC4EC","#FF9966","#FF6666"],
          };
       },
       created() {

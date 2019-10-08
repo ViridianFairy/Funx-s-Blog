@@ -82,14 +82,7 @@ router.post("/api/article", (req, res) => {
          }
       );
       data[0].time = Time.getTime(data[0].time);
-      (async function(){
-            data[0].sayNum = await new Promise(resolve =>{
-               Review.countDocuments({article_id:data[0]._id},(err_r,count)=>{
-                  resolve(count)
-               })    
-            })
          res.send(data);
-      })()
       return;
    });
 });
@@ -148,20 +141,18 @@ router.post("/api/articles", (req, res) => {
          for (let i of data) {
             i.time = Time.getFuzzyTime(i.time);
          }
-         (async function(){
+         //(async function(){
             for(let i of data){
-               i.sayNum = await new Promise(resolve =>{
-                  Review.countDocuments({article_id:i._id},(err_r,count)=>{
-                     resolve(count)
-                  })    
-               })
+               i.body = i.body.replace(/<[^>]+>/g, "").replace(/&nbsp/g, "")
+               i.body = i.body.substring(0,100)
+               // i.sayNum = await new Promise(resolve =>{
+               //    Review.countDocuments({article_id:i._id},(err_r,count)=>{
+               //       resolve(count)
+               //    })    
+               // })
                //console.log(i.sayNum)
             }
             res.send(data);
-         })()
-
-         
-         
          return;
       });
 });
@@ -417,11 +408,16 @@ router.post("/api/review", (req, res) => {
       }
       function reviewIn() {
          if(typeof req.body.user_id_obj != "undefined")
+         Article.findOne({_id:req.body.article_id},'sayNum',(err_s,data_s)=>{
+            var a = ++data_s.sayNum;
+            Article.updateOne({_id:req.body.article_id},{$set:{sayNum:a}},err=>{if(err) throw err})
+         })
+         
          User.findOne({_id:req.body.user_id_obj},'sayNum',(err_user,data_user)=>{
             //console.log(req.body.user_id_obj+" "+data_user)
             if(data_user != null){
                var a = data_user.sayNum + 1 ;
-               console.log(a)
+               
                User.updateOne({_id:data_user._id},{$set:{sayNum:a}},err=>{if(err) throw err})
             }
          })
@@ -435,6 +431,7 @@ router.post("/api/review", (req, res) => {
             body: req.body.body,
             time: d
          }).save();
+               
          res.send({success: 1, msg: "回复成功！"});
          return;
       }
@@ -490,6 +487,15 @@ router.post("/api/category-label", (req, res) => {
                   }
                }            
          }
+         //返回值小于零 顺序不变
+         function cmp(a,b){
+            if(a.data.length > b.data.length)
+               return -1
+            if(a.data.length < b.data.length)
+               return 1
+            return 0
+         }
+         Type.sort(cmp)
          res.send(Type)
       });
 });
