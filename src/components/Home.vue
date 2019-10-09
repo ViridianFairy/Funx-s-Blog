@@ -10,7 +10,7 @@
             v-if="item.image!=''"
          />
         
-         <p>
+         <p class="label">
             <router-link :to="'/category?label='+label" v-for="label in item.label">
                <img src="../assets/Common/label-blue.svg" />{{ label }}
             </router-link>
@@ -144,6 +144,7 @@
    .home-item p:nth-of-type(3) span {
       margin-right: 1.5rem;
    }
+   
    /*
    -------------------------------------------
    -------------------------------------------
@@ -155,13 +156,21 @@
          padding-right: 1rem;
       }
       .home-item > img {
-         height: 9rem;
-         width: 13.5rem;
-         margin:1.4rem 0.5rem 0 0.5rem
+         height: 7rem;
+         width: calc(7rem * 1.5);
+         margin:0.8rem 0.5rem 0 0.5rem
       }
       .home-item h1 {
          width: 97%;
          margin-left:1.4rem;
+         max-height: 2.4rem;
+      }
+      .label{
+         max-height: 2.1rem;
+         white-space: nowrap;
+      }
+      .home-item p:nth-of-type(1) a{
+         margin-right: 0.4rem;
       }
    }
 </style>

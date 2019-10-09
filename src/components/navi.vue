@@ -1,5 +1,6 @@
 <template>
    <div id="z">
+      
       <div id="bg-navi">
          <div id="navi">
             <img src="../assets/Navi/logo.svg" v-if="" />
@@ -7,52 +8,50 @@
                <img src="../assets/Navi/48icon_Drafts.svg" />
             </div>
             <transition name="slide-fade">
-               <div class="navi-item no" v-if="tog" @click="$router.push('/home');id=1;phoneClickClose();" :class="{active:1==id}">
+               <div class="navi-item no" v-if="getPhoneTog" @click="$router.push('/home');id=1;phoneClickClose();" :class="{active:1==id}">
                   <img src="../assets/Navi/48icon_Home.svg" />
                   <p>主页</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/category');id=2;phoneClickClose();" :class="{active:2==id}">
+               <div class="navi-item" v-if="getPhoneTog" @click="$router.push('/category');id=2;phoneClickClose();" :class="{active:2==id}">
                   <img src="../assets/Navi/48icon_Read.svg" />
                   <p>目录</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/collection');id=3;phoneClickClose();" :class="{active:3==id}">
+               <div class="navi-item" v-if="getPhoneTog" @click="$router.push('/collection');id=3;phoneClickClose();" :class="{active:3==id}">
                   <img src="../assets/Navi/48icon_Favorite.svg" />
                   <p>工具</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/demo');id=4;phoneClickClose();" :class="{active:4==id}">
+               <div class="navi-item" v-if="getPhoneTog" @click="$router.push('/demo');id=4;phoneClickClose();" :class="{active:4==id}">
                   <img src="../assets/Navi/48icon_Category.svg" />
                   <p>Demo</p>
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-item" v-if="tog" @click="$router.push('/about');id=5;phoneClickClose();" :class="{active:5==id}">
+               <div class="navi-item" v-if="getPhoneTog" @click="$router.push('/about');id=5;phoneClickClose();" :class="{active:5==id}">
                   <img src="../assets/Navi/48icon_Message.svg" />
                   <p>关于</p>
                </div>
             </transition>
 
             <transition name="slide-fade">
-               <div class="navi-item right login-wrapper" v-if="tog" @click="loginTog=!loginTog" ref="loginButton">
-                  <img src="../assets/Navi/48icon_Userok.svg" v-if="loginState>=1" style="margin-right:0" />
-                  <p v-if="loginState>=1" style="font-size: 1.5rem;color:#09822c;">
-                     已登录
-                  </p>
-                  <img src="../assets/Navi/48icon_User.svg" v-if="loginState<1" style="margin-right:0" />
-                  <p v-if="loginState<1" style="font-size: 1.5rem;color:#7d7d7d;">
+               <div class="navi-item right login-wrapper" v-if="'true'" @click="$store.commit('receiveLoginTog')" ref="loginButton">
+                  <img src="../assets/Navi/48icon_Userok.svg" v-if="getLoginState>=1" style="margin-right:0.3rem" />
+                  <p v-if="getLoginState>=1" id="userLogin-yes">{{$store.state.login.user | cutUserName}}</p>
+                  <img src="../assets/Navi/48icon_User.svg" v-if="getLoginState<1" style="margin-right:0.3rem" />
+                  <p v-if="getLoginState<1" style="font-size: 1.5rem;color:#7d7d7d;">
                      未登录
                   </p>
                   <transition name="login">
-                     <div class="triangle" v-if="loginTog"></div>
+                     <div class="triangle" v-if="getLoginTog"></div>
                   </transition>
                   <!--开始面板-->
                   <transition name="login">
-                     <div class="login " v-if="loginTog&&loginState==0" @click.stop>
+                     <div class="login " v-if="getLoginTog&&getLoginState==0" @click.stop>
                         <div></div>
                         <div class="header" style="font-weight: bold" id="login-msg">
                            {{ login.msg }}
@@ -66,11 +65,11 @@
                            <input placeholder="密码" type="password" maxlength="16" v-model="login.pwd" @focus="$event.currentTarget.select()"/>
                         </div>
                         <button @click="loginIn(true)">登录</button>
-                        <button @click="loginState=-1">点此注册</button>
+                        <button @click="$store.commit('receiveLoginState',-1)">点此注册</button>
                      </div>
                   </transition>
                   <transition name="login">
-                     <div class="login sign" v-if="loginTog&&loginState==-1" @click.stop>
+                     <div class="login sign" v-if="getLoginTog&&getLoginState==-1" @click.stop>
                         <div></div>
                         <div class="header" style="font-weight: bold" id="sign-msg">
                            {{ sign.msg }}
@@ -96,11 +95,11 @@
                         <button class="green" @click="signIn">
                            注册并登录
                         </button>
-                        <button @click="loginState=0">返回</button>
+                        <button @click="$store.commit('receiveLoginState',0)">返回</button>
                      </div>
                   </transition>
                   <transition name="login">
-                     <div class="login logined" v-if="loginTog&&loginState==1" @click.stop>
+                     <div class="login logined" v-if="getLoginTog&&getLoginState==1" @click.stop>
                         <div></div>
                         <div class="header" style="color:#4c875d;font-weight: bold">
                            您已登录
@@ -108,7 +107,7 @@
                         <img id="avatar" :src="getAvatar" />
                         <div class="logined-user"
                            style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030">
-                           {{ this.$store.state.login.user }}
+                           {{ this.$store.state.login.user || cutUserName}}
                         </div>
 
                         <div class="header" style="margin:-0.5rem 0;font-size: 1.4rem;color:rgb(205, 148, 94)">
@@ -127,7 +126,7 @@
                      </div>
                   </transition>
                   <transition name="login">
-                     <div class="login mutate" v-if="loginTog&&loginState==2" @click.stop>
+                     <div class="login mutate" v-if="getLoginTog&&getLoginState==2" @click.stop>
                         <div></div>
                         <div class="header" style="font-weight: bold">
                            修改个人资料
@@ -165,13 +164,16 @@
                         <button class="green" @click="mutateIn">
                            保存修改
                         </button>
-                        <button @click="loginState=1">返回</button>
+                        <button @click="$store.commit('receiveLoginState',1)">返回</button>
                      </div>
                   </transition>
                   <transition name="login">
-                     <div class="login guide" v-if="loginTog&&loginState==3" @click.stop>
+                     <div class="login guide" v-if="getLoginTog && getLoginState==3" @click.stop>
                         <div></div>
-                        <div class="header" style="color:#4c875d;font-weight: bold">
+                        <div class="header" style="color:#4c875d;font-weight: bold;margin-bottom: 0.5rem">
+                           已注册完成
+                        </div>
+                        <div class="header" style="color:#4c875d;font-weight: bold;margin-top: 0.5rem">
                            建议完善个人头像等信息
                         </div>
                         <img id="avatar" :src="getAvatar" />
@@ -198,7 +200,7 @@
                </div>
             </transition>
             <transition name="slide-fade">
-               <div class="navi-other right" v-if="tog">
+               <div class="navi-other right" v-if="getPhoneTog">
                   <input placeholder="搜索文章..." v-model="search" />
                   <button @click="searchIn(search)">搜索</button>
                </div>
@@ -210,12 +212,42 @@
 
 <script>
    /*if(window.screen.width<=960){
-      v.tog==false;
+      v.getPhoneTog==false;
    }*/
    export default {
       name: "navi",
       components: {},
-      methods: {     
+      filters:{
+         cutUserName(v){
+            var len = 0;
+            for(var i=0;i<v.length;i++){
+               if (v.charCodeAt(i)>127 || v.charCodeAt(i)==94)
+                  len += 2;
+               else
+                  len ++;
+               console.log(len)
+               if(len>=10) return v.substring(0,i).concat('..')
+            }
+            return v
+         }
+      },
+      computed: {
+         getAvatar(){
+            //console.log(this.$store.state.login.avatar)
+            return this.$store.state.login.avatar;
+         },
+         getLoginTog(){
+            //console.log('拿到数据'+this.$store.state.loginTog)
+            return this.$store.state.loginTog
+         }, 
+         getLoginState(){
+            return this.$store.state.loginState
+         },
+         getPhoneTog(){
+            return this.$store.state.phoneTog
+         },
+      },
+      methods: {    
          getFiles(e) {
             e.preventDefault();
             if(e.target.files[0].size >= 1024 * 1024){
@@ -236,9 +268,9 @@
          },
          phoneClickClose(){
             if (document.body.clientWidth > 768) return;
-            this.loginTog = false;
+            this.$store.commit('receiveLoginTog',false)
                   setTimeout(() => {
-                     this.tog = false;
+                     this.$store.commit('receivePhoneTog',false)
                   }, 50);
          },
          clearAllMsg(){
@@ -255,13 +287,13 @@
             }
          },
          phonePull() {
-            if (this.tog == true && this.loginTog == true) {
-               this.loginTog = false;
+            if (this.getPhoneTog == true && this.getLoginTog == true) {
+               this.$store.commit('receiveLoginTog',false)
                setTimeout(() => {
-                  this.tog = !this.tog;
+                  this.$store.commit('receivePhoneTog')
                }, 150);
             } else {
-               this.tog = !this.tog;
+               this.$store.commit('receivePhoneTog')
             }
          },
          loginIn(msg) {
@@ -273,8 +305,8 @@
                      this.$emit("triggerLogin");
                      this.Cookies.set("_id", res.data._id);
                      this.$getUserInfo();
-                     if (msg == true) this.loginState = 1;
-                        else this.loginState = 3;
+                     if (msg == true) this.$store.commit('receiveLoginState',1)
+                        else this.$store.commit('receiveLoginState',3)
                      if (msg == true) this.$alert(res.data.msg, "true");
                      // setTimeout(() => {
                      //    this.$refs.loginButton.click();
@@ -289,7 +321,7 @@
          quit() {
             this.clearAllMsg()
             this.$emit("triggerLogin");
-            this.loginState = 0;
+            this.$store.commit('receiveLoginState',0)
             this.Cookies.set("_id", "");
             this.$store.state.login.user = "";
             this.$store.state.login.quote = "";
@@ -307,7 +339,7 @@
                      this.login.user = this.sign.user;
                      this.login.pwd = this.sign.pwd;
                      this.loginIn(false);
-                     //this.loginTog = false;
+                     //this.getLoginTog = false;
 
                   } else if (res.data.success == 0) {
                      this.$alert(res.data.msg, "false");
@@ -317,20 +349,22 @@
                .catch();
          },
          toMutate() {
-            this.loginState = 2;
+            this.$store.commit('receiveLoginState',2)
             this.mutate.old = "";
             this.mutate.new = "";
             this.mutate.quote = this.$store.state.login.quote;
             this.mutate.user = this.$store.state.login.user;
          },
          mutateIn() {
+            this.mutate.user = this.$store.state.login.user;
             this.mutate.avatar = this.$store.state.login.avatar;
             this.$http
                .post("/mutate", this.mutate)
                .then(res => {
                   if (res.data.success == 1) {
                      this.$getUserInfo();
-                     this.loginState = 1;
+                     console.log('话'+this.$store.state.login.quote)
+                     this.$store.commit('receiveLoginState',1)
                      this.$alert(res.data.msg, "true");
                   } else if (res.data.success == 0) {
                      this.$alert(res.data.msg, "false");
@@ -362,7 +396,6 @@
       },
       data() {
          return {
-            tog: true,
             id: 1,
             login: {
                msg: "登录到Funx",
@@ -387,29 +420,21 @@
                
             },
             fileName:"还没有上传头像哦",
-            loginTog: false,
-            loginState: 0,
             search: "",
             textSay: "暂无评论",
             textRead: "暂无阅读",
          };
       },
-      computed: {
-         getAvatar(){
-            console.log(this.$store.state.login.avatar)
-            return this.$store.state.login.avatar;
-         }
-      },
       created() {
          //console.log(this.$route.path)
          this.changeBar(this.$route.path)
          if (document.body.clientWidth <= 768) {
-            this.tog = false;
+            this.$store.commit('receivePhoneTog',false)
          }
          this.$getUserInfo();
          var cookie = this.Cookies.get("_id");
          if (cookie && cookie != "") {
-            this.loginState = 1;
+            this.$store.commit('receiveLoginState',1)
          }
          //棒棒的空白点击 移动端要复杂很多
          document.addEventListener("click", event => {
@@ -433,9 +458,9 @@
                if (jud(navi, t) || jud(phone, t)) {
                   return;
                } else {
-                  this.loginTog = false;
+                  this.$store.commit('receiveLoginTog',false)
                   setTimeout(() => {
-                     this.tog = false;
+                     this.$store.commit('receivePhoneTog',false)
                   }, 50);
                   return;
                }
@@ -447,7 +472,7 @@
                      this.$refs.loginButton.click();
                      return;
                   } else {
-                     this.loginTog = false;
+                     this.$store.commit('receiveLoginTog',false)
                      return;
                   }
                }
@@ -462,7 +487,8 @@
          });
       },
       watch: {
-         tog(val) {
+         '$store.state.phoneTog':function(val){
+            console.log('watch'+val)
             var a = document.getElementById("bg-navi");
             var b = document.getElementById("navi");
             if (val == true) {
@@ -478,7 +504,23 @@
                this.changeBar(to.path);
             }
          }
-      }
+      },
+      mounted() {
+         var timer = null
+         window.onresize = ()=>{
+            if(timer) return;
+            timer = setTimeout(()=>{
+               var a = document.body.clientWidth;
+            if( a <= 768 ){
+               this.$store.commit('receivePhoneTog',false)
+            }else{
+               this.$store.commit('receivePhoneTog',true)
+            }
+            timer = null
+            },50)
+            
+         }
+      },
    };
 </script>
 
@@ -494,7 +536,7 @@
       position: fixed;
       background-color: rgb(255, 255, 255);
       box-shadow: 0px 2px 6px 0px rgba(50, 50, 50, 0.25);
-      transition: 0.3s all;
+      transition: 0.3s all cubic-bezier(0.165, 0.840, 0.440, 1.000);
       max-height: 6rem;
    }
 
@@ -503,7 +545,7 @@
       padding-bottom: 0.2rem;
       padding-top: 0.2rem;
       max-width: 130rem;
-      transition: 0.3s all;
+      transition: 0.3s all cubic-bezier(0.165, 0.840, 0.440, 1.000);
       max-height: 6rem;
    }
 
@@ -690,7 +732,7 @@
       height: 18.5rem;
    }
    .guide{
-      height: 27.2rem;
+      height: 30rem;
    }
    /* .sign div {
        white-space 
@@ -726,6 +768,9 @@
 
    .login-wrapper {
       position: relative;
+      width:auto;
+      margin-left: 0.8rem;
+      margin-right: 0.8rem;
    }
    input[type="file"]{
       opacity: 0;
@@ -753,19 +798,29 @@
       padding: 0.7rem 1rem;
       background-color: #FFB876;
    }
+   #userLogin-yes{
+      font-size: 1.4rem;
+      color:#09822c;
+      white-space:nowrap
+   }
    @media screen and (max-width: 970px) and (min-width: 768px) {
       .navi-other {
          height: 4rem;
-         width: 0rem;
+         width:4rem;
          visibility: hidden;
+         margin-right: 0;
       }
 
       .navi-other input {
-         display: none;
+         padding: 0;
+         width: 0;
+         opacity: 0;
       }
 
       .navi-other button {
-         display: none;
+         opacity: 0;
+         padding-left:0;
+         padding-right: 0
       }
    }
 

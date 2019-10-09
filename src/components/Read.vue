@@ -47,6 +47,7 @@
    </div>
 </template>
 <script>
+   import '../css/article.css'
    export default {
       name: "read",
       components: {},
@@ -170,7 +171,7 @@
       height:8.2rem;
       width:0.6rem;
       margin-top: 0.6rem;
-      margin-bottom: 5rem;
+      margin-bottom: 3rem;
       background-color: #4aacc2;
    }
    

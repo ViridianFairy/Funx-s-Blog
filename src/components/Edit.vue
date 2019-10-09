@@ -2,9 +2,11 @@
    <div id="edit-wrapper">
       <span id="title-text">标题：</span>
       <input id="title" v-model="article.title" />
+      
       <button @click="save" v-if="isAdmin">
          {{saveText}}
       </button>
+      <img id="pic-img" :src="article.image">
       <p id="label">
          标签：
          <a v-for="myLabel,id in article.label">
@@ -13,8 +15,8 @@
          <input v-model="labelText" placeholder="添加标签" />
          <button @click="addLabel">+</button>
          <span id="pic">
-               文章封面图：<input v-model="article.image" placeholder="输入外链" />
-               <img :src="article.image">
+               文章封面图：<input v-model="article.image" placeholder="输入外链" @focus="$event.currentTarget.select()"/>
+               
             </span>
       </p>
      
@@ -23,6 +25,8 @@
 </template>
 <script>
    import E from "wangeditor";
+   import "wangeditor/release/wangEditor.css";
+   import '../css/article.css'
    export default {
       name: "edit",
       components: {},
@@ -52,7 +56,7 @@
             this.article = {}
             this.article.title = "新的文章"
             this.article.body = `<p>新的内容</p>`
-            this.article.label = ["JavaScript"]
+            this.article.label = []
             this.article.image = ""
             var editor = new E(this.$refs.editor);
             editor.create();
@@ -162,7 +166,7 @@
    }
    input {
       font-size: 1.8rem;
-      width: calc(100% - 16rem);
+      width: calc(100% - 31.7rem);
    }
    p span {
       color: grey;
@@ -181,6 +185,10 @@
    }
    /*
    */
+   #label{
+      /* display: inline-block;
+      width: auto; */
+   }
    #label input {
       width: 7rem;
       font-size: 1.4rem;
@@ -200,17 +208,30 @@
       background-color: rgb(243, 136, 136);
    }
    #pic input {
-      width: 15rem;
+      width: calc(100% - 70rem);
       font-size: 1.2rem;
    }
-   #pic img{
+   #pic-img{
       background-color: #e7e7e709;
-      width:calc(5rem * 1.67);
-      height: 5rem;
+      width:15rem;
+      height: 10rem;
       vertical-align: middle;
-      margin-top: -0.75rem;
+      margin-top: -2.5rem;
       margin-bottom: -0.75rem;
-      margin-left: 1.5rem;
-      border-color:transparent;
+      margin-left: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #dbdbdb;
+      float:right;
+      opacity: 0;
+      transition: 0.2s all;
+   }
+   #pic-img:hover{
+      opacity: 1;
+   }
+   @media screen and (max-width: 768px) {
+      #pic-img{
+         width:7.5rem;
+         height: 5rem;
+      }
    }
 </style>

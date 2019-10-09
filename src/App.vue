@@ -115,6 +115,7 @@
                   this.$store.state.path = [{ name: "关于", link: "/about" }];
                   break;
                case "/edit":
+                  this.expand = true;
                   this.$store.state.path.splice(1,MAX,{
                         name: this.cutTitle(this.$store.state.title),
                         link: "/read?id=" + this.$route.query.id},

@@ -162,7 +162,6 @@ router.post("/api/article-new", (req, res) => {
          res.send({success:0,msg:"不要瞎鸡儿乱点，求你了！"})
          return;
       }else{
-          //console.log(req.body)
           let date = new Date();
           var article = new Article({
              title: req.body.article.title,
@@ -175,7 +174,6 @@ router.post("/api/article-new", (req, res) => {
              author: "viridian"}
           )
           article.save((err,data)=>{
-            //console.log(data)
             res.send({success:1,article_id:data._id})
             return;
           })
@@ -302,7 +300,6 @@ router.post("/api/sign", (req, res) => {
    });
 });
 router.post("/api/mutate", (req, res) => {
-   // console.log(req.body.user+req.body.old);
    User.find({user: req.body.user}, function(err, data) {
       
       if (req.body.old != "" || req.body.new != "") {
@@ -328,19 +325,20 @@ router.post("/api/mutate", (req, res) => {
          res.send({success: 0, msg: "个性签名需要少于20字符！"});
          return;
       }
-      if (req.body.quote == "") req.body.quote = "还没有个性签名哦...";
+      if (req.body.quote == "") req.body.quote = "这个人太懒了，什么都没留下";
+      console.log(req.body.quote)
+      console.log("用户是"+req.body.user)
       var setObj = {
          quote: req.body.quote,
          avatar: req.body.avatar
       };
       //开始注册
-      // console.log(req.body.user+"-"+req.body.old);
       User.updateOne(
          {user: req.body.user},
          {
             $set: setObj
          },
-         (err, data) => {
+         (err2, data2) => {
             if (err) {
                res.send({success: 0, msg: "更新时出错"});
                throw err;
@@ -500,24 +498,20 @@ router.post("/api/category-label", (req, res) => {
       });
 });
 router.post("/api/category-search", (req, res) => {
-   console.log(req.body.search)
    var title = new RegExp(req.body.search)
    Article.find({title}).sort({time: -1}).exec(function(err, data) {
          for(let i of data){
             i.time = Time.getTime(i.time)
          }
          res.send(data)
-         console.log(data);
       });
 });
 router.post("/api/getReviews", (req, res) => {
    Review.find({article_id: req.body.article_id}).
       populate('reply_id_obj user_id_obj','user avatar')
       .sort({ time: -1 }).exec((err,doc)=>{
-         //console.log(doc)
       function getObjById(i){
          for(let j of doc){
-            //console.log(j._id +"-"+ i);
             if(j._id == i) return j;
          }
       }
@@ -553,7 +547,6 @@ router.post("/api/getReviews", (req, res) => {
          let reply_name = (item.reply_id_obj?item.reply_id_obj.user:"");
          let reply_avatar = (item.reply_id_obj?item.reply_id_obj.avatar:"");
          let user_id_obj = item.user_id_obj;
-         //console.log(t);
          //找到了爹
          while(!isRoot(t)){
             t = getObjById(t.dad_id);

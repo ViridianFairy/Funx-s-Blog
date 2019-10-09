@@ -4,7 +4,7 @@ import router from "./router/router";
 import axios from "axios";
 import Cookies from "js-cookie";
 import store from "./store/store";
-import "highlight.js/styles/atom-one-dark.css";
+import "highlight.js/styles/solarized-dark.css";
 import hljs from "highlight.js";
 Vue.config.productionTip = false;
 //封装
@@ -62,10 +62,8 @@ Vue.prototype.$alert = function(msg, type) {
    },1700)
 };
 router.afterEach((to,from,next)=>{
-
-   　　　　window,scrollTo(0,0)
-   
-   　　})
+   　window,scrollTo(0,0)
+})
 new Vue({
    el: "#app",
    render:h=>h(App),

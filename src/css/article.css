@@ -1,0 +1,80 @@
+@font-face{
+   font-family: code;
+   src:url("../static/consola.ttf");
+} 
+#home-wrapper p:not(code p){
+   color:#3b4148;
+}
+#home-wrapper blockquote{
+   letter-spacing:.05rem;
+   border-radius: 0.5rem;
+   display: block;
+   border-left: 0.5rem solid rgba(137, 211, 228, 0.403);
+   padding: 1.5rem 1.2rem;
+   margin: 1.8rem 0;
+   line-height: 1.5;
+   font-size: 1.5rem;
+   background-color: rgba(236, 248, 255, 0.736);
+   color:#4a5463;
+   transition: 0.3s all;
+}
+#home-wrapper a{
+   margin:0 0.3rem;
+   color:rgb(59, 139, 157);
+}
+#home-wrapper th{
+   color:#909399;
+   padding: 0.8rem 0;
+}
+#home-wrapper td{
+   font-size: 1.5rem;
+   height: 100%;
+   color:#54575c;
+   padding: 0.9rem 0;
+   border-top: 1px dashed #ebeef5;
+}
+#home-wrapper table{
+   border: 1px solid #ebebeb;
+    border-radius: 3px;
+    transition: 0.3s all;
+}
+#home-wrapper table:hover{
+   box-shadow: 0 0 8px 0 rgba(232,237,250,.6), 0 2px 4px 0 rgba(232,237,250,.5);
+}
+.hljs {
+   border: 1px solid #ebebeb;
+    border-radius: 3px;
+     background: #F6F8FA !important;  
+    transition: 0.3s all;
+}
+.hljs:hover {
+   box-shadow: 0 0 8px 0 rgba(232,237,250,.6), 0 2px 4px 0 rgba(232,237,250,.5);
+}
+code{
+   font-family: code;
+   font-size: 1.3rem;
+   padding: 0.1rem !important;
+   padding-left: 1.5rem !important;
+   border-radius: 0.4rem;
+   letter-spacing:.01rem;
+   line-height: 1.5;
+   color:rgb(33, 79, 89);
+   margin-left: 0.2rem;
+   margin-right: 0.2rem;
+   background-color: #F8F8F8;
+   display: inline-block;
+}
+.small{
+   padding-left:0.4rem;
+   padding-right:0.4rem;
+   color:rgb(2, 155, 190);
+   background-color: #ECF8FF;
+   display: inline-block;
+}
+@media screen and (max-width:768px){
+   code{
+      font-family:monospace;
+      font-size: 1.2rem;
+   }
+}
+

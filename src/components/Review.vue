@@ -8,12 +8,13 @@
                <p class="say-name">{{ $store.state.login.user }}</p>
             </div>
             <textarea class="textarea"
-               :disabled="$store.state.login.avatar==''|| $store.state.invalidArticle"
-               :placeholder="$store.state.login.avatar==''?'先点右上角登录嘛':'来说点什么...'"
-               v-model="msg">{{ msg }}</textarea>
+               @click="judgeAndSign()"
+               :placeholder="$store.state.login.avatar==''?'还没有登录呢':'来说点什么...'"
+               v-model="msg">{{ msg }}</textarea><!-- :disabled="$store.state.login.avatar==''|| $store.state.invalidArticle" -->
             <button class="send"
-               @click="reviewIn(-1)"
-               v-if="$store.state.login.avatar!=''&& !$store.state.invalidArticle">
+               @click="reviewIn(-1);"
+               v-if="!$store.state.invalidArticle"
+               :class="{biggrey:$store.state.login.avatar==''}">
                发布评论
             </button>
          </div>
@@ -65,13 +66,25 @@
    export default {
       name: "review",
       methods: {
+         judgeAndSign(){
+            if (this.$store.state.login.avatar!='') return
+            setTimeout(()=>{
+               this.$store.commit('receiveLoginState',-1)
+               this.$store.commit('receiveLoginTog',true)
+            },10)
+         },
          judgeSon(son,father){
             if(son.dad_id == father._id) return false;
             return true;
          },
          smallBox(index,reviewObj){
-            if(this.$store.state.login.avatar=='') 
-               return;
+            if (this.$store.state.login.avatar ==''){
+               setTimeout(()=>{
+                  this.$store.commit('receiveLoginState',-1)
+                  this.$store.commit('receiveLoginTog',true)
+               },10)
+               return
+            }
             var _id = reviewObj._id;
             if(_id == this.replyData[index]._id){
                var value = this.replyShow[index] = !this.replyShow[index];
@@ -92,6 +105,13 @@
             return this.$store.state.login.avatar;
          },
          reviewIn(index) {
+            if (this.$store.state.login.avatar ==''){
+               setTimeout(()=>{
+                  this.$store.commit('receiveLoginState',-1)
+                  this.$store.commit('receiveLoginTog',true)
+               },10)
+               return
+            }
             var dad_id,reply_id_obj,body;
             if(index == -1){
                dad_id = "";
@@ -390,15 +410,24 @@
       margin-top: 1.9rem;
    }
    /* 还没登陆 按钮不可用 */
-   .p-body .grey{
-      color:#aaa;
+  .grey{
+      color:#aaa !important;
    }
-   .p-body .grey:hover{
+  .grey:hover{
       color:rgb(130, 130, 130);
       cursor:not-allowed;
    }
-   .p-body .grey img{
+   .grey img{
       filter:invert(40%);
+   }
+   .biggrey{
+      color:rgba(255, 255, 255, 0.868) ;
+      background-color:rgba(142, 142, 142, 0.673);
+   }
+   .biggrey:hover{
+      color:rgb(215, 215, 215);
+      background-color:rgba(108, 108, 108, 0.673);
+      cursor:not-allowed;
    }
    @media screen and (max-width: 768px) {
       #review-wrapper {
