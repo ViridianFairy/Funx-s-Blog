@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const cors = require('cors');
 const Router= require("./api")
 const Router_upload= require("./upload")
 app.use(require("cors")());
@@ -8,12 +7,18 @@ app.use(express.json());
 
 app.use(Router)
 app.use(Router_upload)
-app.listen(3001, () => {
+app.listen(3001,'0.0.0.0', () => {
    console.log("success");
 });
+// Array.prototype.hasString = function(e){
+//    this.forEach((v)=>{
+//       if(v==e) return true;
+//    })
+//    return false;
+// }
 //最初版本的遍历评论树，现已废弃
 // String.prototype.len = function() {
-//    var len = 0;
+//    var len = 0;--
 //    for (var i=0; i<this.length; i++) {
 //        if (this.charCodeAt(i)>127 || this.charCodeAt(i)==94) {
 //             len += 2;

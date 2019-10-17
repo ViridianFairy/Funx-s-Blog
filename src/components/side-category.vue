@@ -23,7 +23,7 @@
             if(!this.openAnimate) return;
             this.sector[i].animateTo({
                         shape: {
-                           r:87
+                           r:75
                         },
                         style:{
                            shadowBlur:4,
@@ -37,7 +37,7 @@
             if(!this.openAnimate) return;
             this.sector[i].animateTo({
                         shape: {
-                           r:80
+                           r:70
                         },
                         style:{
                            shadowBlur:0,
@@ -110,11 +110,11 @@
                   endAngle[j] += v.value / 1000
                })
                var sector = new zrender.Sector({
-                  position:[10,5],
+                  position:[10,0],
                   shape: {
                      cx: 80,
                      cy: 80,
-                     r: 80,
+                     r: 70,
                      r0: 25,
                      startAngle: startAngle[j], endAngle: endAngle[j],
                   },
@@ -180,7 +180,7 @@
             var maxX = 165,perX = 38
             for(let i=this.timers.length-1;i>=0;i--){
                var j = this.timers.length - i -1;
-               console.log(maxX - perX*j)
+               // console.log(maxX - perX*j)
                if(i!=this.timers.length-1){
                   var line = new zrender.Line({
                      shape:{
@@ -271,8 +271,8 @@
       background-color: #FFB876;
    }
    #labelChart, #timeChart{
-      width: 180px;
-      height: 16rem;
+      width: 18rem;
+      height: 15.5rem;
       margin: 0 auto;
    }
    #timeChart{

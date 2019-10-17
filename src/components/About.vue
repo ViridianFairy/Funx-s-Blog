@@ -46,7 +46,7 @@ export default {
     return {
       src:"/funx.html",
       verBase:5,
-      List:[
+      /*List:[
          {ver:"",time:"2019.10.06",body:[
             "个人资料：头像上传后立即刷新",
             "关于页面：ae动画增加交互、移动端缩放",
@@ -60,9 +60,8 @@ export default {
          ]},
          {ver:"",time:"2019.10.08",body:[
             "阅读页面：全部添加了新样式",
-         ]},
-         
-      ],
+         ]},  
+      ]*/
     }
   },mounted() {
       

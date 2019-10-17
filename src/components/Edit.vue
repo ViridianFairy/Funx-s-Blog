@@ -9,8 +9,8 @@
       <img id="pic-img" :src="article.image">
       <p id="label">
          标签：
-         <a v-for="myLabel,id in article.label">
-            {{ myLabel }}<button @click="deleteLabel(id)">×</button>
+         <a v-for="(myLabel,id) in article.label" :key=id>{{ myLabel }}
+            <button @click="deleteLabel(id)">×</button>
          </a>
          <input v-model="labelText" placeholder="添加标签" />
          <button @click="addLabel">+</button>
@@ -19,23 +19,42 @@
                
             </span>
       </p>
-     
-      <div id="editor" ref="editor"></div>
+      <div class="editorContainer">
+            <markdown 
+            :mdValuesP="getRaw"  
+            :fullPageStatusP="false" 
+            :editStatusP="true" 
+            :previewStatusP="true" 
+            :navStatusP="true"
+            :icoStatusP="true"  
+            @childevent="childEventHandler"
+            
+            ></markdown>
+   </div>
    </div>
 </template>
 <script>
-   import E from "wangeditor";
-   import "wangeditor/release/wangEditor.css";
+   // import E from "wangeditor";
+   // import "wangeditor/release/wangEditor.css";
    import '../css/article.css'
+   import markdown from'./markdown.vue'
+   // import { log } from 'util';
    export default {
       name: "edit",
-      components: {},
+      components: {markdown:markdown},
+      computed:{
+         getRaw(){
+            console.log(this.raw)
+            return this.raw;
+         }
+      },
       data() {
          return {
             article: {},
             isAdmin:0,
             labelText:"",
-            saveText:"保存"
+            saveText:"保存",
+            raw:"a",
          };
       },
       created() {
@@ -58,43 +77,28 @@
             this.article.body = `<p>新的内容</p>`
             this.article.label = []
             this.article.image = ""
-            var editor = new E(this.$refs.editor);
-            editor.create();
-               editor.txt.html(this.article.body);
-               document.getElementsByClassName(
-                  "w-e-text-container"
-               )[0].style.height = window.innerHeight - 230 + "px";
-               this.saveText = "新增"
-            return;
+            
          }
          this.$http
             .post("/article", { _id: id })
             .then(res => {
-               this.article = res.data[0];
+               this.article = res.data[0];         
+               this.raw = this.article.body
                //vuex
                this.$store.state.title = this.article.title;
                //vuex
-
                if (res.data._id == "-1") {
                   this.article.title = "1";
                }
-               var editor = new E(this.$refs.editor);
-               editor.customConfig.onchange = html => {
-                  this.article.body = html;
-                  this.editorContent = html;
-               };
-               editor.create();
-              // console.log(this.article.body);
-               editor.txt.html(this.article.body);
-              // console.log("插入结束");
-               //迫不得已，这个库太垃圾了了
-               document.getElementsByClassName(
-                  "w-e-text-container"
-               )[0].style.height = window.innerHeight - 230 + "px";
+
             })
             .catch();
       },
       methods: {
+         childEventHandler:function(res){
+                // res会传回一个data,包含属性mdValue和htmlValue，具体含义请自行翻译
+                this.raw=res.mdValue;
+         },
          addLabel() {
             if (this.labelText == "") return;
             this.article.label.push(this.labelText);
@@ -103,7 +107,7 @@
             this.article.label.splice(id, 1);
          },
          save() {
-            console.log(this.article)
+            this.article.body = this.raw
             if(typeof this.$route.query.id == "undefined"){
                this.$http
                .post("/article-new", {
@@ -188,6 +192,9 @@
    #label{
       /* display: inline-block;
       width: auto; */
+   }
+   .editContainer{
+      height:15rem;
    }
    #label input {
       width: 7rem;

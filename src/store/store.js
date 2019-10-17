@@ -18,16 +18,21 @@ const mutations = {
       }
    },
    receiveLoginState(state,v){
-      console.log("响应到"+v)
       state.loginState = v  // -1  0  1  2  3
    },
-   
+   articleLoaded(state){
+      state.read.linksBool = !state.read.linksBool 
+   },
 }
 const state = {
       path: [
          { name: "主页", link: "/home" }
       ],
       title:"",
+      read:{
+         linksBool:true,
+         title:"233",
+      },
       login:{
          user:"",
          quote:"",

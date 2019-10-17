@@ -9,7 +9,7 @@
    letter-spacing:.05rem;
    border-radius: 0.5rem;
    display: block;
-   border-left: 0.5rem solid rgba(137, 211, 228, 0.403);
+   border-left: 0.5rem solid rgba(152, 209, 221, 0.389);
    padding: 1.5rem 1.2rem;
    margin: 1.8rem 0;
    line-height: 1.5;
@@ -20,7 +20,7 @@
 }
 #home-wrapper a{
    margin:0 0.3rem;
-   color:rgb(59, 139, 157);
+   color:rgba(59, 139, 157, 0.778);
 }
 #home-wrapper th{
    color:#909399;
@@ -51,9 +51,21 @@
    box-shadow: 0 0 8px 0 rgba(232,237,250,.6), 0 2px 4px 0 rgba(232,237,250,.5);
 }
 code{
+   padding-left:0.3rem;
+   margin-left:0.3rem;
+   padding-right:0.3rem;
+   margin-right:0.3rem;
+   color:rgb(2, 155, 190);
+   background-color: #ECF8FF;
+   display: inline-block;
+   font-weight: bold;
    font-family: code;
+   font-size: 1.4rem;
+}
+pre code{
+   font-weight: normal;
    font-size: 1.3rem;
-   padding: 0.1rem !important;
+   padding: 0.75rem !important;
    padding-left: 1.5rem !important;
    border-radius: 0.4rem;
    letter-spacing:.01rem;
@@ -63,6 +75,14 @@ code{
    margin-right: 0.2rem;
    background-color: #F8F8F8;
    display: inline-block;
+   width:calc(100% - 2rem);
+   overflow: auto;
+}
+pre ::-webkit-scrollbar-thumb {
+   background-color: #d9d9d9;
+}
+pre ::-webkit-scrollbar-thumb:hover {
+   background-color: #cacaca;
 }
 .small{
    padding-left:0.4rem;
@@ -70,6 +90,47 @@ code{
    color:rgb(2, 155, 190);
    background-color: #ECF8FF;
    display: inline-block;
+}
+hr{
+   width:100%;
+   border:0.15rem dashed #dddddd;
+   border-top: none;
+   margin:1rem 0 !important;
+}
+blockquote p{
+   margin:0;
+}
+h2{
+   color:rgb(58, 58, 58);
+   font-size: 2.2rem;
+   padding-bottom: 0.5rem;
+   border-bottom: solid 1px rgb(234, 234, 234);
+}
+h2:hover,h3:hover{
+   cursor:pointer;
+   color:rgb(17, 90, 101);
+}
+h2:hover::before,h3:hover::before{
+   color:rgb(19, 112, 127);
+}
+h2::before{
+   font:normal normal normal 14px/1 FontAwesome;
+   content:"\f0c1";
+   font-size: 1.8rem;
+   margin-right: 1rem;
+   color:rgb(49, 111, 126);
+}
+h3{
+   color:rgb(84, 84, 84);
+   font-size: 1.7rem;
+   margin:-0.5rem 0;
+}
+h3::before{
+   font:normal normal normal 14px/1 FontAwesome;
+   content:"\f127";
+   font-size: 1.4rem;
+   margin-right: 1rem;
+   color:rgb(49, 111, 126);
 }
 @media screen and (max-width:768px){
    code{

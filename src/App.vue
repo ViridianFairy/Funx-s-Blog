@@ -39,14 +39,17 @@
 </template>
 
 <script>
+   import loading from "./components/loading";
    import nowpath from "./components/nowpath";
    import navi from "./components/navi";
+   
    // import alert from "./components/alert";
    export default {
       name: "app",
       components: {
          navi,
-         nowpath
+         nowpath,
+         loading,
          // alert
       },
       data() {
@@ -264,9 +267,6 @@
    /*-------------------------------------
    重置和补丁
 -------------------------------------*/
-   html {
-      font-size: 10px;
-   }
    body {
       margin: 0;
       padding: 0;

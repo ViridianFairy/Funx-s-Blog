@@ -3,7 +3,7 @@ function getTime(date) {
       if (String(d).length == 1) return "0" + d;
       return d;
    }
-   var a = date.getFullYear() + "-" + dual(date.getMonth()+1) + "-" + dual(date.getDate());
+   var a = date.getFullYear() + "-" + dual(date.getMonth() + 1) + "-" + dual(date.getDate());
    return a + " " + dual(date.getHours()) + ":" + dual(date.getMinutes());
 };
 function getFuzzyTime(date) {
@@ -45,9 +45,28 @@ function getUniqueId() {
    String(seconds).length < 2 ? (seconds = Number("0" + seconds)) : seconds;
    const yyyyMMddHHmmss = `${year}${month}${day}${hour}${minutes}${seconds}`;
    return yyyyMMddHHmmss + Math.random().toString(36).substr(2, 9);
- };
+};
+var getIp = function () {
+   var os = require('os'),
+      ipStr,
+      infaces = os.networkInterfaces(),
+      bool = false;
+   for (var i in infaces) {
+      infaces[i].some(function (x) {
+         if ((x.family == 'IPv4') && (x.internal == false)) {
+            ipStr = x.address;
+            bool = true;
+            return true
+         }
+      })
+      if (bool) { break }
+   }
+   return ipStr
+}
+console.log(getIp())
 module.exports = {
    getFuzzyTime,
    getTime,
-   getUniqueId
+   getUniqueId,
+   getIp,
 }

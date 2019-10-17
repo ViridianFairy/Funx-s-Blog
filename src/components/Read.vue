@@ -1,5 +1,7 @@
 <template>
+   
    <div id="read-wrapper">
+      <!-- <loading ></loading> -->
       <h1>
          {{ article.title }}
       </h1>
@@ -43,28 +45,35 @@
             }}</span
          >
       </p>
-      <div id="read-body" v-html="article.body" v-highlight></div>
+      <div id="read-body" v-html="article.body"></div>
    </div>
 </template>
 <script>
+   import loading from "./loading";
+   import marked from 'marked'
    import '../css/article.css'
+
    export default {
       name: "read",
-      components: {},
+      components: {loading},
       methods: {
          refresh() {
             var id = this.$route.query.id;
             this.$http
                .post("/article", { _id: id ,user_id:this.Cookies.get("_id")})
                .then(res => {
-                  this.article = res.data[0];
+                  this.article = res.data[0]
+                  this.article.body = marked(res.data[0].body,{
+                    sanitize: true
+                  });
                   //vuex
                   this.$store.state.invalidArticle = false;
                   if(this.article.lookNum == -1)
                      this.$store.state.invalidArticle = true;
                   this.$store.state.title = this.article.title;
+                  // this.$store.state.readlinks = 
+                  this.$store.commit('articleLoaded')
                   //vuex
-                  
 
                })
                .catch(e => {});
@@ -90,18 +99,23 @@
                })
                .catch(e => {});
             }
+         },
+         anchor(){
+            console.log("222")
          }
       },
       data() {
          return {
             article: {},
-            isAdmin: 0
+            isAdmin: 0,
          };
       },
       created() {
          this.refresh();
       },
-      mounted() {}
+      mounted() {
+         
+      }
    };
 </script>
 
@@ -160,6 +174,7 @@
       padding-top:0rem;
    }
    #read-body p {
+      text-indent: 4rem;
       margin: 0.5rem;
    }
    #read-wrapper h1::before{

@@ -4,17 +4,17 @@ import router from "./router/router";
 import axios from "axios";
 import Cookies from "js-cookie";
 import store from "./store/store";
-import "highlight.js/styles/solarized-dark.css";
-import hljs from "highlight.js";
+// import "highlight.js/styles/solarized-dark.css";
+// import hljs from "highlight.js";
 Vue.config.productionTip = false;
 //封装
 
-Vue.directive("highlight", function(el) {
-   let blocks = el.querySelectorAll("pre code");
-   blocks.forEach(block => {
-      hljs.highlightBlock(block);
-   });
-});
+// Vue.directive("highlight", function(el) {
+//    let blocks = el.querySelectorAll("pre code");
+//    blocks.forEach(block => {
+//       hljs.highlightBlock(block);
+//    });
+// });
 Vue.prototype.$http = axios.create({ //日常 127.0.0.1
    baseURL: "http://106.15.200.151:3001/api" //dist 106.15.200.151 
 });

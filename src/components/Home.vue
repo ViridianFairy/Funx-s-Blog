@@ -62,13 +62,13 @@
       margin:0;
    }
    .home-item > img {
-      height: 13rem;
+      height: 10rem;
       float: right;
-      width: 20rem;
+      width: calc(10rem *1.5);
       border-radius: 4px;
       border: 1px solid #f0f0f0;
-      margin-left: 2rem;
-      margin-bottom: 2rem;
+      margin-left: 1rem;
+      margin-top: 2rem;
       
       
    }

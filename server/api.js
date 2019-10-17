@@ -3,12 +3,20 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const saslprep = require("saslprep")
 const Time = require("./commonFunc");
+const schedule = require("node-schedule")
 var fs= require("fs");
 mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
    useNewUrlParser: true,
    useUnifiedTopology: true 
 });
- 
+(function refreshArticleIp(){
+   schedule.scheduleJob('10 1 1 * * *', () => {
+      Article.updateMany({}, {
+         $set: { seen: [] }
+      },err => {if (err) throw err;})
+      console.log("定时任务，清理ip")
+   });
+})()
 const Article = mongoose.model("Article",new mongoose.Schema({
    title: String,
    body: String,
@@ -17,6 +25,7 @@ const Article = mongoose.model("Article",new mongoose.Schema({
    label: Array,
    lookNum: Number,
    sayNum: Number,
+   seen:Array,
    author: String},
    {collection: "Article"})
 );
@@ -71,18 +80,30 @@ router.post("/api/article", (req, res) => {
             }
          })
      // 处理用户
-      data[0].lookNum++;
-      Article.updateOne(
-         {_id: data[0]._id},
-         {
-            $set: {lookNum: data[0].lookNum}
-         },
-         err => {
-            if (err) throw err;
-         }
-      );
+         let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;;
+         if(!data[0].seen.includes(ip)){
+            console.log("文章没看过啦")
+             //说明还没看过这篇文章
+             data[0].lookNum++;
+             Article.updateOne({_id: data[0]._id},{
+                $set: {lookNum: data[0].lookNum}
+             },
+             err => {
+                if (err) throw err;
+             });
+             //然后加ip
+             data[0].seen.push(ip);
+             Article.updateOne({_id: data[0]._id},{
+                $set: {seen: data[0].seen}
+             },
+             err => {
+                if (err) throw err;
+             })
+         }   
+      
       data[0].time = Time.getTime(data[0].time);
-         res.send(data);
+      res.send(data);
+      console.log('ip')
       return;
    });
 });
@@ -171,6 +192,7 @@ router.post("/api/article-new", (req, res) => {
              label: req.body.article.label,
              lookNum: 0,
              sayNum: 0,
+             seen:[],
              author: "viridian"}
           )
           article.save((err,data)=>{
@@ -436,6 +458,26 @@ router.post("/api/review", (req, res) => {
    });
 });
 router.post("/api/category-time", (req, res) => {
+   Article.find({},'title time').sort({time: -1}).exec(function(err, data) {
+         let Timer = [];
+         for(let item of data){
+            var year = item.time.getFullYear()
+            var month = item.time.getMonth()+1
+            if(Timer.length==0 || (Timer[0].year!=year || Timer[0].month!=month)){
+               var obj = {
+                  year:year,
+                  month:month,
+                  quant:1
+               }
+               Timer.unshift(obj)
+            }else{
+               Timer[0].quant++;
+            }       
+         }
+         res.send(Timer)
+      });
+});
+router.post("/api/category-time-year", (req, res) => {
    Article.find({},'title time').sort({time: -1}).exec(function(err, data) {
          let Timer = [];
          for(let item of data){

@@ -9,6 +9,7 @@ import Category from "../components/Category.vue";
 import sideDefault from "../components/side-default.vue";
 import sideEdit from "../components/side-edit.vue";
 import sideCategory from "../components/side-category.vue"
+import sideReadlinks from "../components/side-readlinks.vue"
 import Collection from "../components/Collection";
 import Demo from "../components/Demo";
 Vue.use(VueRouter);
@@ -31,7 +32,7 @@ const routes = [
       path: "/read",
       components: {
          left: Read,
-         right: sideDefault,
+         right: sideReadlinks,
          bottom: Review
       }
    },

@@ -3,7 +3,7 @@
       
       <div id="bg-navi">
          <div id="navi">
-            <img src="../assets/Navi/logo.svg" v-if="" />
+            <img src="../assets/Navi/logo.svg" />
             <div class="navi-item right phone" @click="phonePull">
                <img src="../assets/Navi/48icon_Drafts.svg" />
             </div>
@@ -28,7 +28,7 @@
             <transition name="slide-fade">
                <div class="navi-item" v-if="getPhoneTog" @click="$router.push('/demo');id=4;phoneClickClose();" :class="{active:4==id}">
                   <img src="../assets/Navi/48icon_Category.svg" />
-                  <p>Demo</p>
+                  <p style="font-size: 1.6rem">Demo</p>
                </div>
             </transition>
             <transition name="slide-fade">
@@ -153,7 +153,7 @@
                         <div>
                            <img src="../assets/Navi/upload.svg" class="icn" />
                            <div class="upload-wrapper">
-                              <input type="file" @change="getFiles"name="avatar" ref="upload"/>
+                              <input type="file" @change="getFiles" name="avatar" ref="upload"/>
                               <input class="upload-text" disabled :placeholder="fileName">
                               <div class="upload"><button @click="$refs.upload.click()">上传头像</button></div>
                            </div>
@@ -189,7 +189,7 @@
                         <div>
                            <img src="../assets/Navi/upload.svg" class="icn" />
                            <div class="upload-wrapper">
-                              <input type="file" @change="getFiles"name="avatar" ref="upload"/>
+                              <input type="file" @change="getFiles" name="avatar" ref="upload"/>
                               <input class="upload-text" disabled :placeholder="fileName">
                               <div class="upload"><button @click="$refs.upload.click()">上传头像</button></div>
                            </div>
@@ -225,7 +225,6 @@
                   len += 2;
                else
                   len ++;
-               console.log(len)
                if(len>=10) return v.substring(0,i).concat('..')
             }
             return v
@@ -391,7 +390,8 @@
                   this.id = 5;
                   break;
             }
-         }
+         },
+         
 
       },
       data() {
@@ -485,10 +485,10 @@
                }
             }
          });
+        
       },
       watch: {
          '$store.state.phoneTog':function(val){
-            console.log('watch'+val)
             var a = document.getElementById("bg-navi");
             var b = document.getElementById("navi");
             if (val == true) {
@@ -507,19 +507,39 @@
       },
       mounted() {
          var timer = null
+         var timer_s = null
          window.onresize = ()=>{
             if(timer) return;
             timer = setTimeout(()=>{
                var a = document.body.clientWidth;
             if( a <= 768 ){
                this.$store.commit('receivePhoneTog',false)
+               document.getElementById('bg-navi').style.top = "0rem"
             }else{
                this.$store.commit('receivePhoneTog',true)
             }
             timer = null
-            },50)
-            
+            },200)
          }
+         document.addEventListener('mousewheel',(e)=>{
+            if(timer_s) return 
+            if(document.body.clientWidth <= 768 || window.screen.height > document.body.offsetHeight) return;
+            timer_s = setTimeout(()=>{
+               var direct = 0;
+               e = e || window.event;
+               if (e.wheelDelta) {
+               direct = e.wheelDelta > 0 ? 1 : -1;
+               } else if (e.detail) {
+               direct = e.detail < 0 ? 1 : -1;
+            }
+            if(direct ==-1){
+               document.getElementById('bg-navi').style.top = "-6rem"
+            }else{
+               document.getElementById('bg-navi').style.top = "0rem"
+            }
+            timer_s = null;
+            },150)   
+         }); 
       },
    };
 </script>
@@ -577,8 +597,8 @@
    }
 
    .navi-item>img {
-      width: 28px;
-      height: 28px;
+      width: 2.8rem;
+      height: 2.8rem;
       filter: invert(30%);
       margin-right: 0.5rem;
    }
@@ -603,7 +623,7 @@
       left: 50%;
       bottom: 0.6rem;
       width: 0%;
-      height: 0.3rem;
+      height: 0.25rem;
       background-color: #a8b2b7;
       transition: all 0.2s;
    }
@@ -638,24 +658,24 @@
       position: relative;
       text-align: center;
       transition: 0.2s all;
-      width: 28rem;
+      width:27rem;
    }
 
    .navi-other input {
       width: 15rem;
-      margin-top: -2rem;
       margin-right: 1rem;
+      margin-top: 0.3rem;
    }
 
    .navi-other button {
-      margin-right: -2rem;
+      margin-right: 0rem;
    }
 
    .phone {
       display: none;
    }
 
-   @media screen and (max-width: 1200px) {
+   @media screen and (max-width: 1300px) {
       #navi>img {
          margin-right: 1rem;
          margin-left: 2rem;
@@ -666,12 +686,12 @@
       }
 
       .navi-other {
-         width: 20rem;
+         width: 22rem;
          margin-right: 1rem;
       }
 
       .navi-other input {
-         width: 11rem;
+         width: 10rem;
       }
    }
 
@@ -763,7 +783,7 @@
       height: 5.5rem;
       border-radius: 50%;
       margin: -0.5rem 0;
-      border: 2px solid rgb(250, 209, 170);
+      border: 0.2rem solid rgb(250, 209, 170);
    }
 
    .login-wrapper {
@@ -790,10 +810,11 @@
    input.upload-text{
       position: absolute;
       width: 17.5rem;
-      border: 1px solid rgb(253, 221, 190);
+      border: 0.1rem solid rgb(253, 221, 190);
    }
    .upload button{
       margin-top: 0.10rem;
+      margin-right: 0;
       margin-left:13.1rem;
       padding: 0.7rem 1rem;
       background-color: #FFB876;
@@ -803,14 +824,21 @@
       color:#09822c;
       white-space:nowrap
    }
-   @media screen and (max-width: 970px) and (min-width: 768px) {
+   @media screen and (max-width: 1070px) and (min-width: 768px) {
+
+      .navi-item {
+         font-size: 1.4rem;
+         width:8rem;
+      }
       .navi-other {
          height: 4rem;
          width:4rem;
          visibility: hidden;
          margin-right: 0;
       }
-
+      .navi-item>img{
+         width:2.5rem;
+      }
       .navi-other input {
          padding: 0;
          width: 0;
