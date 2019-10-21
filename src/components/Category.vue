@@ -4,6 +4,7 @@
          <div id="title">{{msg}}</div>
          <!--<div id="msgTog">{{msgTog}}</div>-->
       </div>
+      
       <div class="home-item"  v-if="mode=='search'">
             <div class="label-wrapper" v-if="categories.length!=0">
                <img class="label-img" src="../assets/Common/label-blue.svg">
@@ -14,23 +15,34 @@
                <p class="item-title" @click="$router.push('/read?id=' + item._id)">{{item.title}}</p>
             </div>
       </div>
+
       <div id="no-reviews" v-if="mode=='search'&&categories.length==0">
          <div id="no-reviews-body">
             <img src="../assets/Common/nodata.svg" />
             <span>好伤心，什么也没搜到哦...</span>
          </div>
       </div>
+
       <div class="home-item" v-for="label,i in categories" v-if="mode=='label'">
          <div @click="$router.push('/category?label='+label.label)" class="label-wrapper">
             <img class="label-img" src="../assets/Common/label-blue.svg">
-            <span class="label" :style="{color:pieColor[i]}">{{label.label}} 标签：</span>
+            <span class="label" >{{label.label}}：</span> <!--:style="{color:pieColor[i]}"-->
          </div>
-         <div v-for="item in label.data">
-            <div class="item-wrapper">
+         <div class="item-wrapper" v-for="item in label.data">
                <div class="item-time">{{item.time}}</div>
-               <p class="item-title" @click="$router.push('/read?id=' + item._id)">{{item.title}}</p>
+               <p class="item-title" @click="$router.push('/read?id=' + item._id)">{{item.title}}
+                  <span class="time-labels" v-for="label in item.label">·{{label}}</span>
+               </p>
             </div>
-         </div>
+      </div>
+
+      <div class="home-item">
+            <div class="item-wrapper" v-for="item in categories" v-if="mode=='time'">
+               <div class="item-time">{{item.time}}</div>
+               <p class="item-title" @click="$router.push('/read?id=' + item._id)">{{item.title}}
+                  <span class="time-labels" v-for="label in item.label">·{{label}}</span>
+               </p>
+            </div>
       </div>
    </div>
 </template>
@@ -55,8 +67,8 @@
          refresh() {
             var label = this.$route.query.label
             var search = this.$route.query.search
-            //console.log(label + '-' + search)
-            if (typeof search !="undefined") {
+            var type = this.$route.query.type
+            if (search) {
                this.$http
                   .post("/category-search",{search})
                   .then(res => {
@@ -65,11 +77,20 @@
                      this.mode='search'
                      this.categories = res.data;
                   })
-            } else {
+            } else if(!type && !label){
+                this.$http
+                  .post("/category-time-all")
+                  .then(res => {
+                     this.msg = "时间目录："
+                     this.mode = "time"
+                     this.categories = res.data;
+                  })
+                  .catch(e => { });
+            }else{
                this.$http
                   .post("/category-label")
                   .then(res => {
-                     this.msg = "按标签分类："
+                     this.msg = "标签目录："
                      if (label)
                         for (let i in res.data)
                            if (res.data[i].label == label) {
@@ -77,14 +98,14 @@
                               a.push(res.data[i]);
                               res.data = a;
                               this.mode='label'
-                              this.msg = `筛选${a[0].label}标签的文章`
+                              this.msg = `${a[0].label}标签目录`
                               break;
                            }
                            //console.log(res.data)
                      this.categories = res.data;
                   })
                   .catch(e => { });
-            } 
+            }
             
          }
       }
@@ -100,15 +121,15 @@
       font-size: 1.6rem;
       padding: 1.4rem;
       padding-left: 4rem;
-      padding-bottom: 2.5rem;
+      padding-bottom: 0.5rem;
       height: 100%;
       position: relative;
       border-bottom: 1px dashed #d9d9d900;
    }
 
    .label-img {
-      height: 2.5rem;
-      width: 2.5rem;
+      height: 1.8rem;
+      width: 1.8rem;
       position: relative;
       margin-bottom: 0.5rem;
       margin-top: -0.5rem;
@@ -127,14 +148,14 @@
    }
 
    .label-wrapper:hover .label {
-      color: rgb(176, 134, 87);
+      color: rgb(61, 134, 150);
    }
 
    .label {
       margin-left: 0.7rem;
-      font-size: 1.9rem;
-      font-weight: bold;
-      color: rgb(149, 118, 83);
+      font-size: 1.8rem;
+      font-weight: normal;
+      color: #4195A8;
       vertical-align: 0.8rem;
       margin-bottom: 0.5rem;
       margin-top: -0.5rem;
@@ -191,12 +212,18 @@
    }
    .item-title {
       display: block;
-      color: rgb(51, 51, 51);
+      color: #2e3135;
       overflow: hidden;
       font-size: 1.6rem;
       height: 2rem;
+      font-weight: bold;
    }
-
+   .time-labels{
+      font-size: 1.2rem;
+      color: rgb(150, 150, 150);
+      font-weight: normal;
+      margin-right: 0.5rem;
+   }
    .item-time {
       user-select: none;
       font-size: 1.5rem;
@@ -220,13 +247,14 @@
    }
 
    .item-wrapper:hover {
-      border-bottom: 1px dotted rgba(155, 126, 93, 0.361);
+      border-bottom: 1px solid rgba(155, 126, 93, 0.15);
       color: #976530;
    }
 
    .item-wrapper {
-
-      border-bottom: 1px dotted rgba(155, 126, 93, 0.15);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(155, 126, 93, 0.07);
    }
 
 

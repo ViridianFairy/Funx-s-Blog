@@ -6,6 +6,14 @@ function getTime(date) {
    var a = date.getFullYear() + "-" + dual(date.getMonth() + 1) + "-" + dual(date.getDate());
    return a + " " + dual(date.getHours()) + ":" + dual(date.getMinutes());
 };
+function getTimeShort(date) {
+   function dual(d) {
+      if (String(d).length == 1) return "0" + d;
+      return d;
+   }
+   var a = date.getFullYear() + "-" + dual(date.getMonth() + 1) + "-" + dual(date.getDate());
+   return a;
+};
 function getFuzzyTime(date) {
    var div = parseInt((new Date() - date) / 1000);
    if (div == 0) return `刚刚`;
@@ -66,6 +74,7 @@ var getIp = function () {
 console.log(getIp())
 module.exports = {
    getFuzzyTime,
+   getTimeShort,
    getTime,
    getUniqueId,
    getIp,

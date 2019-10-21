@@ -110,7 +110,8 @@ function myAnchor(name){
    dom.scrollIntoView({
       behavior: "smooth",
    });
-   document.getElementById("bg-navi").style.top = "-6rem";
+   if (document.body.clientWidth > 768)
+      document.getElementById("bg-navi").style.top = "-6rem";
 }
 </script>
 <body>

@@ -1,9 +1,12 @@
 <template>
    <p>
       <span @click="$router.push('/home')">
-         <i></i>FunX
+         <i></i>
       </span>
-      <span v-for="item in $store.state.path" @click="$router.push(item.link)">
+      <!-- <span @click="$router.push('/home')">
+         <i></i>FunX
+      </span> -->
+      <span v-for="item in path" @click="$router.push(item.link)">
          <i></i>{{ item.name }}
       </span>
    </p>
@@ -13,11 +16,12 @@
    export default {
       name: "nowpath",
       components: {},
-      props: {
-         sonPath: Array
+      computed:{
+        path(){
+           return this.$store.state.path
+        } 
       },
-      data() {
-         return {};
+      mounted(){
       }
    };
 </script>
@@ -33,7 +37,7 @@
       width: 14px;
       height: 14px;
       display: inline-block;
-      margin: 0 0.8rem;
+      margin: 0 0.6rem 0 0.1rem;
       vertical-align: -0.2rem;
    }
    span:nth-of-type(1) i {

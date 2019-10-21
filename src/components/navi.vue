@@ -22,7 +22,7 @@
             <transition name="slide-fade">
                <div class="navi-item" v-if="getPhoneTog" @click="$router.push('/collection');id=3;phoneClickClose();" :class="{active:3==id}">
                   <img src="../assets/Navi/48icon_Favorite.svg" />
-                  <p>工具</p>
+                  <p>收藏</p>
                </div>
             </transition>
             <transition name="slide-fade">
@@ -107,7 +107,7 @@
                         <img id="avatar" :src="getAvatar" />
                         <div class="logined-user"
                            style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030">
-                           {{ this.$store.state.login.user || cutUserName}}
+                           {{ this.$store.state.login.user | cutUserName}}
                         </div>
 
                         <div class="header" style="margin:-0.5rem 0;font-size: 1.4rem;color:rgb(205, 148, 94)">
@@ -301,7 +301,7 @@
                .post("/login-in", this.login)
                .then(res => {
                   if (res.data.success == 1) {
-                     this.$emit("triggerLogin");
+                      this.$emit("triggerLogin");
                      this.Cookies.set("_id", res.data._id);
                      this.$getUserInfo();
                      if (msg == true) this.$store.commit('receiveLoginState',1)
@@ -319,7 +319,7 @@
          },
          quit() {
             this.clearAllMsg()
-            this.$emit("triggerLogin");
+             this.$emit("triggerLogin");
             this.$store.commit('receiveLoginState',0)
             this.Cookies.set("_id", "");
             this.$store.state.login.user = "";

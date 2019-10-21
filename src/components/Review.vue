@@ -1,5 +1,5 @@
 <template>
-   <div id="review-big-wrapper">
+   <div id="review-big-wrapper" name="review">
       <div id="review-wrapper">
          <p class="head">说出你的想法</p>
          <div id="user-say">

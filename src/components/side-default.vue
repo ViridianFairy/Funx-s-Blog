@@ -6,11 +6,7 @@
          <p ref="msgDOM" v-html="msg"></p>
          <div id="me">
                <img class="disable" src="../assets/Common/zhihu-line.svg">             
-               <img class="able" src="../assets/Common/bilibili-line.svg" 
-                  @click="$refs.bilibili.click();
-msg='古有高宗讳构，今有稻花丰年<br>臭虫论者犹在，愿化飞蝇漫天<br>莫笑横刀向天，纵使批满佞奸<br>带头送塔不亏，只为车轮向前';
-                  $refs.msgDOM.style.color='rgb(255, 148, 157)';           
-                  $refs.msgDOM.style.lineHeight = '2.0';">            
+               <img class="able" src="../assets/Common/bilibili-line.svg" >            
                <img class="disable" src="../assets/Common/github-fill.svg">
                <img class="disable" src="../assets/Common/qq-line.svg">
                <a href="https://space.bilibili.com/29177789" target="_blank" ref="bilibili"></a>
@@ -20,6 +16,8 @@ msg='古有高宗讳构，今有稻花丰年<br>臭虫论者犹在，愿化飞�
 </template>
 
 <script>
+   //msg='古有高宗讳构，今有稻花丰年<br>臭虫论者犹在，愿化飞蝇漫天<br>莫笑横刀向天，纵使批满佞奸<br>带头送塔不亏，只为车轮向前';$refs.bilibili.click();$refs.msgDOM.style.color='rgb(255, 148, 157)';           
+   // $refs.msgDOM.style.lineHeight = '2.0';
    export default {
       name: "About",
       data() {

@@ -109,7 +109,7 @@
       background-color: #4aacc2;
    }
    .home-item h1:hover {
-      color: #0f7f8e;
+      color: #09626d;
    }
    .home-item p:nth-of-type(1){
       margin: 0.5rem 0;
@@ -131,9 +131,11 @@
    .home-item p:nth-of-type(2) {
       margin: 0.5rem 0;
       font-size: 1.5rem;
-      max-height: 4.8rem;
+      -webkit-line-clamp: 2;
       overflow: hidden;
+      text-overflow: ellipsis;
       color: #424242;
+      max-height: 4.4rem;
    }
    .home-item p:nth-of-type(3) {
       margin-top: 1.1rem;

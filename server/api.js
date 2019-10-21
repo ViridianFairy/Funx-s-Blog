@@ -51,6 +51,11 @@ const Review = mongoose.model("Review",new mongoose.Schema({
    time: Object},
    {collection: "Review"})
 );
+const Snake = mongoose.model("Snake",new mongoose.Schema({
+   user_id_obj: {type:String,ref:User},
+   score:Number},
+   {collection: "Snake"})
+);
 router.get('/test',(req,res)=>{
    res.send("test!")
 })
@@ -164,8 +169,8 @@ router.post("/api/articles", (req, res) => {
          }
          //(async function(){
             for(let i of data){
-               i.body = i.body.replace(/<[^>]+>/g, "").replace(/&nbsp/g, "")
-               i.body = i.body.substring(0,100)
+               i.body = i.body.replace(/<[^>]+>/g, "").replace(/[&nbsp|`|#|>|`|=]/g, "")
+               i.body = i.body.substring(0,200)
                // i.sayNum = await new Promise(resolve =>{
                //    Review.countDocuments({article_id:i._id},(err_r,count)=>{
                //       resolve(count)
@@ -477,25 +482,15 @@ router.post("/api/category-time", (req, res) => {
          res.send(Timer)
       });
 });
-router.post("/api/category-time-year", (req, res) => {
-   Article.find({},'title time').sort({time: -1}).exec(function(err, data) {
-         let Timer = [];
-         for(let item of data){
-            var year = item.time.getFullYear()
-            var month = item.time.getMonth()+1
-            if(Timer.length==0 || (Timer[0].year!=year || Timer[0].month!=month)){
-               var obj = {
-                  year:year,
-                  month:month,
-                  quant:1
-               }
-               Timer.unshift(obj)
-            }else{
-               Timer[0].quant++;
-            }       
-         }
-         res.send(Timer)
-      });
+router.post("/api/category-time-all", (req, res) => {
+   Article.find({},'title time label').sort({time: -1}).exec()
+      .then((doc)=>{
+         doc.forEach((item)=>{
+            item.time = Time.getTimeShort(item.time);
+         })
+         res.send(doc)
+         return;
+      })  
 });
 router.post("/api/category-label", (req, res) => {
    Article.find({},'title time label').sort({time: -1}).exec(function(err, data) {
@@ -519,7 +514,7 @@ router.post("/api/category-label", (req, res) => {
                }
          //有了所有的type
          for(let item of data){
-            item.time = Time.getTime(item.time);
+            item.time = Time.getTimeShort(item.time);
             for(let i of item.label)
                for(let j in Type){
                   if(Type[j].label == i){
@@ -613,6 +608,59 @@ router.post("/api/getReviews", (req, res) => {
       }
       //console.log(root);
       res.send({success:1,data:root});
+   })
+});
+router.post("/api/snake/getRank", (req, res) => {
+   Snake.findOne({user_id_obj:req.body.user_id}).
+      populate('user_id_obj','user').exec((err,doc)=>{
+      var obj = {
+         user:doc.user_id_obj.user,
+         score:doc.score
+      }
+      res.send({success:1,data:obj});
+   })
+});
+router.post("/api/snake/getAllRanks", (req, res) => {
+   Snake.find({}).populate('user_id_obj','user avatar')
+      .sort({ score: 1 }).exec((err,doc)=>{
+      var arr = []
+      for(let item of doc){
+         let obj = {
+            user:item.user_id_obj.user,
+            score:item.score,
+            avatar:item.user_id_obj.avatar
+         }
+         arr.unshift(obj)
+      }
+      res.send({success:1,data:arr});
+   })
+});
+router.post("/api/snake/uploadRank", (req, res) => {
+   Snake.findOne({user_id_obj:req.body.user_id}).
+      populate('user_id_obj','user').exec((err,doc)=>{
+      if(!doc){
+         var snake = new Snake({
+            score:req.body.score,
+            user_id_obj:req.body.user_id,
+         })
+         snake.save((err,data)=>{
+           res.send({success:2})
+           return //新的
+         })
+      }else if(req.body.score > doc.score){
+         Snake.updateOne({user_id_obj:req.body.user_id},
+         {$set:{score:req.body.score}},err=>{
+            if(err) throw err
+            else{
+               res.send({success:1}); //
+               return;
+            }
+         })
+      }else{
+         res.send({success:0}); //
+         return 
+      }
+     
    })
 });
 module.exports = router;

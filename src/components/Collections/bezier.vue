@@ -13,7 +13,7 @@
       name: "bezier",
       methods: {
          refresh(){
-            console.log("down")
+            console.log("开始了")
             //if(this.timer) return;
             function limit(pos){
                if(pos<= 8 ) return 8;
@@ -91,11 +91,11 @@
          this.zr = zrender.init(this.$refs.main)
             this.obj_point.position = [60,260]
          this.p1 = new zrender.Circle(this.obj_point)
-         this.p1.on('click',this.refresh)
+         this.p1.on('mousedown',this.refresh)
          this.p1.on('mouseup',this.clearRefresh)
             this.obj_point.position = [260,60]
          this.p2 = new zrender.Circle(this.obj_point)
-         this.p2.on('click',this.refresh)
+         this.p2.on('mousedown',this.refresh)
          this.p2.on('mouseup',this.clearRefresh)
          //
             this.obj_line.shape = {x1:60,y1:260,x2:60,y2:260}
@@ -151,7 +151,7 @@
       background-color: #EDF0F5;
    }
 </style>
- <!-- Vue中，构造函数封装对象，已经是落后的模式了！！！！！
+ <!-- 构造函数封装对象laji
      function Bezier(){
       var zr = zrender.init(document.getElementById('main'))
       var obj_point = {

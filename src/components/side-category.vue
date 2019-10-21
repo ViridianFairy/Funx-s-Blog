@@ -27,7 +27,7 @@
                         },
                         style:{
                            shadowBlur:4,
-                           shadowOffsetY:1,
+                           shadowOffsetY:0,
                         }
                      }, 60, 'cirlularOut')
             // this.$refs[i].style.width = "3rem"
@@ -78,7 +78,9 @@
             zr: null,
             categories: [],
             pieData: [],
-            pieColor: ['#FFB876', '#FFD476', '#FF8076', '#899CD6',"#7CC4EC","#FF9966","#FF6666"],
+            // pieColor: ['#F2F0F3', '#E3E8C8', '#C2D78A', '#81C1B1',"#9BDECC","#B5E8D5","#F1DDD6"],
+            // pieColor: ['#F9E0DB', '#C6979F', '#87BFCC', '#C8E4EF',"#DBE7F3","#B5E8D5","#F1DDD6"],
+            pieColor: ['#EDEAD7', '#AFD9C3', '#6EAC9D', '#527D74',"#6CAEBC"],
             sector:[],
             openAnimate:false,
             timers:[],
@@ -117,8 +119,10 @@
                      r: 70,
                      r0: 25,
                      startAngle: startAngle[j], endAngle: endAngle[j],
+                     
                   },
                   style: {
+                     // opacity:0.95,
                      shadowColor: 'rgb(72, 76, 77, 0.3)',
                      fill: this.pieColor[j],
                      lineWidth:2,
@@ -309,4 +313,29 @@
       transform: translateX(4rem) translateZ(0);
       opacity: 0;
    }
+   /* bodyMove(divX,divY){
+            var t = this.tail
+            while(t!=this.head){
+               this.callMove(t, t.last.x , t.last.y ,this.hz,this.STEP)
+               t = t.last
+            }
+            this.callMove(t, (t.x+divX), (t.y+divY) ,this.hz,this.STEP)
+         },
+         callMove(t,ax,ay,hz,STEP){
+            let stop = false;
+            requestAnimationFrame(animate)
+            function animate(){
+               console.log(t.x + "-" +t.y)
+               t.x += (ax-t.x)/3;
+               t.y += (ay-t.y)/3;
+               if(t.x >= ax){
+                  t.x = ax;
+                  t.y = ay;
+               }
+               t.el.attr('position',[t.x*STEP,t.y*STEP])
+               if(!stop)
+                  requestAnimationFrame(animate)
+               if(t.x>= ax)   
+                  stop = true;
+            } */
 </style>

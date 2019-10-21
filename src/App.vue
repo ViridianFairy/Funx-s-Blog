@@ -76,17 +76,18 @@
                } else {
                   len++;
                }
-               if (len >= 20) {
+               if (len >= 34) {
                   return a.slice(0, i - 1).concat("..");
                }
             }
             return a;
          },
          refresh() {
-            this.leftShow = false;
-            this.$nextTick(() => {
-               this.leftShow = true;
-            });
+            //暂时..不考虑更新左边
+            // this.leftShow = false;
+            // this.$nextTick(() => {
+            //    this.leftShow = true;
+            // });
          },
          //抽离路径改变，进而渲染nowpath路径栏
          //因为初始化无法通过watch监听
@@ -111,6 +112,7 @@
                   this.$store.state.path = [{ name: "收藏", link: "/collection" }];
                   break;
                case "/demo":
+                  this.expand = true;
                   this.$store.state.path = [{ name: "Demo", link: "/demo" }];
                   break;
                case "/about":
@@ -135,9 +137,10 @@
       },
       watch: {
          $route(to) {
-            setTimeout(() => {
-               this.changePath(to);
-            }, 50);
+            this.changePath(to);
+         },
+         "$store.state.title":function(val){
+            this.$set(this.$store.state.path,1,{name:this.cutTitle(val)})
          }
       },
       created() {
@@ -230,6 +233,7 @@
       background-color: rgba(255, 255, 255, 0.632);
    }
    #home-side {
+      /* position: relative; */
       height: 100%;
       width: 20%;
       border: 1px solid #f1f1f1a7;
