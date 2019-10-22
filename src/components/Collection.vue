@@ -1,13 +1,13 @@
 <template>
    <div id="big-wrapper">
-      <!-- <div class="item">
+      <div class="item">
             <div id="no-reviews-body">
                <img src="../assets/Common/nodata.svg" />
                <span>草，这都被你发现了..
                </span>
-            </div> -->
-         <div class="title">贝塞尔曲线可视化</div>
-         <Bezier></Bezier>
+            </div>
+         <!-- <div class="title">贝塞尔曲线可视化</div>
+         <Bezier></Bezier> -->
       </div>
       
    </div>

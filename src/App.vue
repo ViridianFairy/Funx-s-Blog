@@ -32,7 +32,6 @@
          </transition>
          <div id="footer" v-show="footShow">
             COPYRIGHT © 1998 - 2019 WOSHINIDIE. ALL RIGHTS RESERVED.<br />
-            建议PC端访问
          </div>
       </div>
    </transition>
@@ -266,7 +265,7 @@
       color: rgb(175, 192, 203);
       font-size: 1rem;
       text-align: center;
-      margin: 2rem auto 0.2rem 1rem;
+      margin: 0.2rem auto 0.2rem 1rem;
    }
    /*-------------------------------------
    重置和补丁

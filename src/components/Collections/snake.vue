@@ -5,10 +5,10 @@
        :style="{backgroundColor:colors.canvas}"></canvas>
       <transition name="slide-fade">
       <div ref="cover" id="cover" :style="{width:canvas_width+'px',height:canvas_height+'px'}" v-if="cover==1">
-         <div id="wrapper">
+         <div id="wrapper" :style="{top:getPhoneTop}">
             <div class="banner">选择模式</div>
             <p class="title">贪吃蛇</p>
-            <div class="login-wrapper">
+            <div class="login-wrapper" @click="judgeAndSign()">
                <img :src="getSayAvatar()" class="say-avatar" />
                <p>{{getRankText}}</p>
             </div>
@@ -20,7 +20,6 @@
                   <img src="../../assets/Snake/mode2.png">
                </div>
             </div>
-            <!-- <p class="intro">WASD或方向键控制，登录后还可排名</p> -->
             <div class="options-wrapper">
                <div class="option" @click="cover=2;refreshRanks();">
                   <img src="../../assets/Snake/1.svg"><p>排行榜</p>
@@ -37,7 +36,7 @@
       </transition>
       <transition name="slide-fade">
       <div ref="cover" id="cover" :style="{width:canvas_width+'px',height:canvas_height+'px'}" v-if="cover==2">
-         <div id="wrapper">
+         <div id="wrapper" :style="{top:getPhoneTop}">
             <div class="banner">排行榜</div>
             <div id="rank-wrapper">
                <div class="rank" v-for="(item,index) in show.ranks" :key="item.user" :class="{bloody:index==0,gold:index==1,yellow:index==2}">
@@ -71,10 +70,12 @@
       </transition>
       <transition name="slide-fade">
       <div ref="cover" id="cover" :style="{width:canvas_width+'px',height:canvas_height+'px'}" v-if="cover==3">
-         <div id="wrapper">
+         <div id="wrapper" :style="{top:getPhoneTop}">
             <div class="banner">设置</div>
             <p class="intro" >粒子数量：<input v-model="settings.particularNum" maxlength="2"></p>
-            <p class="intro">单格宽度：<input v-model="settings.singleWidth" maxlength="2"></p>
+            <p class="intro setting-intro">吃到食物时散开的粒子数</p>
+            <p class="intro">屏幕分辨率：<input disabled v-model="$store.state.snake.screen" style="width:4.7rem"></p>
+            <p class="intro setting-intro">默认自适应，暂时还不能自定义</p>
             <div class="options-wrapper">
                <div class="option" @click="cover=1">
                   <img src="../../assets/Snake/4.svg"><p>返回</p>
@@ -85,7 +86,7 @@
       </transition>
       <transition name="slide-fade">
       <div ref="cover" id="cover" :style="{width:canvas_width+'px',height:canvas_height+'px'}" v-if="cover==4">
-         <div id="wrapper">
+         <div id="wrapper" :style="{top:getPhoneTop}">
             <div class="banner">帮助</div>
             <p class="intro">【WASD】或【方向键】进行控制</p>
             <p class="intro">【创造模式】下左键拖动绘制，右键拖动移除</p>
@@ -100,9 +101,10 @@
       </transition>
       <transition name="slide-fade">
       <div ref="cover" id="cover" :style="{width:canvas_width+'px',height:canvas_height+'px'}" v-if="cover==-1">
-         <div id="wrapper">
+         <div id="wrapper" :style="{top:getPhoneTop}">
             <div class="banner" style="backgroundColor:#FF5758">你挂掉了</div>
             <p class="title">{{show.deadText}}</p>
+            <p class="title enco" :style="{color:show.encoColor}">{{show.encoText}}</p>
             <div class="login-wrapper">
                <img :src="getSayAvatar()" class="say-avatar" />
                <p>{{getEndText}}</p>
@@ -120,7 +122,7 @@
                   </div>
                </div>
             </div>
-            <div class="options-wrapper">
+            <div class="options-wrapper" style="margin-top:0.5rem">
                <div class="option" @click="cover=1">
                   <img src="../../assets/Snake/4.svg"><p>返回</p>
                </div>
@@ -142,7 +144,7 @@
       <div id="button-wrapper">
          <div style="display:inline-block">
             <button @click="makeWallGroup()">导出</button>
-            <input disabled :value="wallData"></input>
+            <input disabled :value="wallData" style="width:5rem"></input>
          </div>
          <p class="score">
             <span class="score-mask">
@@ -157,6 +159,7 @@
 </template>
 
 <script>
+   var PI = 3.141
    import Velocity from 'velocity-animate'
    import zrender from 'zrender/dist/zrender.js'
    export default {
@@ -190,9 +193,16 @@
                food:"",foodEdge:"",
                body:"#FF5758",bodyEdge:"#ea4445",
             },
-            wallData:"",settings:{particularNum:12,singleWidth:30},
+            wallData:"",settings:{particularNum:12,resolution:0},
             paintMode:false,score:0,loadingDelay:200,cover:0,
-            show:{maxScore:0,ranks:[],deadText:"",extraEndText:""}
+            show:{maxScore:0,ranks:[],deadText:"",extraEndText:"",encoText:"",encoColor:"",enco:[
+               {level:[1],msg:["兄弟，卸游戏吧","手滑了，我懂你","起跑线上摔一下，无所谓的","兄弟，卸游戏吧"],color:"hsl(0,0%,56%)"},
+               {level:[2],msg:["兄弟，还得加油啊","还得继续冲冲冲","大神也有失手的时候","蛇：你是不是在演我？"],color:"hsl(0,9%,56%)"},
+               {level:[3,4],msg:["这感觉，有内味了","大的，小的，我全都要！","蛇：我真的..吃不动了.."],color:"hsl(0,18%,64%)"},
+               {level:[5,6],msg:["兄弟，你真的有点东西噢！","我还能再吃一百年！","蛇：累死老子了，终于停了！"],color:"hsl(0,27%,68%)"},
+               {level:[7],msg:["犹如天上降饭桶，真是人间贪吃神！","到底什么时候才能天亮啊！"],color:"hsl(0,36%,72%)"},
+            ]},
+            phone:{top:"50%"}
          };
       },
       methods: {
@@ -301,20 +311,38 @@
             while(t!=this.head){
                t.x = t.last.x;
                t.y = t.last.y;
-               bodyMoveAnimate(t.el,t.x,t.y,this.hz,this.STEP,0)
+               bodyMoveAnimate(t.el,t.x,t.y,this.hz,this.STEP,0,-1)
                t = t.last
             }
             t.x +=divX
             t.y +=divY
-            bodyMoveAnimate(t.el,t.x,t.y,this.hz,this.STEP,Angle)
+            bodyMoveAnimate(t.el,t.x,t.y,this.hz,this.STEP,Angle,this.direction)
             function bodyMoveAnimate(el,x,y,hz,STEP,angle){
-               
+               // var fix = 0
+               var r = el.rotation/PI
+               // if(direction!=-1 && direction == 'down' && r<0.1 && r>-0.1 ){
+               //    fix =1
+               //    angle = (-0.5)*PI
+               // }             
+               // if(direction!=-1 && direction == 'right' && r<1.6 && r>1.4 ){
+               //    fix =2
+               //    angle = 2*PI
+               // } //test
+               // console.log('old:' + r.toFixed(2))
+               if(r>1.4 && r<1.6 && angle >-0.1 && angle<0.1){
+                  el.rotation = -0.5*PI;
+               }
+               // console.log(r + ' ' + angle/PI)
+               if(r>-0.1 && r<0.1 && angle/PI >1.4 && angle/PI <1.6){
+                  
+                  el.rotation = 2*PI;
+               }
+               // console.log(r.toFixed(2))
                el.animateTo({
                   position:[x*STEP,y*STEP],
                   rotation:angle,
-               },hz,()=>{
-
-               }) //test
+               },hz)
+               
             }
          },
          checkDead(){
@@ -338,7 +366,7 @@
                let item = this.food[i]
                let x = this.head.x
                let y = this.head.y
-               console.log(item)
+               // console.log(item)
                if((x == item.x && y == item.y &&item.type=='normal')||(item.type=='bonus'&&
                ((x == item.x && y == item.y)||(x-1 == item.x && y == item.y)||(x == item.x && y-1 == item.y)||(x-1 == item.x && y-1 == item.y)))){
                   this.bodyAdd()
@@ -477,6 +505,18 @@
          dead(){
             clearInterval(this.foodTimer)
             var user_id = this.Cookies.get("_id")
+            for(let i=0;i<this.show.enco.length;i++){
+               let item = this.show.enco[i]
+               for(let j=0;j<item.level.length;j++){
+                  if(item.level[j]==this.hzLevel){
+                     let random = Math.floor(Math.random()*item.msg.length)
+                     this.show.encoText =  item.msg[random]
+                     this.show.encoColor = item.color
+                     continue;
+                     continue;
+                  }
+               }
+            }
             if(!this.paintMode && user_id){
                this.$http
                .post("/snake/uploadRank", { user_id,score:this.score})
@@ -485,12 +525,14 @@
                   this.show.deadText = ""
                   this.show.extraEndText = ""
                   if (res.data.success == 1 || res.data.success == 2) {
-                        this.show.deadText += "个人新纪录！"
-                        // this.show.deadText += "历史最高排名！"
+                     this.show.deadText += "个人新纪录！"
+                     this.show.encoText = ""
                      this.show.maxScore = this.score
                   }else{
                      this.show.extraEndText = "历史最高：" + this.show.maxScore
                   }
+                  
+                  
                   this.refreshRanks()
                });
             }
@@ -502,7 +544,7 @@
             setTimeout(()=>{
                this.cover=-1
                document.onkeydown = (e)=>{
-                  console.log(e.key)
+                  // e.preventDefault();
                   if(e.key==' '|| e.key=='Enter'){
                      this.start()
                   }
@@ -514,16 +556,16 @@
          getFixDirection(){
              switch(this.direction){              
                case "up":
-                   return Math.PI*(0.5)  
+                   return PI*(0.5).toFixed(3)  
                    break;           
                case "left":
-                   return Math.PI*(1) 
+                   return PI*(1).toFixed(3) 
                    break;               
                case "down":
-                   return Math.PI*(1.5)
+                   return PI*(1.5).toFixed(3)
                    break; 
                case "right":
-                   return Math.PI*(0)
+                   return PI*(0).toFixed(3)
                    break;               
                }
          },
@@ -531,16 +573,16 @@
             x0 += this.STEP/2
             y0 += this.STEP/2
             if(type == 'bonus')
-               var r = this.STEP * (0.7 + 0.3 * Math.random())
+               var r = this.STEP*1 * (0.7 + 0.3 * Math.random())
             else       
-               var r = this.STEP/2 * (0.7 + 0.3 * Math.random())
+               var r = this.STEP*0.55 * (0.7 + 0.3 * Math.random())
             for(let i =0;i< this.settings.particularNum;i++){
                let lightness = Math.floor(Math.random() * 40 + 40)
-               let pos1 = Math.random()*100 - 50
-               let pos2 = Math.random()*100 - 50
+               let pos1 = Math.random()*(this.STEP*2) - (this.STEP)
+               let pos2 = Math.random()*(this.STEP*2) - (this.STEP)
                if(type == 'bonus'){
-                  pos1*=2
-                  pos2*=2
+                  pos1 = Math.random()*(this.STEP*3.6) - (this.STEP*1.8)
+                  pos1 = Math.random()*(this.STEP*3.6) - (this.STEP*1.8)
                }
                let color = this.colorHeavy(this.hzQueue[level][3],'hue') - 10 + Math.random() * 20;
                let particle = new zrender.Circle({
@@ -670,6 +712,7 @@
                this.colors.canvas = this.hzQueue[this.hzLevel][5]
             } 
             this.$refs.cover.style.opacity = 0;//拿掉这破玩意
+            
             setTimeout(()=>{
                //定义一些函数
                this.direction = getDirection()
@@ -710,7 +753,7 @@
                   var fPos = getForwardSpace()
                   for(j=0;j<5;j++){
                      for(i=0;i<self.wall.length;i++){
-                        console.log(`检测${pos.x},${pos.y},追加量是(${fPos[0]},${fPos[1]})*${j}`)
+                        // console.log(`检测${pos.x},${pos.y},追加量是(${fPos[0]},${fPos[1]})*${j}`)
                         if(pos.x + fPos[0] *j == self.wall[i].x && pos.y + fPos[1] *j == self.wall[i].y)
                            return false
                      }
@@ -730,6 +773,7 @@
                this.bodyAdd(true)
                this.changeHz(this.hz)
                document.onkeydown = (e)=>{
+                  // e.preventDefault();
                   // if(this.moveQueue.length == this.moveQueueMax+1) return;
                   switch(e.key){
                       case "w": case "ArrowUp":
@@ -792,9 +836,23 @@
                      return true
                }
             }
-         }
+         },
+         judgeAndSign(){
+            if (this.$store.state.login.avatar!='') return
+            setTimeout(()=>{
+               this.$store.commit('receiveLoginState',-1)
+               this.$store.commit('receiveLoginTog',true)
+            },10)
+         },
       },
       created(){
+         var width = document.body.clientWidth;
+         var fixedWidth = width>1120?1060:width-40
+         var ratio = this.canvas_width/fixedWidth
+         this.$store.state.snake.screen = fixedWidth + 'px'
+         this.canvas_width/=ratio
+         this.canvas_height/=ratio
+         this.STEP/=ratio 
          for(let i=2;i<this.hzQueue.length;i++){
             this.hzQueue[i][0] = this.hzQueue[i-1][0] + this.hzQueue[i-1][2]*this.hzQueue[i][0]
          }
@@ -803,6 +861,15 @@
          }
       },
       mounted() {
+         // //
+         // this.direction = 'up'
+         // console.log(this.getFixDirection())
+         //
+         
+         if (document.body.clientWidth <= 768){
+            this.phone.top = '100%'
+         }
+         
          this.getShowMaxScore()
          this.$refs.main.oncontextmenu = function(e){
             e.preventDefault();
@@ -845,31 +912,21 @@
          }
          setTimeout(()=>{
             this.cover = 1;
-         },this.generateMap())
-         ///////
-         var test = new zrender.Heart({
-            position:[100,300],
-            shape:{cx:this.STEP/2,cy:this.STEP/2,width:this.STEP/2,height:this.STEP*3},
-            style:{fill:this.hzQueue[2][3]},
-            origin:[this.STEP/2,this.STEP/2],
-            rotation:0,
-         })
-         test.animateTo({
-            rotation:-2*Math.PI
-         })
-         this.zr.add(test)
-         ///////
+         },this.loadingDelay + this.generateMap())
       },
       computed:{
          getRankText(){
             if(!this.$store.state.login.user)
-               return "登录才可以参与排名"
+               return "点击注册，记录你的成绩和排名"
             return this.$store.state.login.user + "的最高分："+ this.show.maxScore
          },
          getEndText(){
             if(!this.$store.state.login.user)
-               return "本次得分："+ this.score
+               return "得分："+ this.score + " （未登录,分数浪费了哦..）"
             return this.$store.state.login.user + "的本次得分："+ this.score
+         },
+         getPhoneTop(){
+            return this.phone.top
          }
       },
       watch: {
@@ -1010,6 +1067,10 @@
          font-weight: bold;
          text-align: center;
       }
+      .enco{
+         font-size: 2.4rem;
+         color:#8E8E8E;
+      }
       
       .big{
          // padding:0.8rem 1.5rem;
@@ -1020,7 +1081,14 @@
          text-align: center;
          font-size: 1.8rem;
          color:rgb(168, 168, 168);
-         margin:0.2rem 0 0.6rem 0;
+         margin:0.4rem 0 0.6rem 0;
+      }
+      .setting-intro{
+         margin-bottom: 0.7rem;
+         margin-top: -0.5rem;
+         font-size: 1.5rem;
+         color:rgb(222, 222, 222);
+         letter-spacing: 0.1rem;
       }
    }
    #button-wrapper{
@@ -1160,6 +1228,7 @@
          position: relative;
          overflow: hidden;
          display: inline-block;
+         margin-right: 1rem;
       }
       span{
          position: absolute;

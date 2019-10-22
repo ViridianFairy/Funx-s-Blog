@@ -48,6 +48,9 @@ const state = {
       loginState:0,
       loginTog:false,
       phoneTog:true,
+      snake:{
+         screen:0
+      }
    }
 const vuex = new Vuex.Store({
    state,
