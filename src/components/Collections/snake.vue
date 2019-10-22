@@ -144,12 +144,20 @@
             <button @click="makeWallGroup()">导出</button>
             <input disabled :value="wallData"></input>
          </div>
-         <p class="score">得分：{{score}}</p>
+         <p class="score">
+            <span class="score-mask">
+               <span class="score-block">得分：</span>               
+               <span ref="scoreNew">{{score}}</span>
+               <span ref="scoreOld">{{score}}</span>
+               <span class="score-ghost">{{score}}</span>
+            </span>
+         </p>
       </div>
    </div>
 </template>
 
 <script>
+   import Velocity from 'velocity-animate'
    import zrender from 'zrender/dist/zrender.js'
    export default {
       name: "bezier",
@@ -162,22 +170,24 @@
             head:{x:0,y:0,next:null,last:null,el:null},
             food:[],foodMax:6,
             tail:null,
-            moveTimer:null,moveQueue:[],moveQueueMax:2,
+            moveTimer:null,moveQueue:[],moveQueueMax:3,foodTimer:null,
             hz:0,hzLevel:0, //fps
-            hzQueue:[[16.67*40], //
-               [0,16.67*14,10,'hsl(123,45%,69%)'],
-               [3,16.67*12,15,'hsl(177,45%,69%)'],
-               [4,16.67*10,20,'hsl(208,45%,69%)'],
-               [7,16.67*9,25,'hsl(284,45%,69%)'],
-               [9,16.67*8,30,'hsl(335,45%,69%)'],
-               [11,16.67*7,35,'hsl(359,45%,69%)'],
+            hzQueue:[[16.67*40,'hsl(206,10%,95%)'], //
+            //  0     1     2     3:foodColor 4:foodEdge 5.bgColor  
+               [0,16.67*14,10,'hsl(123,45%,69%)',,'hsl(220,2%,100%)'],
+               [3,16.67*12,15,'hsl(177,45%,69%)',,'hsl(220,2%,97%)'],
+               [6,16.67*10,25,'hsl(208,45%,69%)',,'hsl(220,2%,94%)'],
+               [9,16.67*9,30,'hsl(284,45%,69%)',,'hsl(220,2%,91%)'],
+               [12,16.67*8,35,'hsl(335,45%,69%)',,'hsl(220,2%,6%)'],
+               [15,16.67*7,40,'hsl(359,45%,69%)',,'hsl(220,2%,3%)'],
+               [30,16.67*6,45,'hsl(359,45%,69%)',,'hsl(220,2%,0%)'],
             ],
             wallBuffer:1,
             wall:[],zr:null,
             colors:{ //colour
-               canvas:"#F8FAFE",canvasPaint:"rgb(230, 244, 255)",canvasNormal:"#F8FAFE",
-               wall:"rgb(176, 176, 176)",wallEdge:"rgb(137, 137, 137)",
-               food:"hsl(123,45%,69%)",foodEdge:"hsl(123,70%,39%)",
+               canvas:"#F8FAFE",
+               wall:"hsl(0,0%,69%)",wallEdge:"hsl(0,0%,54%)",
+               food:"",foodEdge:"",
                body:"#FF5758",bodyEdge:"#ea4445",
             },
             wallData:"",settings:{particularNum:12,singleWidth:30},
@@ -195,13 +205,18 @@
                }
             });
          },
-         colorHeavy(color,onlyHue){
+         colorHeavy(color,option){
             var ptn = /[\(\),%]/g
             var h = color.match(/\((\d*?),/)[0].replace(ptn,"")
+            if(option == 'hue')
+               return h
             var s = color.match(/,(\d*?)%,/)[0].replace(ptn,"")
             var l = color.match(/,(\d*?)%\)/)[0].replace(ptn,"")
-            if(onlyHue)
-               return h;
+            if(option == 'wall'){
+               return `hsl(${h},${s}%,${l - 7 + Math.floor(Math.random()*14)}%)`
+            }
+            if(option == 'wallHeavy')
+               return `hsl(${h},${s}%,${l-15}%)`
             return `hsl(${h},${s+25}%,${l-30}%)`
          },
          getShowMaxScore(){
@@ -293,10 +308,13 @@
             t.y +=divY
             bodyMoveAnimate(t.el,t.x,t.y,this.hz,this.STEP,Angle)
             function bodyMoveAnimate(el,x,y,hz,STEP,angle){
+               
                el.animateTo({
                   position:[x*STEP,y*STEP],
                   rotation:angle,
-               },hz)
+               },hz,()=>{
+
+               }) //test
             }
          },
          checkDead(){
@@ -318,63 +336,92 @@
          checkEat(){
             for(let i=0;i<this.food.length;i++){
                let item = this.food[i]
-               if(this.head.x == item.x && this.head.y == item.y){
+               let x = this.head.x
+               let y = this.head.y
+               console.log(item)
+               if((x == item.x && y == item.y &&item.type=='normal')||(item.type=='bonus'&&
+               ((x == item.x && y == item.y)||(x-1 == item.x && y == item.y)||(x == item.x && y-1 == item.y)||(x-1 == item.x && y-1 == item.y)))){
                   this.bodyAdd()
                   this.zr.remove(item.el)
                   this.food.splice(i,1)
-                  this.effectEat(this.head.x*this.STEP,this.head.y*this.STEP,item.level)
-                  this.score += this.hzQueue[item.level][2];
+                  this.effectEat(this.head.x*this.STEP,this.head.y*this.STEP,item.level,item.type)
+                  if (item.type=='normal') this.score += this.hzQueue[item.level][2];
+                  if (item.type=='bonus') this.score += this.hzQueue[item.level][2]*3;
                   if(this.score >= this.hzQueue[this.hzLevel+1][0]){
                      this.hzLevel++
                      this.hz = this.hzQueue[this.hzLevel][1]
                      this.changeHz(this.hz)
+                     this.colors.canvas = this.hzQueue[this.hzLevel][5]
                   }
                   return;
                }
             }
          },
-         makeFood(obeyMax){
+         makeFood(obeyMax,option){
             if(this.food.length >= this.foodMax && !obeyMax) return;
-            var self = this;
-            var pos = getPos()
-            if(!judgeWall(pos)){
-               return;
+            var wall = this.wall;
+            var pos = {
+               x:Math.floor(Math.random()*(this.canvas_width/this.STEP - 2*this.wallBuffer) + this.wallBuffer),
+               y:Math.floor(Math.random()*(this.canvas_height/this.STEP - 2*this.wallBuffer) + this.wallBuffer)
+            }
+            if(option=='bonus'){
+               if(!judgeWall(pos))
+                  return;
+               pos.x++
+               if(!judgeWall(pos))
+                  return;
+               pos.y++
+               if(!judgeWall(pos))
+                  return;
+               pos.x--
+               if(!judgeWall(pos))
+                  return;
+            }else{
+               if(!judgeWall(pos)){
+                  return;
+               }
             }
             var x = pos.x
             var y = pos.y
             var level = this.hzLevel;
-            var type = 'normal';
-            var el = new zrender.Circle({
-               position:[x*this.STEP,y*this.STEP],
-               shape:{cx:this.STEP/2,cy:this.STEP/2,r:this.STEP/2 - 2},
-               style:{fill:this.hzQueue[level][3],stroke:this.hzQueue[level][4],lineWidth:2},
-               zlevel:5,origin:[this.STEP/2,this.STEP/2],scale:[0,0],cursor:"normal"
-            })
+            if(option=='bonus'){
+               var type = 'bonus';
+               var el = new zrender.Circle({
+                  position:[x*this.STEP,y*this.STEP],
+                  shape:{cx:this.STEP,cy:this.STEP,r:this.STEP - 2},
+                  style:{fill:this.hzQueue[level][3],stroke:this.hzQueue[level][4],lineWidth:2},
+                  zlevel:5,origin:[this.STEP,this.STEP],scale:[0,0],cursor:"normal"
+               })
+            }else{
+               var type = 'normal';
+               var el = new zrender.Circle({
+                  position:[x*this.STEP,y*this.STEP],
+                  shape:{cx:this.STEP/2,cy:this.STEP/2,r:this.STEP/2 - 2},
+                  style:{fill:this.hzQueue[level][3],stroke:this.hzQueue[level][4],lineWidth:2},
+                  zlevel:5,origin:[this.STEP/2,this.STEP/2],scale:[0,0],cursor:"normal"
+               })
+            }
+
             el.animateTo({
                scale:[1,1]
             },300,"quadraticOut")
-
             this.zr.add(el)
             this.food.push({x,y,el,level,type}) //
-            function getPos(){
-               x = x || Math.floor(Math.random()*(self.canvas_width/self.STEP - 2*self.wallBuffer) + self.wallBuffer)
-               y = y || Math.floor(Math.random()*(self.canvas_height/self.STEP - 2*self.wallBuffer) + self.wallBuffer)
-               return {x,y}
-            }
             function judgeWall(pos){
                let i;
-               for(i=0;i<self.wall.length;i++){
-                  if(pos.x == self.wall[i].x && pos.y == self.wall[i].y) 
+               for(i=0;i<wall.length;i++){
+                  if(pos.x == wall[i].x && pos.y == wall[i].y) 
                      return false
                }
                return true
             }
          },
          makeWall(x,y){
+            var color = this.colorHeavy(this.colors.wall,'wall')
             var wall = new zrender.Rect({
                position:[x*this.STEP,y*this.STEP],
                shape:{x:0.5,y:0.5,width:this.STEP-1,height:this.STEP-1},
-               style:{fill:this.colors.wall,stroke:this.colors.wallEdge,opacity:0,lineWidth:3},
+               style:{fill:color,stroke:this.colorHeavy(color,'wallHeavy'),opacity:0,lineWidth:3},
                zlevel:0,cursor:"normal"
             })
             wall.animateTo({
@@ -416,8 +463,7 @@
                   if(i<this.wallBuffer || i>this.canvas_width/this.STEP - this.wallBuffer) continue;
                   if(j<this.wallBuffer || j>this.canvas_height/this.STEP - this.wallBuffer) continue;
                   var s = Number(Math.random()).toFixed(2)
-                  // console.log(s)
-                  if(s > 0.9){
+                  if(s > 0.91){
                      setTimeout(()=>{
                         this.makeWall(i,j)
                      },sum*16.67)
@@ -429,6 +475,7 @@
             return sum*16.67
          },
          dead(){
+            clearInterval(this.foodTimer)
             var user_id = this.Cookies.get("_id")
             if(!this.paintMode && user_id){
                this.$http
@@ -467,27 +514,38 @@
          getFixDirection(){
              switch(this.direction){              
                case "up":
-                   return Math.PI*(-0.5)             
+                   return Math.PI*(0.5)  
+                   break;           
                case "left":
-                   return Math.PI*(-1)               
+                   return Math.PI*(1) 
+                   break;               
                case "down":
-                   return Math.PI*(-1.5)
+                   return Math.PI*(1.5)
+                   break; 
                case "right":
-                   return Math.PI*(-2)              
+                   return Math.PI*(0)
+                   break;               
                }
          },
-         effectEat(x0,y0,level){
+         effectEat(x0,y0,level,type){
             x0 += this.STEP/2
             y0 += this.STEP/2
-            for(let i =0;i< this.settings.particularNum ; i++){
+            if(type == 'bonus')
+               var r = this.STEP * (0.7 + 0.3 * Math.random())
+            else       
+               var r = this.STEP/2 * (0.7 + 0.3 * Math.random())
+            for(let i =0;i< this.settings.particularNum;i++){
                let lightness = Math.floor(Math.random() * 40 + 40)
                let pos1 = Math.random()*100 - 50
                let pos2 = Math.random()*100 - 50
-               let color = this.colorHeavy(this.hzQueue[level][3],true) - 10 + Math.random() * 20;
+               if(type == 'bonus'){
+                  pos1*=2
+                  pos2*=2
+               }
+               let color = this.colorHeavy(this.hzQueue[level][3],'hue') - 10 + Math.random() * 20;
                let particle = new zrender.Circle({
                   shape: {
-                     cx: 0,cy: 0,r: this.STEP/2 * (0.7 + 0.3 * Math.random())
-                  },
+                     cx: 0,cy: 0,r },
                   style: {
                      fill: 'hsl(' + Math.floor(color)+ ',60%,'+ lightness + '%)',
                      stroke: 'hsl(' + Math.floor(color)+ ',60%,'+ (lightness-10) + '%)',
@@ -545,12 +603,12 @@
             var isPainting = undefined;
             var self = this;
             if(this.paintMode){
-               this.colors.canvas = this.colors.canvasPaint
+               this.colors.canvas = this.hzQueue[0][1]
                this.zr.on("mousedown",down)
                this.zr.on("mouseup",up)
                this.zr.on("mousemove",paintOn)
             }else{
-               this.colors.canvas = this.colors.canvasNormal
+               this.colors.canvas = this.hzQueue[1][5]
                isPainting = undefined;
                this.zr.off("mousedown")
                this.zr.off("mouseup")
@@ -603,19 +661,26 @@
             this.score = 0
             this.cover = 0;
             this.hzLevel = 1;
+            this.moveQueue = [];
             if(mode=='paint'){
                this.hz = this.hzQueue[0]
                this.goPaintMode()
             }else{
                this.hz = this.hzQueue[1][1]
-               this.colors.canvas = this.colors.canvasNormal
+               this.colors.canvas = this.hzQueue[this.hzLevel][5]
             } 
             this.$refs.cover.style.opacity = 0;//拿掉这破玩意
             setTimeout(()=>{
                //定义一些函数
                this.direction = getDirection()
-               console.log(this.direction)
                var self = this;
+               for(let i=1;i<=9;i++){
+                  setTimeout(()=>{this.makeFood(true)},i*16.67*5)
+               }
+               this.foodTimer = setInterval(()=>{
+                  this.makeFood()
+                  this.makeFood(false,'bonus')
+               },1100)
                function getDirection(){
                   switch(Math.floor(Math.random()*4)){
                      case 0:
@@ -635,9 +700,9 @@
                      case 'right':
                         return [1,0]
                      case 'down':
-                        return [0,-1]
-                     case 'up':
                         return [0,1]
+                     case 'up':
+                        return [0,-1]
                   }
                }
                function judgeWall(pos){
@@ -645,7 +710,8 @@
                   var fPos = getForwardSpace()
                   for(j=0;j<5;j++){
                      for(i=0;i<self.wall.length;i++){
-                        if(pos.x + fPos[0] *j == self.wall[i].x && pos.y + fPos[1] *j == self.wall[i].y) 
+                        console.log(`检测${pos.x},${pos.y},追加量是(${fPos[0]},${fPos[1]})*${j}`)
+                        if(pos.x + fPos[0] *j == self.wall[i].x && pos.y + fPos[1] *j == self.wall[i].y)
                            return false
                      }
                   }
@@ -664,57 +730,68 @@
                this.bodyAdd(true)
                this.changeHz(this.hz)
                document.onkeydown = (e)=>{
-                  if(this.moveQueue.length == this.moveQueueMax) return;
+                  // if(this.moveQueue.length == this.moveQueueMax+1) return;
                   switch(e.key){
                       case "w": case "ArrowUp":
-                          if(this.direction=="left" || this.direction=="right")
-                              this.direction = "up";
-                          break;
+                        this.moveQueue.push('up')
+                        break;
                       case "s": case "ArrowDown":
-                          if(this.direction=="left" || this.direction=="right")
-                              this.direction = "down";
-                          break;
+                        this.moveQueue.push('down')
+                        break;
                       case "a": case "ArrowLeft":
-                          if(this.direction=="up" || this.direction=="down")
-                              this.direction = "left";
-                          break;
+                        this.moveQueue.push('left')
+                        break;
                       case "d": case "ArrowRight":
-                          if(this.direction=="up" || this.direction=="down")
-                              this.direction = "right";
-                          break;
+                        this.moveQueue.push('right')
+                        break;
                   }
-                  // this.keyLocker = true;
+                  // console.log(this.moveQueue.join('-'))
                }
-               var a = 9;
-               while(a--){
-                  this.makeFood(true)
-               }
-               setInterval(()=>{
-                  this.makeFood()
-               },1100)
             },this.generateMap())
          },
          changeHz(hz){
             clearInterval(this.moveTimer)
             this.moveTimer = setInterval(()=>{
-               this.keyLocker = false;
+               var t = this.moveQueue.shift()
+               while(!validDirection(t,this.direction) && this.moveQueue.length!=0){
+                  t = this.moveQueue.shift()
+               }
+               if(validDirection(t,this.direction)) this.direction = t
                this.checkEat()
+               let direction = this.getFixDirection(this.direction)
                 switch(this.direction){
                   case "right":
-                      this.bodyMove(1,0,0)
+                      this.bodyMove(1,0,direction)
                       break;
                   case "left":
-                      this.bodyMove(-1,0,Math.PI*1)
+                      this.bodyMove(-1,0,direction)
                       break;
                   case "up":
-                      this.bodyMove(0,-1,Math.PI*0.5)
+                      this.bodyMove(0,-1,direction)
                       break;
                   case "down":
-                      this.bodyMove(0,1,Math.PI*-0.5)
+                      this.bodyMove(0,1,direction)
                       break;
                   }
                this.checkDead()
             },hz)
+            function validDirection(d,direction){
+               if(!d) return false;
+               switch(d){
+                  case "left":
+                     if(direction=='left' || direction=='right') return false
+                     return true
+                  case "right":
+                     if(direction=='left' || direction=='right') return false
+                     return true
+                  case "up":
+                     if(direction=='up' || direction=='down') return false
+                     return true
+                  case "down":
+                     if(direction=='up' || direction=='down') return false
+                     return true
+               }
+            }
          }
       },
       created(){
@@ -730,7 +807,6 @@
          this.$refs.main.oncontextmenu = function(e){
             e.preventDefault();
          }
-         
          this.zr = zrender.init(this.$refs.main)
          var cursor = 'normal'
          var strokeNoScale = true
@@ -769,11 +845,20 @@
          }
          setTimeout(()=>{
             this.cover = 1;
-            // this.makeWallGroup([[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0]
-            // ,[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0],[16,0],[17,0],[18,0],[19,0],[20,0],[21,0],[22,0],
-            // [23,0],[24,0],[25,0],[26,0],[27,0],[28,0],[29,0],[29,1],[29,2],[29,3],[29,4],[29,5],[29,6],[29,7],[29,8],[29,9],[29,10],[29,11],[29,12],[29,13],[29,14],[29,15],[29,17],[29,18],[29,19],[29,16],[28,19],[27,20],[27,19],[26,19],[25,19],[24,19],[23,19],[22,19],[21,20],[20,20],[19,20],[17,20],[18,19],[19,19],[20,19],[21,19],[17,19],[16,19],[15,19],[14,19],[13,19],[12,19],[11,19],[10,19],[9,19],[8,19],[7,19],[6,19],[5,19],[4,19],[3,19],[2,19],[1,19],[0,19],[0,18],[0,17],[0,16],[0,13],[0,14],[0,15],[0,12],[0,11],[0,10],[0,9],[0,8],[0,7],[0,6],[0,5],[0,4],[0,3],[0,2],[0,1],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[8,8],[7,8],[6,8],[5,8],[4,8],[3,8],[3,12],[4,12],[5,12],[6,12],[7,12],[8,12],[9,12],[9,13],[9,14],[9,15],[9,16],[20,16],[20,15],[20,14],[20,13],[20,12],[21,12],[22,12],[23,12],[24,12],[25,12],[26,12],[20,8],[21,8],[22,8],[23,8],[24,8],[25,8],[26,8],[20,7],[20,6],[20,5],[20,4],[20,3],[12,5],[13,5],[14,5],[15,5],[16,5],[17,5],[12,6],[12,7],[17,6],[17,7],[17,8],[12,8],[12,12],[12,13],[12,14],[12,15],[13,15],[14,15],[17,12],[17,13],[17,14],[17,15],[16,15],[15,15],[3,13],[8,16],[3,7],[8,3],[21,3],[26,7],[26,13],[21,16]])
          },this.generateMap())
-         
+         ///////
+         var test = new zrender.Heart({
+            position:[100,300],
+            shape:{cx:this.STEP/2,cy:this.STEP/2,width:this.STEP/2,height:this.STEP*3},
+            style:{fill:this.hzQueue[2][3]},
+            origin:[this.STEP/2,this.STEP/2],
+            rotation:0,
+         })
+         test.animateTo({
+            rotation:-2*Math.PI
+         })
+         this.zr.add(test)
+         ///////
       },
       computed:{
          getRankText(){
@@ -786,7 +871,18 @@
                return "本次得分："+ this.score
             return this.$store.state.login.user + "的本次得分："+ this.score
          }
-      }
+      },
+      watch: {
+         score(val,old){
+            var oel = this.$refs.scoreOld
+            var nel = this.$refs.scoreNew
+            oel.innerText = old
+            oel.style.top = '0'
+            nel.style.top = '3rem'
+            Velocity(oel,{top:'-3rem'},{duration:this.hz*1.8,easing:"easeInOutQuart"})
+            Velocity(nel,{top:'0rem'},{duration:this.hz*1.8,easing:"easeInOutQuart"})
+         }
+      },
    };
 
 </script>
@@ -982,6 +1078,7 @@
             width:4rem;
             height:4rem;
             border-radius: 50%;
+            margin-right: 1rem;
          }
          span:nth-of-child(1){
             margin-right: 2rem;
@@ -1055,6 +1152,28 @@
       margin:0 0.5rem 0 0;
       color:#29ADCA;
       font-weight: bold;
+      position: relative;
+      overflow: hidden;
+      .score-mask{
+         width:auto;
+         height:auto;
+         position: relative;
+         overflow: hidden;
+         display: inline-block;
+      }
+      span{
+         position: absolute;
+         top:0rem;
+      }
+      span.score-ghost{
+         visibility: hidden;
+         position: relative;
+         top:0rem;
+      }
+      span.score-block{
+         position: relative;
+         top:0rem;
+      }
    }
    .slide-fade-enter-active {
       transition: all 0.5s ease-in-out;
@@ -1079,3 +1198,7 @@
    }
    
 </style>
+
+this.makeWallGroup([[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0]
+,[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0],[16,0],[17,0],[18,0],[19,0],[20,0],[21,0],[22,0],
+[23,0],[24,0],[25,0],[26,0],[27,0],[28,0],[29,0],[29,1],[29,2],[29,3],[29,4],[29,5],[29,6],[29,7],[29,8],[29,9],[29,10],[29,11],[29,12],[29,13],[29,14],[29,15],[29,17],[29,18],[29,19],[29,16],[28,19],[27,20],[27,19],[26,19],[25,19],[24,19],[23,19],[22,19],[21,20],[20,20],[19,20],[17,20],[18,19],[19,19],[20,19],[21,19],[17,19],[16,19],[15,19],[14,19],[13,19],[12,19],[11,19],[10,19],[9,19],[8,19],[7,19],[6,19],[5,19],[4,19],[3,19],[2,19],[1,19],[0,19],[0,18],[0,17],[0,16],[0,13],[0,14],[0,15],[0,12],[0,11],[0,10],[0,9],[0,8],[0,7],[0,6],[0,5],[0,4],[0,3],[0,2],[0,1],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[8,8],[7,8],[6,8],[5,8],[4,8],[3,8],[3,12],[4,12],[5,12],[6,12],[7,12],[8,12],[9,12],[9,13],[9,14],[9,15],[9,16],[20,16],[20,15],[20,14],[20,13],[20,12],[21,12],[22,12],[23,12],[24,12],[25,12],[26,12],[20,8],[21,8],[22,8],[23,8],[24,8],[25,8],[26,8],[20,7],[20,6],[20,5],[20,4],[20,3],[12,5],[13,5],[14,5],[15,5],[16,5],[17,5],[12,6],[12,7],[17,6],[17,7],[17,8],[12,8],[12,12],[12,13],[12,14],[12,15],[13,15],[14,15],[17,12],[17,13],[17,14],[17,15],[16,15],[15,15],[3,13],[8,16],[3,7],[8,3],[21,3],[26,7],[26,13],[21,16]])

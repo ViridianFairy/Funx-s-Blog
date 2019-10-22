@@ -33,6 +33,7 @@
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-service": "^3.11.0",
     "eruda": "^1.5.8",
+    "velocity-animate": "^1.5.2",
     "vue-template-compiler": "^2.6.10"
   },
   "postcss": {
