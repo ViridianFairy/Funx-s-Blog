@@ -16,7 +16,7 @@ Vue.config.productionTip = false;
 //    });
 // });
 Vue.prototype.$http = axios.create({ //日常 127.0.0.1
-   baseURL: "http://127.0.0.1:3001/api" //dist 106.15.200.151 
+   baseURL: "http://106.15.200.151:3001/api" //dist 106.15.200.151 
 });
 Vue.prototype.Cookies = Cookies;
 //通过_id存储并拿到当前的用户信息

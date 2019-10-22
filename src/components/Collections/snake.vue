@@ -150,7 +150,7 @@
 </template>
 
 <script>
-   import zrender from 'zrender/dist/zrender.min'
+   import zrender from 'zrender/dist/zrender.js'
    export default {
       name: "bezier",
       data() {
@@ -158,19 +158,19 @@
             canvas_width:30*30,
             canvas_height:30*20,
             STEP:30,
-            direction:'right',
-            head:{x:2,y:2,next:null,last:null,el:null},
-            food:[],foodMax:4,
+            direction:'',
+            head:{x:0,y:0,next:null,last:null,el:null},
+            food:[],foodMax:6,
             tail:null,
-            moveTimer:null,
+            moveTimer:null,moveQueue:[],moveQueueMax:2,
             hz:0,hzLevel:0, //fps
             hzQueue:[[16.67*40], //
                [0,16.67*14,10,'hsl(123,45%,69%)'],
-               [3,16.67*12,15],
-               [4,16.67*10,20],
-               [5,16.67*9,25],
-               [5,16.67*8,30],
-               [5,16.67*8,30],
+               [3,16.67*12,15,'hsl(177,45%,69%)'],
+               [4,16.67*10,20,'hsl(208,45%,69%)'],
+               [7,16.67*9,25,'hsl(284,45%,69%)'],
+               [9,16.67*8,30,'hsl(335,45%,69%)'],
+               [11,16.67*7,35,'hsl(359,45%,69%)'],
             ],
             wallBuffer:1,
             wall:[],zr:null,
@@ -194,6 +194,15 @@
                   this.show.ranks = res.data.data
                }
             });
+         },
+         colorHeavy(color,onlyHue){
+            var ptn = /[\(\),%]/g
+            var h = color.match(/\((\d*?),/)[0].replace(ptn,"")
+            var s = color.match(/,(\d*?)%,/)[0].replace(ptn,"")
+            var l = color.match(/,(\d*?)%\)/)[0].replace(ptn,"")
+            if(onlyHue)
+               return h;
+            return `hsl(${h},${s+25}%,${l-30}%)`
          },
          getShowMaxScore(){
             if(!this.Cookies.get("_id")) return
@@ -313,9 +322,8 @@
                   this.bodyAdd()
                   this.zr.remove(item.el)
                   this.food.splice(i,1)
-                  this.effectEat(this.head.x*this.STEP,this.head.y*this.STEP)
-                  this.score += this.hzQueue[this.hzLevel][2];
-                  console.log(this.hzLevel)
+                  this.effectEat(this.head.x*this.STEP,this.head.y*this.STEP,item.level)
+                  this.score += this.hzQueue[item.level][2];
                   if(this.score >= this.hzQueue[this.hzLevel+1][0]){
                      this.hzLevel++
                      this.hz = this.hzQueue[this.hzLevel][1]
@@ -334,17 +342,20 @@
             }
             var x = pos.x
             var y = pos.y
+            var level = this.hzLevel;
+            var type = 'normal';
             var el = new zrender.Circle({
                position:[x*this.STEP,y*this.STEP],
                shape:{cx:this.STEP/2,cy:this.STEP/2,r:this.STEP/2 - 2},
-               style:{fill:this.colors.food,stroke:this.colors.foodEdge,lineWidth:2},
+               style:{fill:this.hzQueue[level][3],stroke:this.hzQueue[level][4],lineWidth:2},
                zlevel:5,origin:[this.STEP/2,this.STEP/2],scale:[0,0],cursor:"normal"
             })
             el.animateTo({
                scale:[1,1]
             },300,"quadraticOut")
+
             this.zr.add(el)
-            this.food.push({x,y,el})
+            this.food.push({x,y,el,level,type}) //
             function getPos(){
                x = x || Math.floor(Math.random()*(self.canvas_width/self.STEP - 2*self.wallBuffer) + self.wallBuffer)
                y = y || Math.floor(Math.random()*(self.canvas_height/self.STEP - 2*self.wallBuffer) + self.wallBuffer)
@@ -390,6 +401,33 @@
             for(let i=0;i<arr.length;i++)
                setTimeout(()=>{this.makeWall(arr[i][0],arr[i][1])},16.67/3*i)
          },
+         generateMap(){
+            for(let i=0;i<this.wall.length;i++){
+               let x = this.wall[i].x;
+               let y = this.wall[i].y;
+               let max = this.canvas_width/this.STEP;
+               this.zr.remove(this.wall[i].el)
+            }
+            this.wall = []
+            this.makeWallGroup([[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0],[16,0],[17,0],[18,0],[19,0],[20,0],[21,0],[22,0],[23,0],[24,0],[25,0],[26,0],[27,0],[28,0],[29,0],[29,1],[29,2],[29,3],[29,4],[29,5],[29,6],[29,7],[29,8],[29,9],[29,10],[29,11],[29,12],[29,13],[29,14],[29,15],[29,17],[29,18],[29,19],[29,16],[28,19],[27,20],[27,19],[26,19],[25,19],[24,19],[23,19],[22,19],[21,20],[20,20],[19,20],[17,20],[18,19],[19,19],[20,19],[21,19],[17,19],[16,19],[15,19],[14,19],[13,19],[12,19],[11,19],[10,19],[9,19],[8,19],[7,19],[6,19],[5,19],[4,19],[3,19],[2,19],[1,19],[0,19],[0,18],[0,17],[0,16],[0,13],[0,14],[0,15],[0,12],[0,11],[0,10],[0,9],[0,8],[0,7],[0,6],[0,5],[0,4],[0,3],[0,2],[0,1]])
+            var sum = 0;
+            for(let i=0;i<=this.canvas_width/this.STEP;i++){
+               for(let j=0;j<=this.canvas_height/this.STEP;j++){
+                  if(i<this.wallBuffer || i>this.canvas_width/this.STEP - this.wallBuffer) continue;
+                  if(j<this.wallBuffer || j>this.canvas_height/this.STEP - this.wallBuffer) continue;
+                  var s = Number(Math.random()).toFixed(2)
+                  // console.log(s)
+                  if(s > 0.9){
+                     setTimeout(()=>{
+                        this.makeWall(i,j)
+                     },sum*16.67)
+                     sum++;
+                  }
+                     
+               }
+            }
+            return sum*16.67
+         },
          dead(){
             var user_id = this.Cookies.get("_id")
             if(!this.paintMode && user_id){
@@ -413,32 +451,39 @@
             clearInterval(this.moveTimer)
             setTimeout(()=>{
                this.effectDead(this.head.x*this.STEP,this.head.y*this.STEP)
-            },0)
+            },this.hz*0.9)
             setTimeout(()=>{
                this.cover=-1
-            },300)
+               document.onkeydown = (e)=>{
+                  console.log(e.key)
+                  if(e.key==' '|| e.key=='Enter'){
+                     this.start()
+                  }
+                  
+               }
+            },this.hz * 2.2)
             
          },
          getFixDirection(){
-             switch(this.direction){
-               case "right":
-                   return 0
-               case "left":
-                   return Math.PI*1
+             switch(this.direction){              
                case "up":
-                   return Math.PI*0.5
+                   return Math.PI*(-0.5)             
+               case "left":
+                   return Math.PI*(-1)               
                case "down":
-                   return Math.PI*-0.5
+                   return Math.PI*(-1.5)
+               case "right":
+                   return Math.PI*(-2)              
                }
          },
-         effectEat(x0,y0){
+         effectEat(x0,y0,level){
             x0 += this.STEP/2
             y0 += this.STEP/2
             for(let i =0;i< this.settings.particularNum ; i++){
                let lightness = Math.floor(Math.random() * 40 + 40)
                let pos1 = Math.random()*100 - 50
                let pos2 = Math.random()*100 - 50
-               let color = 113+ Math.random() * 20;
+               let color = this.colorHeavy(this.hzQueue[level][3],true) - 10 + Math.random() * 20;
                let particle = new zrender.Circle({
                   shape: {
                      cx: 0,cy: 0,r: this.STEP/2 * (0.7 + 0.3 * Math.random())
@@ -478,7 +523,7 @@
                   break;
             }
             var animator = this.head.el.animate('')
-            var halfFrame = 160
+            var halfFrame = this.hz*0.9
             animator.when(halfFrame,{
                postion:[x0 + shakeX*this.STEP, y0 + shakeY*this.STEP]
             }).when(halfFrame*1.5,{
@@ -496,7 +541,7 @@
          },
          goPaintMode(){
             this.paintMode = true;
-            this.hz = 16.67 * 100
+            this.hz = this.hzQueue[0][0]
             var isPainting = undefined;
             var self = this;
             if(this.paintMode){
@@ -546,7 +591,6 @@
          },
          start(mode){
             let body = this.head
-            console.log(body)
             while(body){
                if(body.el) this.zr.remove(body.el)
                body = body.next
@@ -554,7 +598,6 @@
             for(let i =0;i<this.food.length;i++){ 
                this.zr.remove(this.food[i].el)
             }//一系列重绘
-            this.head = {x:2,y:2,next:null,last:null,el:null}
             this.tail = null
             this.food = []
             this.score = 0
@@ -568,42 +611,93 @@
                this.colors.canvas = this.colors.canvasNormal
             } 
             this.$refs.cover.style.opacity = 0;//拿掉这破玩意
-            // setTimeout(()=>{
-            //    this.$refs.cover.style.display = 'none';
-            // },200)
-            this.bodyAdd(true) //嘎嘣脆的头
-            this.changeHz(this.hz)
-            document.onkeydown = (e)=>{
-               switch(e.key){
-                   case "w": case "ArrowUp":
-                       if(this.direction=="left" || this.direction=="right")
-                           this.direction = "up";
-                       break;
-                   case "s": case "ArrowDown":
-                       if(this.direction=="left" || this.direction=="right")
-                           this.direction = "down";
-                       break;
-                   case "a": case "ArrowLeft":
-                       if(this.direction=="up" || this.direction=="down")
-                           this.direction = "left";
-                       break;
-                   case "d": case "ArrowRight":
-                       if(this.direction=="up" || this.direction=="down")
-                           this.direction = "right";
-                       break;
+            setTimeout(()=>{
+               //定义一些函数
+               this.direction = getDirection()
+               console.log(this.direction)
+               var self = this;
+               function getDirection(){
+                  switch(Math.floor(Math.random()*4)){
+                     case 0:
+                        return 'left'
+                     case 1:
+                        return 'right'
+                     case 2:
+                        return 'up'
+                     case 3:
+                        return 'down'
+                  }
                }
-            }
-            var a = 12;
-            while(a--){
-               this.makeFood(true)
-            }
-            setInterval(()=>{
-               this.makeFood()
-            },1000)
+               function getForwardSpace(){
+                  switch(self.direction){
+                     case 'left':
+                        return [-1,0]
+                     case 'right':
+                        return [1,0]
+                     case 'down':
+                        return [0,-1]
+                     case 'up':
+                        return [0,1]
+                  }
+               }
+               function judgeWall(pos){
+                  let i,j;
+                  var fPos = getForwardSpace()
+                  for(j=0;j<5;j++){
+                     for(i=0;i<self.wall.length;i++){
+                        if(pos.x + fPos[0] *j == self.wall[i].x && pos.y + fPos[1] *j == self.wall[i].y) 
+                           return false
+                     }
+                  }
+                  return true
+               }
+               function getPos(){
+                  let x = x || Math.floor(Math.random()*(self.canvas_width/self.STEP - 2*self.wallBuffer) + self.wallBuffer)
+                  let y = y || Math.floor(Math.random()*(self.canvas_height/self.STEP - 2*self.wallBuffer) + self.wallBuffer)
+                  return {x,y}
+               }
+               var tPos = getPos()
+               while(!judgeWall(tPos)){
+                  tPos = getPos()
+               }
+               this.head = {x:tPos.x,y:tPos.y,next:null,last:null,el:null}
+               this.bodyAdd(true)
+               this.changeHz(this.hz)
+               document.onkeydown = (e)=>{
+                  if(this.moveQueue.length == this.moveQueueMax) return;
+                  switch(e.key){
+                      case "w": case "ArrowUp":
+                          if(this.direction=="left" || this.direction=="right")
+                              this.direction = "up";
+                          break;
+                      case "s": case "ArrowDown":
+                          if(this.direction=="left" || this.direction=="right")
+                              this.direction = "down";
+                          break;
+                      case "a": case "ArrowLeft":
+                          if(this.direction=="up" || this.direction=="down")
+                              this.direction = "left";
+                          break;
+                      case "d": case "ArrowRight":
+                          if(this.direction=="up" || this.direction=="down")
+                              this.direction = "right";
+                          break;
+                  }
+                  // this.keyLocker = true;
+               }
+               var a = 9;
+               while(a--){
+                  this.makeFood(true)
+               }
+               setInterval(()=>{
+                  this.makeFood()
+               },1100)
+            },this.generateMap())
          },
          changeHz(hz){
             clearInterval(this.moveTimer)
             this.moveTimer = setInterval(()=>{
+               this.keyLocker = false;
                this.checkEat()
                 switch(this.direction){
                   case "right":
@@ -623,15 +717,20 @@
             },hz)
          }
       },
+      created(){
+         for(let i=2;i<this.hzQueue.length;i++){
+            this.hzQueue[i][0] = this.hzQueue[i-1][0] + this.hzQueue[i-1][2]*this.hzQueue[i][0]
+         }
+         for(let i=1;i<this.hzQueue.length;i++){
+            this.hzQueue[i][4] = this.colorHeavy(this.hzQueue[i][3])
+         }
+      },
       mounted() {
          this.getShowMaxScore()
          this.$refs.main.oncontextmenu = function(e){
             e.preventDefault();
          }
-         for(let i=2;i<this.hzQueue.length;i++){
-            this.hzQueue[i][0] = this.hzQueue[i-1][0] + this.hzQueue[i-1][2]*this.hzQueue[i][0]
-            console.log(this.hzQueue[i][0])
-         }
+         
          this.zr = zrender.init(this.$refs.main)
          var cursor = 'normal'
          var strokeNoScale = true
@@ -669,11 +768,12 @@
                },this.loadingDelay + i*16.67*2)
          }
          setTimeout(()=>{
-            this.makeWallGroup([[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0],[16,0],[17,0],[18,0],[19,0],[20,0],[21,0],[22,0],[23,0],[24,0],[25,0],[26,0],[27,0],[28,0],[29,0],[29,1],[29,2],[29,3],[29,4],[29,5],[29,6],[29,7],[29,8],[29,9],[29,10],[29,11],[29,12],[29,13],[29,14],[29,15],[29,17],[29,18],[29,19],[29,16],[28,19],[27,20],[27,19],[26,19],[25,19],[24,19],[23,19],[22,19],[21,20],[20,20],[19,20],[17,20],[18,19],[19,19],[20,19],[21,19],[17,19],[16,19],[15,19],[14,19],[13,19],[12,19],[11,19],[10,19],[9,19],[8,19],[7,19],[6,19],[5,19],[4,19],[3,19],[2,19],[1,19],[0,19],[0,18],[0,17],[0,16],[0,13],[0,14],[0,15],[0,12],[0,11],[0,10],[0,9],[0,8],[0,7],[0,6],[0,5],[0,4],[0,3],[0,2],[0,1],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[8,8],[7,8],[6,8],[5,8],[4,8],[3,8],[3,12],[4,12],[5,12],[6,12],[7,12],[8,12],[9,12],[9,13],[9,14],[9,15],[9,16],[20,16],[20,15],[20,14],[20,13],[20,12],[21,12],[22,12],[23,12],[24,12],[25,12],[26,12],[20,8],[21,8],[22,8],[23,8],[24,8],[25,8],[26,8],[20,7],[20,6],[20,5],[20,4],[20,3],[12,5],[13,5],[14,5],[15,5],[16,5],[17,5],[12,6],[12,7],[17,6],[17,7],[17,8],[12,8],[12,12],[12,13],[12,14],[12,15],[13,15],[14,15],[17,12],[17,13],[17,14],[17,15],[16,15],[15,15],[3,13],[8,16],[3,7],[8,3],[21,3],[26,7],[26,13],[21,16]])
-         },this.loadingDelay + 300)
-         setTimeout(()=>{
             this.cover = 1;
-         },this.loadingDelay + 1300)
+            // this.makeWallGroup([[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0]
+            // ,[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0],[16,0],[17,0],[18,0],[19,0],[20,0],[21,0],[22,0],
+            // [23,0],[24,0],[25,0],[26,0],[27,0],[28,0],[29,0],[29,1],[29,2],[29,3],[29,4],[29,5],[29,6],[29,7],[29,8],[29,9],[29,10],[29,11],[29,12],[29,13],[29,14],[29,15],[29,17],[29,18],[29,19],[29,16],[28,19],[27,20],[27,19],[26,19],[25,19],[24,19],[23,19],[22,19],[21,20],[20,20],[19,20],[17,20],[18,19],[19,19],[20,19],[21,19],[17,19],[16,19],[15,19],[14,19],[13,19],[12,19],[11,19],[10,19],[9,19],[8,19],[7,19],[6,19],[5,19],[4,19],[3,19],[2,19],[1,19],[0,19],[0,18],[0,17],[0,16],[0,13],[0,14],[0,15],[0,12],[0,11],[0,10],[0,9],[0,8],[0,7],[0,6],[0,5],[0,4],[0,3],[0,2],[0,1],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[8,8],[7,8],[6,8],[5,8],[4,8],[3,8],[3,12],[4,12],[5,12],[6,12],[7,12],[8,12],[9,12],[9,13],[9,14],[9,15],[9,16],[20,16],[20,15],[20,14],[20,13],[20,12],[21,12],[22,12],[23,12],[24,12],[25,12],[26,12],[20,8],[21,8],[22,8],[23,8],[24,8],[25,8],[26,8],[20,7],[20,6],[20,5],[20,4],[20,3],[12,5],[13,5],[14,5],[15,5],[16,5],[17,5],[12,6],[12,7],[17,6],[17,7],[17,8],[12,8],[12,12],[12,13],[12,14],[12,15],[13,15],[14,15],[17,12],[17,13],[17,14],[17,15],[16,15],[15,15],[3,13],[8,16],[3,7],[8,3],[21,3],[26,7],[26,13],[21,16]])
+         },this.generateMap())
+         
       },
       computed:{
          getRankText(){
@@ -843,13 +943,13 @@
       overflow-y:scroll;
       height:26.5rem;
       .rank{
-         margin:0.8rem 0.75rem;
+         margin:0.8rem 1.2rem;
          font-size: 2rem;
          .rank-bg{
             margin-top: 0.1rem;
             background-color: rgb(121, 204, 239);
             border-radius: 2rem;
-            width:22.5rem;
+            width:25.5rem;
             float:right;
             .index{
                margin-top: 0.3rem;
