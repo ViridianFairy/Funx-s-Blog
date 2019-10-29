@@ -24,7 +24,6 @@
                <transition name="slide-fade">
                   <router-view name="right" :key="key"></router-view>
                </transition>
-               
             </div>
          </div>
          <transition name="slide-fade">
@@ -38,7 +37,6 @@
 </template>
 
 <script>
-   import loading from "./components/loading";
    import nowpath from "./components/nowpath";
    import navi from "./components/navi";
    
@@ -48,7 +46,6 @@
       components: {
          navi,
          nowpath,
-         loading,
          // alert
       },
       data() {
@@ -153,7 +150,6 @@
          setTimeout(() => {
             this.naviShow = true;
          }, 200);
-         document.body.removeChild(document.getElementById("appLoading"));
       }
    };
 </script>
@@ -220,6 +216,7 @@
       max-width: 120rem;
       display: flex;
       justify-content: space-around;
+      position: relative;
    }
    #home-wrapper {
       border: 1px solid #f1f1f1;
@@ -289,6 +286,10 @@
    }
    .about{
       width: 97.5% !important; /*迫不得已了*/
+   }
+   .fixed{
+      position: fixed;
+
    }
    @media screen and (max-width: 768px) {
       #home-side {

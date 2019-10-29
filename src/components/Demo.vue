@@ -1,7 +1,8 @@
 <template>
    <div id="demo-wrapper">
-      <snake></snake>
-      <!-- <snake></snake> -->
+      <div class="demo">
+         <snake></snake>
+      </div>
    </div>
 </template>
 

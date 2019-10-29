@@ -6,18 +6,17 @@
                <span>草，这都被你发现了..
                </span>
             </div>
-         <!-- <div class="title">贝塞尔曲线可视化</div>
-         <Bezier></Bezier> -->
+         <!-- <Palette></Palette> -->
       </div>
       
    </div>
 </template>
 
 <script>
-   import Bezier from './Collections/bezier'
+   import Palette from './Collections/palette.vue'
    export default {
       name: "collection",
-      components: {Bezier},
+      components: {Palette},
       data() {
          return {
             

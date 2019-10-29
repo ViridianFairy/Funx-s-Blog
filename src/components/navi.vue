@@ -391,8 +391,14 @@
                   break;
             }
          },
-         
-
+         getScrollDirection(){
+            var oldY = this.scrolledY
+            var newY = window.scrollY
+            this.scrolledY = window.scrollY
+            if(newY > oldY) return 'down'
+            if(newY < oldY) return 'up'
+            
+         }
       },
       data() {
          return {
@@ -423,10 +429,11 @@
             search: "",
             textSay: "暂无评论",
             textRead: "暂无阅读",
+            scrolledX:0,
+            scrolledY:0,
          };
       },
       created() {
-         //console.log(this.$route.path)
          this.changeBar(this.$route.path)
          if (document.body.clientWidth <= 768) {
             this.$store.commit('receivePhoneTog',false)
@@ -506,6 +513,8 @@
          }
       },
       mounted() {
+         this.scrolledY = window.scrollY
+         
          var timer = null
          var timer_s = null
          window.onresize = ()=>{
@@ -521,22 +530,37 @@
             timer = null
             },200)
          }
-         document.addEventListener('mousewheel',(e)=>{
+         //global
+         document.addEventListener('scroll',(e)=>{
             if(timer_s) return 
             if(document.body.clientWidth <= 768 || window.screen.height > document.body.offsetHeight) return;
-            timer_s = setTimeout(()=>{
-               var direct = 0;
-               e = e || window.event;
-               if (e.wheelDelta) {
-               direct = e.wheelDelta > 0 ? 1 : -1;
-               } else if (e.detail) {
-               direct = e.detail < 0 ? 1 : -1;
-            }
-            if(direct ==-1){
-               document.getElementById('bg-navi').style.top = "-6rem"
-            }else{
-               document.getElementById('bg-navi').style.top = "0rem"
-            }
+            timer_s = setTimeout(()=>{  
+               var d = this.getScrollDirection()
+               sideLinksScroll(d)
+               switch(d){
+                  case 'down':
+                     document.getElementById('bg-navi').style.top = "-6rem"
+                     break;
+                  case 'up':
+                     document.getElementById('bg-navi').style.top = "0rem"
+                     break;
+                  default:
+                     break;   
+               }
+               function sideLinksScroll(direction){
+                   var a = document.getElementById("links-big-wrapper");
+                     if(a){
+                        if (window.scrollY <= a.offsetHeight + 100) {
+                           a.style.top = "0px";
+                        }else{
+                           if(direction == 'down')
+                              a.style.top = window.scrollY - 90 + "px";
+                           if(direction == 'up')
+                              a.style.top = window.scrollY - 30 + "px";
+                        }
+                     }
+               }
+               
             timer_s = null;
             },150)   
          }); 

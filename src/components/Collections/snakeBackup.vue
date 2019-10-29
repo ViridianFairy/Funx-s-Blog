@@ -39,7 +39,7 @@
          <div id="wrapper" :style="{top:getPhoneTop}">
             <div class="banner">排行榜</div>
             <div id="rank-wrapper">
-               <div class="rank" v-for="(item,index) in show.ranks" :key="item.user" :class="{bloody:index==0,gold:index==1,yellow:index==2,aqua:(index>=3&&index<=9)}">
+               <div class="rank" v-for="(item,index) in show.ranks" :key="item.user" :class="{bloody:index==0,gold:index==1,yellow:index==2}">
                   <img :src="item.avatar">
                   <div class="rank-bg">
                      <span class="index">no.{{index+1}}</span><br>
@@ -49,7 +49,7 @@
                </div>
             </div>
             <div id="rank-wrapper" class="rank-user">
-               <div class="rank" v-for="(item,index) in show.ranks" :key="item.user" :class="{bloody:index==0,gold:index==1,yellow:index==2,aqua:(index>=3&&index<=9)}">
+               <div class="rank" v-for="(item,index) in show.ranks" :key="item.user" :class="{bloody:index==0,gold:index==1,yellow:index==2}">
                   <div v-if="item.user == $store.state.login.user">
                   <img :src="item.avatar">
                   <div class="rank-bg"  style="margin-right: 0.7rem">
@@ -111,7 +111,7 @@
                <p>{{show.extraEndText}}</p>
             </div>
             <div id="rank-wrapper" class="rank-user">
-               <div class="rank" v-for="(item,index) in show.ranks" :key="item.user" :class="{bloody:index==0,gold:index==1,yellow:index==2,aqua:(index>=3&&index<=9)}">
+               <div class="rank" v-for="(item,index) in show.ranks" :key="item.user" :class="{bloody:index==0,gold:index==1,yellow:index==2}">
                   <div v-if="item.user == $store.state.login.user">
                   <img :src="item.avatar">
                   <div class="rank-bg"  style="margin-right: 0.7rem">
@@ -346,11 +346,11 @@
             var tele = {}
             // console.log(`${t.y},${this.canvas_height/this.STEP}`)
             while(t!=this.head){
-               
+               let surgeX = Math.abs(t.x - t.last.x)
+               let surgeY = Math.abs(t.y - t.last.y)
                t.x = t.last.x;
                t.y = t.last.y;
-               // changeTelePos()
-               // console.log('body before')
+               changeTelePosForBody(surgeX,surgeY)
                bodyMoveAnimate(t,t.x,t.y,this.hz,this.STEP,0,'body',tele)
                t = t.last
             }
@@ -368,33 +368,36 @@
                   el.el.rotation = -0.5*PI;
                if(r>-0.1 && r<0.1 && angle/PI >1.4 && angle/PI <1.6)
                   el.el.rotation = 2*PI;
-
-               //real
-               if(tele.on && isHead){ //万不得已 抽离穿墙失败了
-                  el.x = tele.nx
-                  el.y = tele.ny
-                  let telem = null
-                  //funeral on
-                  let deleteEl = el.el
-                  deleteEl.animateTo({
-                     position:[x*STEP,y*STEP],
-                     rotation:angle,
-                  },hz)
-                  setTimeout(()=>{
-                     self.zr.remove(deleteEl)
-                  },hz)
-                  //funeral off
+               if(tele.on){           
                   if(isHead){
+                     el.x = tele.nx
+                     el.y = tele.ny
+                     var telem = null
+                     //funeral on
+                     var deleteEl = el.el
+                     deleteEl.animateTo({
+                        position:[x*STEP,y*STEP],
+                        rotation:angle,
+                     },hz)
+                     setTimeout(()=>{
+                        self.zr.remove(deleteEl)
+                     },hz)
                      telem = self.paintElem('head',tele.ox,tele.oy,self.getFixDirection())
+                     self.zr.add(telem)
+                     telem.animateTo({
+                        position:[tele.nx*STEP,tele.ny*STEP],
+                        rotation:angle,
+                     },hz)
+                     el.el = telem
                   }else{
-                     telem = self.paintElem('body',tele.ox,tele.oy,self.getFixDirection())
+                     debugger
+                     el.el.attr = [x*STEP,y*STEP]
+                     console.log('body')
+                     el.el.animateTo({
+                        position:[x*STEP,y*STEP],
+                        rotation:angle,
+                     },hz)
                   } 
-                  self.zr.add(telem)
-                  telem.animateTo({
-                     position:[tele.nx*STEP,tele.ny*STEP],
-                     rotation:angle,
-                  },hz)
-                  el.el = telem
                }else{
                   el.el.animateTo({
                      position:[x*STEP,y*STEP],
@@ -403,28 +406,48 @@
                }
             }
             function changeTelePos(){
-               if(t.y == 20){
-                  tele.ox = t.x; tele.nx = t.x ;tele.oy = -1; tele.ny = 0;tele.on =1;
-               }
-               if(t.y == -1){
-                  tele.ox = t.x; tele.nx = t.x ;tele.oy = 20; tele.ny = 19;tele.on =1;
-               }
                if(t.x == 30){
                   tele.ox = -1; tele.nx = 0 ;tele.oy = t.y; tele.ny = t.y;tele.on =1;
                }
                if(t.x == -1){
                   tele.ox = 30; tele.nx = 29 ;tele.oy = t.y; tele.ny = t.y;tele.on =1;
                }
+               if(t.y == 20){
+                  tele.ox = t.x; tele.nx = t.x ;tele.oy = -1; tele.ny = 0;tele.on =1;
+               }
+               if(t.y == -1){
+                  tele.ox = t.x; tele.nx = t.x ;tele.oy = 20; tele.ny = 19;tele.on =1;
+               }
             }
-      
+            function changeTelePosForBody(surgeX,surgeY){
+               tele.on = 0
+               if(t.y == 0 && surgeY>5){
+                  tele.on =1;
+               }
+               if(t.y == 19 && surgeY>5){
+                  tele.on =1;
+               }
+               if(t.x == 0 && surgeX>5){
+                  tele.on =1;
+               }
+               if(t.x == 29 && surgeX>5){
+                  tele.on =1;
+               }
+            }
          },
          checkDead(){
-            var t = this.head.next
-            while(t){
-               if(t.x == this.head.x && t.y == this.head.y)
-                  this.dead()
-               t = t.next
-            }
+            // if(this.head.x < 0 +this.wallBuffer || this.head.x >= this.canvas_width/this.STEP - this.wallBuffer)
+            //     this.dead()
+            // if(this.head.y < 0 +this.wallBuffer || this.head.y >= this.canvas_height/this.STEP- this.wallBuffer)
+            //     this.dead()
+            //test
+            // var t = this.head.next
+            // while(t){
+            //    console.log(`死亡检测：（${this.head.x},${this.head.y}）（${t.x},${t.y}）`)
+            //    if(t.x == this.head.x && t.y == this.head.y)
+            //       this.dead()
+            //    t = t.next
+            // }
             for(let i=0;i<this.wall.length;i++){
                if(this.head.x == this.wall[i].x && this.head.y == this.wall[i].y)
                   this.dead()
@@ -1281,23 +1304,6 @@
             }
             .score{
                color:rgb(127, 82, 82);
-            }
-         }
-      }
-      .aqua{
-         img{
-            border-color:rgb(121, 181, 242);
-         }
-         .rank-bg{
-            background-color: rgb(121, 181, 242);
-            .index{
-               color:rgb(76, 115, 154);
-            }
-            .user{
-               color:rgb(255, 255, 255);
-            }
-            .score{
-               color:rgb(82, 103, 127);
             }
          }
       }     

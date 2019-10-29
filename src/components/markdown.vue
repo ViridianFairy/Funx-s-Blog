@@ -39,14 +39,14 @@
     import Vue from 'vue'
     import hljs from 'highlight.js'
     import range from '../js/rangeFn.js'
-    import marked from 'marked'
+    import marked from 'marked/lib/marked'
     marked.setOptions({
         renderer: new marked.Renderer(),
         gfm: true,
         tables: true,
         breaks: false,
         pedantic: false,
-        sanitize: true,
+        sanitize: false,
         smartLists: true,
         smartypants: false,
         highlight: function(code) {

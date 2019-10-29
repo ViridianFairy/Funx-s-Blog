@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,minimal-ui:ios">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Document</title>
+   <link rel="stylesheet" href="">
+   <script src=""></script>
+   <style>
+      .bg {
+         width: 150px;
+         height: 150px;
+      }
+
+      .a1 {
+         font-size: 100px;
+         overflow: scroll;
+         border:10px solid #aaa;
+         border-top:20px solid khaki;
+         padding: 20px;
+         box-sizing: content-box;
+         background-image: linear-gradient(45deg, #FFA5BE 25%, #D1F3F3 0, #D1F3F3 50%, #FFA5BE 0, #FFA5BE 75%, #D1F3F3 0);
+         background-size: 30px 30px;
+      }
+
+      .a2 {
+         background: repeating-linear-gradient(60deg, #FFE792 0, #FFE792 15px, #A9B5E0 0, #A9B5E0 30px)
+      }
+
+      .a3 {
+         background: #655;
+         background-image: radial-gradient(tan 22%, transparent 0),
+            radial-gradient(tan 22%, transparent 0);
+         background-size: 30px 30px;
+         background-position: 0 0, 15px 15px;
+      }
+
+      .b1-left {
+         background-color: coral;
+         float: left;
+         width: 100px;
+      }
+
+      .b1-right {
+         background-color: cornflowerblue;
+         width: 100%
+      }
+
+      .b2-left {
+         background-color: crimson;
+         float: left;
+         width: 100px;
+      }
+
+      .b2-right {
+         background-color: cyan;
+         float: left;
+         width: calc(100% - 100px);
+      }
+
+      .b3-container {
+         display: flex;
+      }
+
+      .b3-left {
+         width: 200px;
+         background-color: fuchsia;
+      }
+
+      .b3-right {
+         background-color: khaki;
+         flex: 1
+      }
+
+      .c1 {
+         display: inline-block;
+         text-align: center;
+         width: 200px;
+         background-color: lavender;
+      }
+
+      .c2-wrapper {
+         position: relative;
+         left: 50%;
+         float: left;
+         background-color: rgb(255, 255, 255);
+
+      }
+
+      .c2 {
+         background-color: lightseagreen;
+         position: relative;
+         right: 50%;
+         /* overflow: scroll; */
+         height: 100px;
+
+         border: 20px solid transparent;
+         border-image: linear-gradient(#e66465, #565978) 10;
+         padding: 10px;
+      }
+
+      .btn {
+         width: 200px;
+         border: 30px solid;
+         border-image: repeating-linear-gradient(45deg, #f33, #3bf, #f33 30px) 60;
+         padding: 20px;
+      }
+   </style>
+</head>
+
+<body>
+   <div></div>
+   <div class="bg a1">asfasf<br>asfa</div>
+   <div class="bg a2"></div>
+   <div class="bg a3"></div>
+   <!-- <div class="b1-left">111</div>
+   <div class="b1-right">111</div> -->
+   <!-- <div class="b2-left">111</div>
+   <div class="b2-right">111</div> -->
+   <!-- <div class="b3-container">
+      <div class="b3-left">222 333 444</div>
+      <div class="b3-right">222</div>
+   </div>
+   <span class="c1">1234123123</span><br>
+   <div class="c2-wrapper">
+      <div class="c2">666661233333333333666661233333333333<br>hasdklfsadjklf<br>
+         hasdklfsadjklf<br>hasdklfsadjklf<br>hasdklfsadjklf
+         <br>hasdklfsadjklf</div>
+   </div>
+   <div class="btn">asfasf</div> -->
+</body>
+<script>
+   window.onload = () => {
+      function p() {
+         [].forEach.call(arguments, (item) => {
+            console.log(item)
+         })
+      }
+      setTimeout(() => {
+         var a = document.querySelector('.a1')
+         // p(a.clientLeft,a.clientTop)
+          p(a.offsetWidth)
+      }, 100)
+   }
+</script>
+
+</html>

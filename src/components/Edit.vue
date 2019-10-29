@@ -44,7 +44,6 @@
       components: {markdown:markdown},
       computed:{
          getRaw(){
-            console.log(this.raw)
             return this.raw;
          }
       },
