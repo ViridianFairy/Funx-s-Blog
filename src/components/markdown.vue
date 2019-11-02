@@ -252,6 +252,7 @@
         },
         computed: {
             compiledMarkdown: function() {
+                
                 return marked(this.input, {
                     sanitize: true
                 })
@@ -266,6 +267,7 @@
             input: function() {
                 let data = {};
                 data.mdValue = this.input;
+                
                 data.htmlValue = marked(this.input, {
                     sanitize: true
                 });
@@ -290,7 +292,7 @@
    //  @import "http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css";
     /*引入atom的代码高亮样式文件*/
     
-    @import "../css/atom-one-dark.min.css";
+     @import "../css/atelier-sulphurpool-dark.css";
     .mdContainer {
         font-size: 1.5rem;
         width: 100%;

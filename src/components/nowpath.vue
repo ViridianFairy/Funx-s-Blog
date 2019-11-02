@@ -3,10 +3,7 @@
       <span @click="$router.push('/home')">
          <i></i>
       </span>
-      <!-- <span @click="$router.push('/home')">
-         <i></i>FunX
-      </span> -->
-      <span v-for="item in path" @click="$router.push(item.link)">
+      <span v-for="item in path" @click="$router.push(item.link)" :key="item.name">
          <i></i>{{ item.name }}
       </span>
    </p>
@@ -22,12 +19,19 @@
         } 
       },
       mounted(){
+      },
+      watch:{
+         path(val,old){
+            //console.log(val)
+         }
       }
    };
 </script>
 
 <style scoped>
    p {
+      position: relative;
+      z-index: 1;
       margin: 0;
       padding: 2rem 0 0 0;
       font-size: 1.4rem;

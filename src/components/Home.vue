@@ -1,27 +1,20 @@
 <template>
    <div>
-      <div class="home-item" v-for="item in articles">
+      <div class="home-item" v-for="item in articles" :key="item.title">
             <router-link :to="'/read?id='+item._id">
                <h1>{{ item.title }}</h1>
             </router-link>
-         <img
-            @click="$router.push('/read?id=' + item._id)"
-            :src="item.image"
-            v-if="item.image!=''"
-         />
-        
+         <img @click="$router.push('/read?id=' + item._id)" :src="item.image" v-if="item.image!=''"/>
          <p class="label">
-            <router-link :to="'/category?label='+label" v-for="label in item.label">
+            <router-link :to="'/category?label='+label" v-for="label in item.label" :key="String(label)">
                <img src="../assets/Common/label-blue.svg" />{{ label }}
             </router-link>
          </p>
-         <p>
-            {{ item.body }}<!--| noHtml-->
-         </p>
+         <p>{{ item.body }}<!--| noHtml--></p>
          <p>
             <span>{{ item.time }}</span>
             <span><img class="info-i" src="../assets/Common/mine.svg">{{ item.author }}</span>
-            <span><img class="info-i" src="../assets/Common/browse.svg">{{ item.lookNum }}</span>
+            <span ><img class="info-i" src="../assets/Common/browse.svg" alt="相同ip在一天内，仅能增加一次浏览量">{{ item.lookNum }}</span>
             <span><img class="info-i" src="../assets/Common/interactive.svg">{{ item.sayNum }}</span>
          </p>
       </div>

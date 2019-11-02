@@ -1,40 +1,35 @@
 <template>
-  <div id="read-wrapper" name="article">
+  <div id="read-wrapper" name="article" >
+     <div id="read-colorful"
+     :style="{backgroundImage:`linear-gradient(to right,rgb(255, 255, 255) 15%,rgba(255, 255, 255, 0) 50%),
+         linear-gradient(to top,rgb(255, 255, 255) 2%,rgba(255, 255, 255, 0) 10%),
+         url(${this.article.image})`}"></div>
     <!-- <loading ></loading> -->
     <h1>{{ article.title }}</h1>
+    <button v-if="isAdmin" id="delete" @click="deleteIn" class="red">删除</button>
+   <button v-if="isAdmin" id="edit" @click="$router.push('/edit?id=' + $route.query.id)">编辑</button>
+   <button v-if="isAdmin" id="edit" class="green" @click="$router.push('/edit')">新增</button>
     <p>
       标签：
-      <router-link :to="'/category?label='+label" v-for="label in article.label">
+      <router-link :to="'/category?label='+label" v-for="label in article.label" :key="label">
         <img src="../assets/Common/label-blue.svg" />
         {{ label }}
       </router-link>
-
-      <button v-if="isAdmin" id="delete" @click="deleteIn" class="red">删除</button>
-      <button v-if="isAdmin" id="edit" @click="$router.push('/edit?id=' + $route.query.id)">编辑</button>
-      <button v-if="isAdmin" id="edit" class="green" @click="$router.push('/edit')">新增</button>
+      
     </p>
     <p>
       <span>{{ article.time }}</span>
       <span>
-        <img class="info-i" src="../assets/Common/mine.svg" />
-        {{
-        article.author
-        }}
+        <img class="info-i" src="../assets/Common/mine.svg" />{{article.author}}
       </span>
       <span>
-        <img class="info-i" src="../assets/Common/browse.svg" />
-        {{
-        article.lookNum
-        }}
+        <img class="info-i" src="../assets/Common/browse.svg" />{{article.lookNum}}
       </span>
       <span>
-        <img class="info-i" src="../assets/Common/interactive.svg" />
-        {{
-        article.sayNum
-        }}
-      </span>
+        <img class="info-i" src="../assets/Common/interactive.svg" />{{article.sayNum}}</span>
     </p>
     <div id="read-body" v-html="article.body"></div>
+    
   </div>
 </template>
 <script>
@@ -46,6 +41,9 @@ import { log } from "util";
 export default {
   name: "read",
   components: { loading },
+  computed:{
+     
+  },
   methods: {
     refresh() {
       var id = this.$route.query.id;
@@ -53,14 +51,33 @@ export default {
         .post("/article", { _id: id, user_id: this.Cookies.get("_id") })
         .then(res => {
           this.article = res.data[0];
-          this.article.body = marked(res.data[0].body, {
-            sanitize: true
-          });
+          //debugger;
+          this.article.body = marked(res.data[0].body);
+
           //vuex
           this.$store.state.invalidArticle = false;
           if (this.article.lookNum == -1)
             this.$store.state.invalidArticle = true;
-          this.$store.commit("articleLoaded",this.article.title);
+          this.$store.commit("articleLoaded", this.article.title);
+          var count = 1;
+          var timer = setInterval(() => {
+            var doms = document.getElementsByClassName("readlinks");
+            if (doms) {
+              clearInterval(timer);
+              function getCn(n) {
+                var BASE = "一二三四五六七八九十";
+                if (n >= 1 && n <= 10) return BASE[n - 1];
+                if (n >= 11 && n <= 20) return BASE[9] + BASE[n - 1 - 10];
+              }
+              Array.from(doms).forEach((item, index) => {
+                if (item.tagName.toLowerCase() == "h2") {
+                  count = 1;
+                } else {
+                  item.innerText = `${getCn(count++)}、${item.innerText}`;
+                }
+              });
+            }
+          }, 20);
           //vuex
         })
         .catch(e => {});
@@ -101,9 +118,27 @@ export default {
 </script>
 
 <style scoped>
+#read-wrapper #read-colorful{
+  display: block;
+  position: absolute;
+  /* filter:blur(2px); */
+  top:-46px;
+  right:-1px;
+  content: "";
+  width:calc(100%);
+  height: 200px;
+  background-position:right top;
+  background-size:calc(100% ) 200px;
+  background-repeat: no-repeat;
+  z-index: 0;
+  filter: blur(4px);
+  opacity: 0.3;
+}
 #read-wrapper {
+  background-color: white;
   padding: 2.5rem 2.5rem 3rem 4rem;
   position: relative;
+  
 }
 
 #read-wrapper p:nth-of-type(1) img {
@@ -116,6 +151,9 @@ export default {
   color: #b1c1c8;
   margin-right: 1rem;
 }
+#read-wrapper p:nth-of-type(1) a:hover {
+  text-decoration: underline;
+}
 #read-wrapper h1 {
   font-size: 2.8rem;
   color: rgb(47, 48, 55);
@@ -125,6 +163,7 @@ export default {
   line-height: 1.3;
 }
 #read-wrapper p {
+   position: relative;
   margin: 1rem 0;
   font-size: 1.3rem;
   color: #6c787d;
@@ -155,6 +194,7 @@ export default {
   line-height: 1.8;
   border-top: 1px dashed rgb(217, 217, 217);
   padding-top: 0rem;
+  
 }
 #read-body p {
   text-indent: 4rem;
@@ -172,7 +212,10 @@ export default {
   margin-bottom: 3rem;
   background-color: #4aacc2;
 }
-
+button{
+   position: relative;
+   z-index: 1;
+}
 /**/
 @media screen and (max-width: 768px) {
   #read-wrapper {

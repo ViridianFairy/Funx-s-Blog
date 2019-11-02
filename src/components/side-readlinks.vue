@@ -1,17 +1,17 @@
 <template>
   <div id="links-big-wrapper">
-    <div id="links-title" @click="jumpTop">回到顶部</div>
+    <div id="links-title" @click="jumpTop">目录</div>
     <div id="links-wrapper">
       <div class="links-h2" v-for="(item,bigIndex) in domList" :key="item.name">
          <transition-group name="slide-fade">
          <i @click="toggle(bigIndex)" v-show="!item.show" :key="'2'"></i>
          <i @click="toggle(bigIndex)" v-show="item.show" :key="'1'"></i></transition-group>
          
-         <span :onclick="`window.myAnchor('${item.name}')`">{{item.name}}</span>
+         <span :onclick="`window.myAnchor('${item.link}')`">{{item.name}}</span>
             <div class="child-wrapper">
-              <div class="links-h3" v-for="(child,index) in item.data" :key="child"
-                :onclick="`window.myAnchor('${item.name}')`" :ref="'a'+bigIndex">
-                <span>{{index+1}}. {{child}}</span>
+              <div class="links-h3" v-for="(child,index) in item.data" :key="child.link"
+                :onclick="`window.myAnchor('${child.link}')`" :ref="'a'+bigIndex">
+                <span>{{index+1}}. {{child.name}}</span>
               </div>
           </div>
       </div>
@@ -53,10 +53,11 @@ export default {
             arr.push({
                name:item.innerText,
                data:[],
+               link:item.getAttribute('name'),
                show:1
             })
          }else{
-            arr[arr.length-1].data.push(item.innerText)
+            arr[arr.length-1].data.push({name:item.innerText,link:item.getAttribute('name')})
          }
       })
       this.domList = arr;
@@ -208,6 +209,9 @@ export default {
      border: none;
      font-size: 1.45rem;
      font-weight: normal;
+     text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
      & > span:hover {
        cursor: pointer;
        text-decoration: underline;

@@ -21,11 +21,9 @@ const mutations = {
       state.loginState = v  // -1  0  1  2  3
    },
    articleLoaded(state,title){
-      //console.log("侦测到links")
-      //console.log("biaoti:"+title)
       state.read.linksBool = !state.read.linksBool
       state.title = title
-   },
+   }
 }
 const state = {
       path: [

@@ -55,11 +55,12 @@ code{
    margin-left:0.3rem;
    padding-right:0.3rem;
    margin-right:0.3rem;
-   color:rgb(4, 140, 171);
-   background-color: rgb(237, 247, 253);
+   color:rgb(0, 124, 152);
+   background-color: rgb(235, 247, 255);
    display: inline-block;
    font-family: code;
-   font-size: 1.4rem;
+   font-size: 1.5rem;
+
 }
 pre code{
    font-weight: normal;
@@ -68,11 +69,11 @@ pre code{
    padding-left: 1.5rem !important;
    border-radius: 0.4rem;
    letter-spacing:.01rem;
-   line-height: 1.45;
-   color:rgb(33, 79, 89);
+   line-height: 1.6;
+   color:#C5C8C6;
    margin-left: 0.2rem;
    margin-right: 0.2rem;
-   background-color: #F8F8F8;
+   background-color: rgb(40, 43, 56);
    display: inline-block;
    width:calc(100% - 2rem);
    overflow: auto;
@@ -100,14 +101,15 @@ blockquote p{
    margin:0;
 }
 h2{
+   margin-left:0rem;
    color:rgb(58, 58, 58);
-   font-size: 2.2rem;
+   font-size: 2.5rem;
    padding-bottom: 0.5rem;
-   border-bottom: solid 1px rgb(234, 234, 234);
+   border-bottom: solid 1px rgb(243, 243, 243);
 }
 h2:hover,h3:hover{
-   cursor:pointer;
-   color:rgb(17, 90, 101);
+   cursor:default;
+   color:rgb(17, 70, 75);
 }
 h2:hover::before,h3:hover::before{
    color:rgb(19, 112, 127);
@@ -120,22 +122,39 @@ h2::before{
    color:rgb(49, 111, 126);
 }
 h3{
-   color:rgb(84, 84, 84);
-   font-size: 1.85rem;
+   color:rgb(55, 55, 55);
+   font-size: 2rem;
    margin:0.8rem 0;
+   margin-left:0rem;
 }
-h3::before{
+/* h3::before{
    font:normal normal normal 14px/1 FontAwesome;
    content:"\f127";
    font-size: 1.4rem;
    margin-right: 1rem;
    color:rgb(49, 111, 126);
-}
+} */
 ul{
    list-style: disc;
 }
 ul li{
    margin-left:3rem;
+}
+dd{
+   width:auto;
+   margin-inline-start: 0;
+   border: 1px solid rgb(245, 245, 245);
+   border-radius: 2px;
+   padding: 5px 5px 18px 5px;
+   position: relative;
+}
+dd::before{
+   position: absolute;
+   right: 0.5rem;
+   bottom: -0.1rem;
+   content: attr(n);
+   font-size: 1.1rem;
+   color:rgb(224, 224, 224);
 }
 @media screen and (max-width:768px){
    code{

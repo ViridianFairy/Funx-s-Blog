@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const saslprep = require("saslprep")
 const Time = require("./commonFunc");
 const schedule = require("node-schedule")
+const Model = require("./Model")
 var fs= require("fs");
 mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
    useNewUrlParser: true,
@@ -17,45 +18,10 @@ mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
       console.log("定时任务，清理ip")
    });
 })()
-const Article = mongoose.model("Article",new mongoose.Schema({
-   title: String,
-   body: String,
-   time: Object,
-   image: String,
-   label: Array,
-   lookNum: Number,
-   sayNum: Number,
-   seen:Array,
-   author: String},
-   {collection: "Article"})
-);
-const User = mongoose.model("User",new mongoose.Schema({
-   time:Object,
-   user: String,
-   pwd: String,
-   type: String,
-   quote: String,
-   lookNum: Number,
-   sayNum: Number,
-   avatar: String},{
-   collection: "Account"})
-);
-const Review = mongoose.model("Review",new mongoose.Schema({
-   _id:String,
-   user_id_obj: {type:String,ref:User},
-   reply_id_obj: {type:String,ref:User},
-   article_id:String,
-   dad_id: String,
-   thumbNum: Number,
-   body: String,
-   time: Object},
-   {collection: "Review"})
-);
-const Snake = mongoose.model("Snake",new mongoose.Schema({
-   user_id_obj: {type:String,ref:User},
-   score:Number},
-   {collection: "Snake"})
-);
+const Article = Model.Article
+const User = Model.User
+const Review = Model.Review
+const Snake = Model.Snake
 router.get('/test',(req,res)=>{
    res.send("test!")
 })
@@ -169,7 +135,7 @@ router.post("/api/articles", (req, res) => {
          }
          //(async function(){
             for(let i of data){
-               i.body = i.body.replace(/<[^>]+>/g, "").replace(/[&nbsp|`|#|>|`|=]/g, "")
+               i.body = i.body.replace(/[#{2,3}]|(```)|(\*{1,3})|(> )/g,"")
                i.body = i.body.substring(0,200)
                // i.sayNum = await new Promise(resolve =>{
                //    Review.countDocuments({article_id:i._id},(err_r,count)=>{

@@ -302,7 +302,7 @@
                .then(res => {
                   if (res.data.success == 1) {
                       this.$emit("triggerLogin");
-                     this.Cookies.set("_id", res.data._id);
+                     this.Cookies.set("_id", res.data._id,{ expires: 365 });
                      this.$getUserInfo();
                      if (msg == true) this.$store.commit('receiveLoginState',1)
                         else this.$store.commit('receiveLoginState',3)

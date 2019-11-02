@@ -1,15 +1,59 @@
 const express = require("express");
 const app = express();
-const Router= require("./api")
+const Router = require("./api")
+const Poker = require("./poker")
 const Router_upload= require("./upload")
 app.use(require("cors")());
 app.use(express.json());
-
+// begin
 app.use(Router)
 app.use(Router_upload)
+app.use(Poker.router)
+// end
 app.listen(3001,'0.0.0.0', () => {
    console.log("success");
 });
+Poker.server.listen(3000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Array.prototype.hasString = function(e){
 //    this.forEach((v)=>{
 //       if(v==e) return true;

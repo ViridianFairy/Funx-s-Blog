@@ -21,7 +21,7 @@
                </transition>
             </div>
             <div id="home-side" v-if="!expand">
-               <transition name="slide-fade">
+               <transition name="init">
                   <router-view name="right" :key="key"></router-view>
                </transition>
             </div>
@@ -39,14 +39,11 @@
 <script>
    import nowpath from "./components/nowpath";
    import navi from "./components/navi";
-   
-   // import alert from "./components/alert";
    export default {
       name: "app",
       components: {
          navi,
          nowpath,
-         // alert
       },
       data() {
          return {
@@ -110,6 +107,14 @@
                case "/demo":
                   this.expand = true;
                   this.$store.state.path = [{ name: "Demo", link: "/demo" }];
+                  switch(location.hash){
+                     case '#snake':
+                        this.$store.state.path.splice(2,0,{name:"SnakeGame", link: "/demo#snake"})
+                        break;
+                     case '#poker':
+                        this.$store.state.path.splice(2,0,{name:"PokerGame", link: "/demo#poker"})
+                        break;
+                  }
                   break;
                case "/about":
                   this.expand = true;
@@ -143,7 +148,7 @@
          setTimeout(() => {
             this.changePath({ path: this.$route.path });
             this.footShow = true;
-         }, 70);
+         }, 0);
       },
       mounted() {
          this.mainShow = true;
