@@ -21,14 +21,91 @@ router.post("/api/poker/new-user",(req, res)=>{
       res.send(doc)
    })
 })
-var playerNum = 0;
+function redef(item){
+   if(item[1]==4 && item[0]==0)
+      return 16
+   if(item[1]==4 && item[0]==1)
+      return 15
+   if(item[0]==0) return 13
+   if(item[0]==1) return 14
+   return item[0]
+}
+function cmp(a,b){
+   a = redef(a)
+   b = redef(b)
+   return a-b
+}
+var playerNum = 0 //socket begin
+var nameArr = []
+// setInterval(()=>{
+//    console.log(nameArr)
+// },500)
 io.on('connection',(socket)=>{
-   io.emit('join-msg',{ msg:`新玩家加入，现在一共有${++playerNum}个玩家啦！`})
-   socket.on('disconnect',reason=>{
-      io.emit('join-msg',{ msg:`退出了，现在只有${--playerNum}个玩家了！`})
+   var name = ''
+   var pokerData = []
+   var wash = null
+   socket.on('login',data=>{
+      name = data.name
+      
+      if(nameArr.indexOf(name)!=-1){ //重连
+         io.send({
+            type:'System',
+            msg:`${name}重新连接了！`,
+            playerNum,
+         })
+      }else{
+         nameArr.push(name)
+         io.send({
+            type:'System',
+            msg:`${data.name}加入了游戏！`,
+            playerNum:++playerNum,
+         })
+         wash = new Washer()
+         io.emit('wash',wash.getAll())
+      }
+   })
+
+   socket.on('chat',data=>{
+      io.send({
+         name:data.name,
+         msg:data.msg,
+      })
+   })
+   socket.on('disconnect',data=>{
+      io.emit('message',{
+         type:'System',
+         msg:`${name}离开了！`,
+         playerNum:--playerNum,
+      })
+      nameArr.splice(nameArr.indexOf(name),1)
    })
 })
-
+function Washer(){
+   this.data = []
+   for(let i=0;i<=53;i++)
+      this.data.push(i)
+}
+Washer.prototype.getAll = function(){
+   var num = 17
+   var arr = []
+   while(num--){
+      let r = (Math.floor((Math.random()*this.data.length)))
+      el = this.data[r]
+      arr.push(el)
+      this.data.splice(r,1)
+   }
+   arr = arr.map(item=>{
+      let x = item%13
+      let y = parseInt(item/13)
+      let z = redef([x,y])
+      return [x,y,(z+1)]
+   })
+   arr.sort((v1,v2) => {
+      return cmp(v1,v2)*(-1)
+   })
+   return arr
+   
+}
 module.exports = {
    router,
    server:wsServer,

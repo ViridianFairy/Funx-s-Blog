@@ -4,7 +4,7 @@ import router from "./router/router";
 import axios from "axios";
 import Cookies from "js-cookie";
 import store from "./store/store";
-const baseURL = "http://127.0.0.1:3001/api" //上线 106.15.200.151 日常 127.0.0.1
+const baseURL = "http://106.15.200.151:3001/api" //上线 106.15.200.151 日常 127.0.0.1
 // import "highlight.js/styles/solarized-dark.css";
 // import hljs from "highlight.js";
 Vue.config.productionTip = false;

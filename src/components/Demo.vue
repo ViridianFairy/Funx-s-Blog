@@ -12,11 +12,8 @@
 </template>
 
 <script>
-   //import baseURL from '../main'
    import snake from './Collections/snake.vue'
    import poker from './Collections/poker.vue'
-   //baseURL.replace(/http/,'ws')
-   var baseURL = 'ws://127.0.0.1:3001/api'
    export default {
       name: "collection",
       components: {snake,poker},
@@ -59,6 +56,10 @@
 </script>
 
 <style scoped>
+   .demo{
+      background-color: #fff;
+      width: 10rem;
+   }
    #demo-wrapper{
       margin: 0 auto
    }
