@@ -17,6 +17,10 @@ const mutations = {
          state.phoneTog = bool
       }
    },
+   isPhoneTog(state,bool){
+      state.isPhone = bool
+      console.log(state.isPhone)
+   },
    receiveLoginState(state,v){
       state.loginState = v  // -1  0  1  2  3
    },
@@ -46,6 +50,7 @@ const state = {
       loginState:0,
       loginTog:false,
       phoneTog:true,
+      isPhone:0,
       snake:{
          screen:0
       }

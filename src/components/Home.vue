@@ -32,7 +32,7 @@
       },
       created() {
          this.$http
-            .post("/articles")
+            .post("/articles",{ _id: this.Cookies.get("_id")} )
             .then(res => {
                this.articles = res.data;
             })

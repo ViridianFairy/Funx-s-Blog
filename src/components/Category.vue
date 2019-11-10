@@ -57,7 +57,8 @@
             msg: "",
             msgTog: "",
             mode: 'label',
-            pieColor: ['#FFB876', '#FFD476', '#FF8076', '#899CD6',"#7CC4EC","#FF9966","#FF6666"],
+            // pieColor: ['#FFB876', '#FFD476', '#FF8076', '#899CD6',"#7CC4EC","#FF9966","#FF6666"],
+            pieColor: ['#0E6BA8', '#248AD4', '#85B7FC', '#C6CEFF',"#009292","#02DEC5","#016072"],
          };
       },
       created() {
@@ -212,11 +213,12 @@
    }
    .item-title {
       display: block;
-      color: #2e3135;
+      color: #373738;
       overflow: hidden;
       font-size: 1.6rem;
       height: 2rem;
       font-weight: bold;
+      letter-spacing: 0.03rem;
    }
    .time-labels{
       font-size: 1.2rem;
@@ -237,7 +239,7 @@
    .item-wrapper:hover .item-title {
       cursor: pointer;
 
-      color: #976530;
+      color: #685e53;
       cursor: pointer;
       user-select: none;
    }
@@ -248,7 +250,7 @@
 
    .item-wrapper:hover {
       border-bottom: 1px solid rgba(155, 126, 93, 0.15);
-      color: #976530;
+      color: #615b55;
    }
 
    .item-wrapper {

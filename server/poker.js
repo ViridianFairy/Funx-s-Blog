@@ -9,37 +9,40 @@ mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
    useNewUrlParser: true,
    useUnifiedTopology: true 
 });
-router.post("/api/poker/new-user",(req, res)=>{
-   var save = new Poker({
-      user_id_obj:"abc", //req.body.user_id_obj
-      beans:0,
-      totalGames:0,
-      winGames:0,
-      exp:0,
-   }).save()
-   save.then((doc)=>{
-      res.send(doc)
+router.post("/api/poker/query",(req, res)=>{
+   var name = res.data.name
+   pokerQuery(name).then((doc)=>{
+      console.log(doc)
+   }).catch(()=>{
+      pokerNew(name)
    })
 })
-function redef(item){
-   if(item[1]==4 && item[0]==0)
-      return 16
-   if(item[1]==4 && item[0]==1)
-      return 15
-   if(item[0]==0) return 13
-   if(item[0]==1) return 14
-   return item[0]
+function pokerQuery(name){
+   return new Promise((resolve,reject)=>{
+      User.findOne({name}).then((doc=>{
+         if(doc) resolve(doc)
+         reject()
+      }))
+   })
 }
-function cmp(a,b){
-   a = redef(a)
-   b = redef(b)
-   return a-b
+function pokerNew(name){
+   return new Promise((resolve)=>{
+      var save = new Poker({
+         name,
+         pokers:[],
+         status:0,   
+      }).save()
+      save.then((doc)=>{
+         resolve()
+      })
+   })
 }
 var playerNum = 0 //socket begin
 var nameArr = []
-// setInterval(()=>{
-//    console.log(nameArr)
-// },500)
+var table = []
+setInterval(()=>{
+   //console.log(nameArr)
+},500)
 io.on('connection',(socket)=>{
    var name = ''
    var pokerData = []
@@ -106,7 +109,36 @@ Washer.prototype.getAll = function(){
    return arr
    
 }
+
+function redef(item){
+   if(item[1]==4 && item[0]==0)
+      return 16
+   if(item[1]==4 && item[0]==1)
+      return 15
+   if(item[0]==0) return 13
+   if(item[0]==1) return 14
+   return item[0]
+}
+function cmp(a,b){
+   a = redef(a)
+   b = redef(b)
+   return a-b
+}
 module.exports = {
    router,
    server:wsServer,
 }
+
+
+// router.post("/api/poker/new-user",(req, res)=>{
+//    var save = new Poker({
+//       user_id_obj:"abc", //req.body.user_id_obj
+//       beans:0,
+//       totalGames:0,
+//       winGames:0,
+//       exp:0,
+//    }).save()
+//    save.then((doc)=>{
+//       res.send(doc)
+//    })
+// })

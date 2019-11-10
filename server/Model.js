@@ -12,6 +12,7 @@ const Article = mongoose.model("Article",new mongoose.Schema({
    lookNum: Number,
    sayNum: Number,
    seen:Array,
+   finish:Boolean,
    author: String},
    {collection: "Article"})
 );
@@ -43,16 +44,27 @@ const Snake = mongoose.model("Snake",new mongoose.Schema({
    {collection: "Snake"})
 );
 const Poker = mongoose.model("Poker",new mongoose.Schema({
-   user_id_obj:{ type:String,ref:User},
-   beans:Number,
-   totalGames:Number,
-   winGames:Number,
-   exp:Number
+   name:String,
+   pokers:Array,
+   status:Number,
 }))
+const Bihu = mongoose.model("Bihu",new mongoose.Schema({
+   title:String,
+   author:String,
+   content:String,
+   like:String,
+}))
+// const Poker = mongoose.model("Poker",new mongoose.Schema({
+//    user_id_obj:{ type:String,ref:User},
+//    beans:Number,
+//    totalGames:Number,
+//    winGames:Number,
+//    exp:Number
+// }))
 module.exports = {
    Article,
    User,
    Review,
    Snake,
-   Poker,
+   Poker,Bihu,
 }

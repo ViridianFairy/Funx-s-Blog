@@ -1,14 +1,28 @@
 <template>
    <div id="big-wrapper">
-      <div class="item">
+      <div style="float:right;margin:1rem 1rem -0.7rem 0;color:#ddd;font-size:1.2rem;">
+         暂时凑数，来源：知乎收藏热榜，10分钟更新一次。
+      </div>
+      <!-- <div class="item">
             <div id="no-reviews-body">
                <img src="../assets/Common/nodata.svg" />
                <span>草，这都被你发现了..
                </span>
             </div>
-         <!-- <Palette></Palette> -->
-      </div>
-      
+         <Palette></Palette>
+      </div> -->
+      <article v-for="(bihu,index) in bihus" :key="index" @click="toggle(index)">
+         <div class="head">
+            <span>{{index+1}}</span>{{bihu.title}}
+         </div>
+         <transition name="slide-fade">
+            <div class="content" v-html="bihu.content" v-if="shows[index]"></div>
+         </transition>
+         <div class="author">
+            <span>作者：{{bihu.author}}</span>
+            <span>赞同数：{{bihu.like}}</span>
+         </div>
+      </article>
    </div>
 </template>
 
@@ -19,66 +33,92 @@
       components: {Palette},
       data() {
          return {
-            
+           bihus:[],
+           shows:[]
          };
-      }
+      },
+      methods:{
+         toggle(index){
+            for(let i=0;i<this.shows.length;i++){
+               this.shows.splice(i,1,false)
+            }
+            this.shows.splice(index,1,true)
+            this.$nextTick(()=>{
+               [].forEach.call(document.querySelectorAll('article img'),item=>{
+                  item.removeAttribute('width')
+                  item.setAttribute('width','70%')
+               });
+               [].forEach.call(document.querySelectorAll('article p'),item=>{
+                  item.setAttribute('style','margin:0.8rem 0')
+               })
+           })
+         }
+      },
+      mounted() {
+        this.$http.post('/collection/init').then(res=>{
+           this.bihus = res.data
+           this.bihus.forEach(()=>{
+              this.shows.push(false)
+           })
+        })
+      },
    };
 </script>
 
-<style scoped>
-   #no-reviews-body {
-      margin-top: 3rem;
-      text-align: center;
-   }
-
-   #no-reviews-body img {
-      width: 15rem;
-      height: 15rem;
-      opacity: 0.35;
-   }
-
-   #no-reviews-body span {
-      vertical-align: 6rem;
-      margin-left: 1.5rem;
+<style lang="scss" scoped>
+   article{
+      line-height: 1.65;
       font-size: 1.5rem;
-      color: #ccc;
+      border-bottom:1px solid rgb(236, 236, 236);
+      padding:16px 0;
+      margin:0 32px;
+      display: flex;
+      flex-direction: column;
+      width:calc(100% - 32px);
+      color: #1a1a1a;
    }
-   .item{
-      font-size: 1.6rem;
-      padding: 1.4rem;
-      padding-left: 4rem;
-      padding-bottom: 0.5rem;
-      height: 100%;
-      position: relative;
-      border-bottom: 1px dashed #d9d9d900;
+   .author{
+      display: flex;
+      span{
+         margin-right: 2rem;
+      }
+      span:nth-of-type(2){
+         color:#aaa;
+      }
    }
-   .item .title {
+   .head{
       font-size: 2rem;
       font-weight: bold;
-      color: rgb(65, 149, 168);
-      margin-left: 2.2rem;
-      position: relative;
-      margin-top: 0.4rem;
-      margin-bottom: 0.9rem;
+      display: flex;
+      margin-bottom: 0.5rem;
+      span{
+         margin:0 1rem 0 0;
+         color:rgb(239, 149, 32);
+      }
    }
-   .item .title::before {
-      left: -2.0rem;
-      top: 0.1rem;
-      position: absolute;
-      content: "";
-      width: 0.6rem;
-      height: 2.5rem;
-      background-color: #4aacc2;
+   .content{
+      width:calc(100% - 50px);
+   }
+   figure{
+      width: 100%;
    }
    @media screen and (max-width: 768px) {
-      .home-item {
-         padding-left: 1rem;
-         padding-right: 1rem;
+      article{
+         margin:0 20px;
       }
-      .home-item > img {
-         height: 6rem;
-         width: 10rem;
-         margin-left: 0.5rem;
-      }
+      .content{
+      width:calc(100% - 20px);
+   }
+   }
+   .slide-fade-enter-active {
+      transition: all 0.2s ease-in;
+   }
+   .slide-fade-leave-active {
+      transition: all 0.2s ease-in;
+   }
+   .slide-fade-enter,
+   .slide-fade-leave {
+      transform: translateY(1rem) translateZ(0);
+      opacity: 0;
    }
 </style>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,minimal-ui:ios">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Document</title>
+   <link rel="stylesheet" href="">
+   <script src=""></script>
+   <style>
+      .container{
+         display: grid;
+      }
+      .item{
+         position: relative;
+         transition: 0.1s all;
+      }
+      .item:hover{
+         filter: brightness(0.95);
+      }
+      .item span{
+         user-select: none;
+         text-align:middle;
+         color:rgb(255, 255, 255);
+         text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
+         position: absolute;
+         text-align: center;
+         font-size: 28px;
+         left:50%;
+         top:50%;
+         transform: translate(-50%,-50%);
+      }
+      .item:hover{
+         filter: brightness(0.95);
+      }
+      .item:nth-child(1){
+         background-color:#7FC7D6;
+      }
+      .item:nth-child(2){
+         background-color:#F8BB9C;
+      }
+      .item:nth-child(3){
+         background-color:#FEEBC3;
+      }
+      .item:nth-child(4){
+         background-color:#FAD57A;
+      }
+      .item:nth-child(5){
+         background-color:rgb(243, 153, 128);
+      }
+      .item:nth-child(6){
+         background-color:#B4DCE8;
+      }
+      .item:nth-child(7){
+         background-color:#7FC7D6;
+      }
+      .item:nth-child(8){
+         background-color:#E3EFEB;
+      }
+      .item:nth-child(9){
+         background-color:#FCD58F;
+      }
+      .c1{
+         grid-template-columns: 50px 50px 50px;
+         grid-template-rows: 50px 50px 50px;
+      }
+      .c2{
+         grid-template-columns: repeat(3,33.3%);
+         grid-template-rows: repeat(2,50px 75px);
+      }
+      .c3{
+         grid-template-columns: repeat(auto-fill,60px 100px);
+         grid-template-rows: repeat(4,50px);
+      }
+      .c4{
+         grid-template-columns: repeat(1,1fr 2fr 1fr);
+         grid-template-rows: 2fr 1fr 1fr
+      }
+      .c5{
+         grid-template-columns: repeat(3,1fr);
+         grid-template-rows: repeat(3,75px);
+      }
+      .c6{
+         grid-template-columns: repeat(4,1fr);
+         grid-template-rows: repeat(4,50px);
+      }
+      .i1{
+         grid-column: 1/span 2;
+         grid-row: 1/span 2;
+      }
+      .i2{
+         grid-column: 3/5;
+         grid-row: 1/2;
+      }
+      #wrap:focus{
+         outline: none;
+      }
+
+      .a1{
+         grid-template-rows: repeat(4,4rem);
+         grid-template-columns: repeat(12,1fr);
+         grid-template-areas: 'a a n n n n n n n n t t'
+                              'a a h h h h h h h h h h'
+                              'a a h h h h h h h h h h'
+                              'f f f f f f f f f f r r';
+         grid-gap: 10px;
+      }
+      .h{
+         grid-area: h;
+         display: flex;
+         justify-content: space-between;
+      }
+      .l{
+         grid-area: l
+      }
+      .a{
+         grid-area: a
+      }
+      .f{
+         grid-area: f
+      }
+      .r{
+         grid-area: r
+      }
+      .f{
+         grid-area: f
+      }
+   </style>
+</head>
+
+<body>
+   <!-- <dd n="grid-template"><div class="container c1">
+      <div class="item i1"><span>1</span></div>
+      <div class="item i1"><span>2</span></div>
+      <div class="item i1"><span>3</span></div>
+      <div class="item i1"><span>4</span></div>
+      <div class="item i1"><span>5</span></div>
+      <div class="item i1"><span>6</span></div>
+      <div class="item i1"><span>7</span></div>
+      <div class="item i1"><span>8</span></div>
+      <div class="item i1"><span>9</span></div>
+   </div></dd> -->
+   <!-- <dd n="grid-template"><div class="container c6">
+      <div class="item i1"><span>1</span></div>
+      <div class="item i2"><span>2</span></div>
+      <div class="item i3"><span>3</span></div>
+      <div class="item i4"><span>4</span></div>
+      <div class="item"><span>5</span></div>
+      <div class="item"><span>6</span></div>
+      <div class="item"><span>7</span></div>
+      <div class="item"><span>8</span></div>
+      <div class="item"><span>9</span></div>
+   </div></dd> -->
+   <!-- <button id="bold">bold</button>
+   <div id="wrap" contenteditable="true">af</div> -->
+   <dd n="grid-template"><div class="container a1">
+      <div class="item h" name="h">
+         <span>XiaoHu</span>
+         <span>Uzi</span>
+         <span>Langx</span>
+         <span>Ming</span>
+         <span>Karsa</span>
+      </div>
+      <div class="item l" name="l"><span>2</span></div>
+      <div class="item r" name="r"><span>3</span></div>
+      <div class="item f" name="f"><span>4</span></div>
+      <div class="item a" name="a"><span>4</span></div>
+   </div></dd>   
+</body>
+<script>
+   var b = document.getElementById('bold')
+   b.onclick = ()=>{
+      document.execCommand('bold')
+   }
+</script>
+
+</html>

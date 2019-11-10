@@ -1,6 +1,9 @@
 <template>
   <div id="wrapper">
       <h1>关于...</h1>
+      <h2>
+         所以，你真的不想点一下下面吗
+      </h2>
       <div id="sky"></div>
       <div id="iframe-wrapper" :style={height:iHeight}>
             <iframe :src="src" :style="{transform:'scale('+ long +')'}" frameborder="0"></iframe>
@@ -13,9 +16,8 @@
       </div>
       <div class="item" style="margin-bottom:1.5rem ;"><h2>
          <img src="../assets/About/overall.svg" class="icn" style="width: 3.1rem">
-         vue-cli vue-router vuex nodejs lottie ZRender
-      </h2>
-      </div>
+         Vue-cli Vue-router Vuex Nodejs Express
+      </h2></div>
   </div>
 </template>
 
@@ -46,22 +48,17 @@ export default {
     return {
       src:"/funx.html",
       verBase:5,
-      /*List:[
-         {ver:"",time:"2019.10.06",body:[
-            "个人资料：头像上传后立即刷新",
-            "关于页面：ae动画增加交互、移动端缩放",
-            "大图片改为外链",
+      List:[
+         {ver:"",time:"2019.9.26",body:[
+            "第一版",
          ]},
-         {ver:"",time:"2019.10.07",body:[
-            "侧边栏：饼图和折线图（echarts是给调参侠用的",
+         {ver:"",time:"2019.10.7",body:[
+            "第二版",
          ]},
-         {ver:"",time:"2019.10.08",body:[
-            "导航栏：全新的响应式设计",
+         {ver:"",time:"2019.11.8",body:[
+            "计划：Skeleton 更多懒加载",
          ]},
-         {ver:"",time:"2019.10.08",body:[
-            "阅读页面：全部添加了新样式",
-         ]},  
-      ]*/
+      ]
     }
   },mounted() {
       
@@ -69,7 +66,7 @@ export default {
  }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
    #wrapper{
       overflow: hidden;
       margin: 0 auto 2rem auto;
@@ -84,13 +81,23 @@ export default {
    h2{
       font-size: 1.5rem;
       margin: 0.5rem 0 0 0;
-      color:rgb(83, 138, 140);
+      color:rgb(102, 159, 161);
+      border:none;
+      &::before{
+         content: '';
+      }
+      &:hover{
+         color:rgb(96, 145, 147);
+      }
    }
    h3{
       font-size: 1.4rem;
       font-weight:normal;
       margin:0.2rem 0;
-      color:rgb(185, 185, 185)
+      color:rgb(185, 185, 185);
+      &:hover{
+         color:rgb(147, 147, 147);
+      }
    }
    iframe{
       width: 70rem;

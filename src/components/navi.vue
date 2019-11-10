@@ -107,7 +107,7 @@
                         <img id="avatar" :src="getAvatar" />
                         <div class="logined-user"
                            style="text-align: center;font-size: 1.8rem;font-weight: bold;color:#303030">
-                           {{ this.$store.state.login.user | cutUserName}}
+                           {{ this.$store.state.login.user}}
                         </div>
 
                         <div class="header" style="margin:-0.5rem 0;font-size: 1.4rem;color:rgb(205, 148, 94)">
@@ -117,7 +117,7 @@
                               src="../assets/Navi/saynum.svg" />{{$store.state.login.sayNum>0?$store.state.login.sayNum:textSay}}
                         </div>
                         <div
-                           style="line-height: 1.5;text-align: center;color:#525252;min-height:3.8rem;margin-left:1.5rem;margin-right:1.5rem;">
+                           style="line-height: 1.5;text-align: center;color:#525252;margin-left:1.5rem;margin-right:1.5rem;">
                            {{ this.$store.state.login.quote }}
                         </div>
 
@@ -201,7 +201,7 @@
             </transition>
             <transition name="slide-fade">
                <div class="navi-other right" v-if="getPhoneTog">
-                  <input placeholder="搜索文章..." v-model="search" />
+                  <input placeholder="搜索文章..." v-model="search" @keydown.enter="searchIn(search)"/>
                   <button @click="searchIn(search)">搜索</button>
                </div>
             </transition>
@@ -225,7 +225,7 @@
                   len += 2;
                else
                   len ++;
-               if(len>=10) return v.substring(0,i).concat('..')
+               if(len>=8) return v.substring(0,i).concat('..')
             }
             return v
          }
@@ -513,8 +513,18 @@
          }
       },
       mounted() {
-         this.scrolledY = window.scrollY
+         if( document.body.clientWidth <= 768 )
+            this.$store.commit('isPhoneTog',true)
+         else
+            this.$store.commit('isPhoneTog',false)
+         this.$nextTick(()=>{
+            [].forEach.call(document.getElementsByClassName('login'),(dom)=>{
+               console.log(dom.offsetHeight)
+               dom.style.maxHeight = dom.offsetHeight
+            })
+         })
          
+         this.scrolledY = window.scrollY
          var timer = null
          var timer_s = null
          window.onresize = ()=>{
@@ -522,9 +532,11 @@
             timer = setTimeout(()=>{
                var a = document.body.clientWidth;
             if( a <= 768 ){
+               this.$store.commit('isPhoneTog',true)
                this.$store.commit('receivePhoneTog',false)
                document.getElementById('bg-navi').style.top = "0rem"
             }else{
+               this.$store.commit('isPhoneTog',false)
                this.$store.commit('receivePhoneTog',true)
             }
             timer = null
@@ -729,11 +741,13 @@
       position: fixed;
       z-index: 10001;
       width: 26rem;
-      height: 18.5rem;
+      height: auto;
+      max-height:20rem;
       background-color: rgb(255, 255, 255);
       border-color: 1px solid antiquewhite;
       border-radius: 0.4rem;
       box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.75);
+      padding-bottom: 0.4rem;
    }
 
    .login:hover {
@@ -773,20 +787,20 @@
    }
 
    .sign {
-      height: 18.5rem;
+      max-height:20rem;
    }
    .guide{
-      height: 30rem;
+     max-height:32rem;
    }
    /* .sign div {
        white-space 
    } */
    .logined {
-      height: 26rem;
+      max-height:28rem;
    }
 
    .mutate {
-      height: 40.5rem;
+      max-height:42rem;
    }
 
    .icn {
@@ -978,16 +992,16 @@
    }
 
    .login-enter-active {
-      transition: all 0.4s;
+      transition: all 0.4s ease-out;
    }
 
    .login-leave-active {
-      transition: all 0.2s;
+      transition: all 0.2s  ease-out;
    }
 
    .login-enter,
    .login-leave-to {
-      height: 0;
+      max-height: 0;
       opacity: 0.75;
    }
 </style>

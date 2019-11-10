@@ -75,7 +75,7 @@
             
          },
          init(){
-            this.socket = io('http://127.0.0.1:3000/')
+            this.socket = io(`${require('../../config').baseURL}:3000`)
             var socket = this.socket
             socket.on('connect',e =>{
                setTimeout(()=>{
@@ -101,10 +101,8 @@
          
       },
       mounted(){
-         window.οnbefοreunlοad = ()=>{   
-            alert('1')
-         }
-         this.init()
+         if(this.$store.state.login.user)
+            this.init()
       },
       created(){
          var width = window.innerWidth 

@@ -3,12 +3,15 @@ const app = express();
 const Router = require("./api")
 const Poker = require("./poker")
 const Router_upload= require("./upload")
+const Router_wisdom= require("./wisdom")
 app.use(require("cors")());
 app.use(express.json());
 // begin
 app.use(Router)
 app.use(Router_upload)
+app.use(Router_wisdom)
 app.use(Poker.router)
+
 // end
 app.listen(3001,'0.0.0.0', () => {
    console.log("success");

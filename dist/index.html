@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta name=referrer content=never><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link href=//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css rel=stylesheet><title>FunX's Blog</title><link href=/css/app.07512c4d.css rel=preload as=style><link href=/js/app.ca68c01a.js rel=preload as=script><link href=/js/chunk-vendors.5014040b.js rel=preload as=script><link href=/css/app.07512c4d.css rel=stylesheet></head><style>html {
+      overflow-y: scroll;
+      overflow-x: hidden;
+      height: 100%;
+      font-family:"microsoft yahei";
+      font-size: 10px;
+   }
+
+   #appLoading {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+   }
+
+   .load-3 {
+      background-color: #4b9ddb00;
+   }
+
+   .load-3 .line:nth-last-child(1) {
+      animation: loadingC 0.4s 0.07s cubic-bezier(0.600, -0.280, 0.735, 0.045) infinite;
+      margin-left: 0.3rem;
+   }
+
+   .load-3 .line:nth-last-child(2) {
+      animation: loadingC 0.4s 0.13s cubic-bezier(0.600, -0.280, 0.735, 0.045) infinite;
+   }
+
+   .load-3 .line:nth-last-child(3) {
+      animation: loadingC 0.4s 0.20s cubic-bezier(0.600, -0.280, 0.735, 0.045) infinite;
+      margin-right: 0.3rem;
+   }
+
+   .line {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border-radius: 15px;
+   }
+
+   .load-3 .line:nth-of-type(1) {
+      background-color: rgb(255, 191, 132);
+   }
+
+   .load-3 .line:nth-of-type(2) {
+      background-color: rgb(248, 158, 73);
+   }
+
+   .load-3 .line:nth-of-type(3) {
+      background-color: rgb(255, 136, 25);
+   }
+
+   @keyframes loadingC {
+      0% {
+         transform: translate(0, 0);
+      }
+
+      50% {
+         transform: translate(0, 1.5rem);
+      }
+
+      100% {
+         transform: translate(0, 0);
+      }
+   }
+
+   ::-webkit-scrollbar-track-piece {
+      background-color: #f8f8f8;
+      -webkit-border-radius: 2em;
+      -moz-border-radius: 2em;
+      border-radius: 2em;
+   }
+
+   /*滚动条的宽度*/
+   ::-webkit-scrollbar {
+      width: 0.9rem;
+      height: 0.6rem;
+   }
+
+   /*滚动条的设置*/
+   ::-webkit-scrollbar-thumb {
+      background-color: #b2d4dd;
+      background-clip: padding-box;
+      -webkit-border-radius: 2em;
+      -moz-border-radius: 2em;
+      border-radius: 2em;
+   }
+
+   /*滚动条鼠标移上去*/
+   ::-webkit-scrollbar-thumb:hover {
+      background-color: #9fbfc8;
+      cursor:default;
+   }</style><script>function myAnchor(name){
+   console.log(name)
+   var dom = document.getElementsByName(name)[0];
+   console.log(dom)
+   dom.scrollIntoView({
+      behavior: "smooth",
+   });
+   if (document.body.clientWidth > 768)
+      document.getElementById("bg-navi").style.top = "-6rem";
+}</script><body><div id=app></div><script src=/js/chunk-vendors.5014040b.js></script><script src=/js/app.ca68c01a.js></script></body></html>

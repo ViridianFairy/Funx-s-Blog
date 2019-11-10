@@ -13,11 +13,13 @@
             <button @click="deleteLabel(id)">×</button>
          </a>
          <input v-model="labelText" placeholder="添加标签" />
-         <button @click="addLabel">+</button>
+         <button @click="addLabel" style="margin-right: 1.5rem;">+</button>
+         <button :class="{green:article.finish,blue:!article.finish}" @click="toggleFinish()" 
+            style="margin-right: 1rem;width:auto;padding:0 0.5rem">{{finishText}}
+         </button>
          <span id="pic">
-               文章封面图：<input v-model="article.image" placeholder="输入外链" @focus="$event.currentTarget.select()"/>
-               
-            </span>
+            文章封面图：<input v-model="article.image" placeholder="输入外链" @focus="$event.currentTarget.select()"/>
+         </span>
       </p>
       <div class="editorContainer">
             <markdown 
@@ -54,6 +56,7 @@
             labelText:"",
             saveText:"保存",
             raw:"a",
+            finishText:'',
          };
       },
       created() {
@@ -76,12 +79,12 @@
             this.article.body = `<p>新的内容</p>`
             this.article.label = []
             this.article.image = ""
-            
+            this.article.finish = false
          }
          this.$http
             .post("/article", { _id: id })
             .then(res => {
-               this.article = res.data[0];         
+               this.article = res.data[0];      
                this.raw = this.article.body
                //vuex
                this.$store.state.title = this.article.title;
@@ -89,11 +92,21 @@
                if (res.data._id == "-1") {
                   this.article.title = "1";
                }
+               this.toggleFinish()
+               this.toggleFinish()
 
             })
             .catch();
       },
       methods: {
+         toggleFinish(){
+            this.article.finish = !this.article.finish
+            if(this.article.finish){
+               this.finishText = '完成'
+            }else{
+               this.finishText = '未完成'
+            }
+         },
          childEventHandler:function(res){
                 // res会传回一个data,包含属性mdValue和htmlValue，具体含义请自行翻译
                 this.raw=res.mdValue;

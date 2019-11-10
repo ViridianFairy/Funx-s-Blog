@@ -29,8 +29,8 @@
          <transition name="slide-fade">
             <router-view name="bottom" :key="key"></router-view>
          </transition>
-         <div id="footer" v-show="footShow">
-            COPYRIGHT © 1998 - 2019 WOSHINIDIE. ALL RIGHTS RESERVED.<br />
+         <div id="footer" v-show="footShow" @click="footText='你不服？'">
+            {{footText}}<br />
          </div>
       </div>
    </transition>
@@ -52,6 +52,7 @@
             footShow: false,
             naviShow: false,
             expand: false,
+            footText:"COPYRIGHT © 1998 - 2019 WOSHINIDIE. ALL RIGHTS RESERVED."
          };
       },
       computed: {
@@ -264,7 +265,7 @@
          5px 0px 5px -5px rgba(50, 50, 50, 0.15);
    }
    #footer {
-      color: rgb(175, 192, 203);
+      color: rgb(213, 221, 226);
       font-size: 1rem;
       text-align: center;
       margin: 0.2rem auto 0.2rem 1rem;

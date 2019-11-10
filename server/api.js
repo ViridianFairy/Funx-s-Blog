@@ -5,6 +5,7 @@ const saslprep = require("saslprep")
 const Time = require("./commonFunc");
 const schedule = require("node-schedule")
 const Model = require("./Model")
+const OId = require('mongodb').ObjectId
 var fs= require("fs");
 mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
    useNewUrlParser: true,
@@ -37,7 +38,8 @@ router.post("/api/article", (req, res) => {
                label: [],
                lookNum: -1,
                sayNum: 0,
-               author: "admin"
+               author: "admin",
+               finish:false,
             }
          ]);
          return;
@@ -85,6 +87,7 @@ router.post("/api/article-save", (req, res) => {
          return;
       }else{
             req.body = req.body.article;
+            // console.log('finish'+req.body.finish)
             Article.updateOne(
          {_id: req.body._id},
          {
@@ -92,6 +95,7 @@ router.post("/api/article-save", (req, res) => {
                title: req.body.title,
                body: req.body.body,
                image: req.body.image,
+               finish: req.body.finish,
                label: req.body.label
             }
          },
@@ -126,27 +130,44 @@ router.post("/api/article-delete", (req, res) => {
    });
 });
 router.post("/api/articles", (req, res) => {
-   Article.find({})
-      .sort({time: -1})
-      .exec(function(err, data) {
-         if (err) console.log(err);
-         for (let i of data) {
-            i.time = Time.getFuzzyTime(i.time);
-         }
-         //(async function(){
+   // console.log('调参')
+   var isAdmin = false
+   User.findOne({_id:req.body._id},(erru,datau)=>{
+      if(datau){
+         if(datau.type=="admin")
+            isAdmin = true
+      }
+      Article.find({}).sort({time: -1})
+         .exec(function(err, data) {
+            // console.log('is?'+isAdmin)
+            if(isAdmin){
+               for (let i in data) {
+                  if(!data[i].finish)
+                     data[i].title += '(未完成)'
+               }
+            }else{
+               
+               var reduceData = []
+               for (let i of data) {
+                  if(i.finish){
+                     reduceData.push(i)
+                  }
+               }
+               data = reduceData
+            }
+            if (err) console.log(err);
+            for (let i of data) {
+               i.time = Time.getFuzzyTime(i.time);
+            }
             for(let i of data){
                i.body = i.body.replace(/[#{2,3}]|(```)|(\*{1,3})|(> )/g,"")
                i.body = i.body.substring(0,200)
-               // i.sayNum = await new Promise(resolve =>{
-               //    Review.countDocuments({article_id:i._id},(err_r,count)=>{
-               //       resolve(count)
-               //    })    
-               // })
-               //console.log(i.sayNum)
             }
             res.send(data);
-         return;
-      });
+            return;
+         });   
+   })
+   
 });
 router.post("/api/article-new", (req, res) => {
    User.findOne({_id:req.body.user_id},(err_u,data_u)=>{
@@ -281,7 +302,8 @@ router.post("/api/sign", (req, res) => {
                   res.send({success: 0, msg: "更新出错"});
                   throw err;
                } else{
-                  var from = '../../resource/user_avatars/1.png'
+                  var random = Math.floor(Math.random()*8+2)
+                  var from = `../../resource/user_avatars/${random}.png`
                   var to = '../../resource/user_avatars/'+ res_a._id + '.png'
                   fs.writeFileSync(to, fs.readFileSync(from));
                   res.send({success: 1, msg: "注册成功！"});
@@ -294,7 +316,7 @@ router.post("/api/sign", (req, res) => {
 });
 router.post("/api/mutate", (req, res) => {
    User.find({user: req.body.user}, function(err, data) {
-      
+      var setObj = {}
       if (req.body.old != "" || req.body.new != "") {
          User.find({user: req.body.user, pwd: req.body.old}, function(errt, datat) {
             if (datat.length == 0) {
@@ -321,10 +343,8 @@ router.post("/api/mutate", (req, res) => {
       if (req.body.quote == "") req.body.quote = "这个人太懒了，什么都没留下";
       console.log(req.body.quote)
       console.log("用户是"+req.body.user)
-      var setObj = {
-         quote: req.body.quote,
-         avatar: req.body.avatar
-      };
+      setObj.quote =req.body.quote
+      setObj.avatar =req.body.avatar
       //开始注册
       User.updateOne(
          {user: req.body.user},
@@ -429,7 +449,7 @@ router.post("/api/review", (req, res) => {
    });
 });
 router.post("/api/category-time", (req, res) => {
-   Article.find({},'title time').sort({time: -1}).exec(function(err, data) {
+   Article.find({finish:{$ne:false}},'title time').sort({time: -1}).exec(function(err, data) {
          let Timer = [];
          for(let item of data){
             var year = item.time.getFullYear()
@@ -449,7 +469,7 @@ router.post("/api/category-time", (req, res) => {
       });
 });
 router.post("/api/category-time-all", (req, res) => {
-   Article.find({},'title time label').sort({time: -1}).exec()
+   Article.find({finish:{$ne:false}},'title time label').sort({time: -1}).exec()
       .then((doc)=>{
          doc.forEach((item)=>{
             item.time = Time.getTimeShort(item.time);
@@ -459,7 +479,7 @@ router.post("/api/category-time-all", (req, res) => {
       })  
 });
 router.post("/api/category-label", (req, res) => {
-   Article.find({},'title time label').sort({time: -1}).exec(function(err, data) {
+   Article.find({finish:{$ne:false}},'title time label').sort({time: -1}).exec(function(err, data) {
          let Type = [];
          //预定义
          function hasType(str){
@@ -502,7 +522,7 @@ router.post("/api/category-label", (req, res) => {
 });
 router.post("/api/category-search", (req, res) => {
    var title = new RegExp(req.body.search)
-   Article.find({title}).sort({time: -1}).exec(function(err, data) {
+   Article.find({title,finish:{$ne:false}}).sort({time: -1}).exec(function(err, data) {
          for(let i of data){
             i.time = Time.getTime(i.time)
          }
@@ -629,4 +649,10 @@ router.post("/api/snake/uploadRank", (req, res) => {
      
    })
 });
+router.post("/api/collection/init",(req, res)=>{
+   Model.Bihu.find({}, function(err, data) {
+      res.send(data);
+      return;
+   });
+})
 module.exports = router;

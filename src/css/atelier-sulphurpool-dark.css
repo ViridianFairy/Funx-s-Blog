@@ -21,6 +21,9 @@
 .hljs-selector-class {
   color: #c94922;
 }
+.hljs-attribute{
+   color: #7290c0;
+}
 
 /* Atelier-Sulphurpool Orange */
 .hljs-number,
