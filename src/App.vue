@@ -115,6 +115,9 @@
                      case '#poker':
                         this.$store.state.path.splice(2,0,{name:"PokerGame", link: "/demo#poker"})
                         break;
+                     case '#disk':
+                        this.$store.state.path.splice(2,0,{name:"网盘", link: "/demo#disk"})
+                        break;
                   }
                   break;
                case "/about":

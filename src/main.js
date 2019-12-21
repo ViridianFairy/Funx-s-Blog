@@ -36,7 +36,7 @@ Vue.prototype.$getUserInfo = function() {
 import Alert from "./components/alert";
 const alertBox = Vue.extend(Alert);
 //Vue.prototype.$alertNum = 0;
-Vue.prototype.$alert = function(msg, type) {
+Vue.prototype.$alert = function(msg, type, Obj) {
 
    if (document.getElementsByClassName('alert').length >= 2) return;
    if (type == "") type = "true";
@@ -44,7 +44,8 @@ Vue.prototype.$alert = function(msg, type) {
       data: {
          msg: msg,
          type: type,
-         visible: false
+         visible: false,
+         mouse:Obj?Obj:{x:0,y:0},
       }
    }).$mount();
    document.body.appendChild(a.$el);

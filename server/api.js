@@ -655,4 +655,43 @@ router.post("/api/collection/init",(req, res)=>{
       return;
    });
 })
+//下面是upload.js里的
+router.post('/api/disk/delete',(req,res)=>{
+   var isAdmin = false
+   User.findOne({_id:req.body._id},(erru,datau)=>{
+      if(datau){
+         if(datau.type=="admin")
+            isAdmin = true
+      }
+      if(isAdmin){
+         if(req.body.isFile){ //
+            var path = '../../resource/junk' + req.body.pos +'/'+ req.body.name
+            fs.unlink(path,function(error){
+               if(error){
+                   console.log(error);
+                   return false;
+               }
+               res.send({success:1,msg:"成功删除文件！"})
+               return;
+           })
+         }else{
+            var path = '../../resource/junk' + req.body.pos +'/'+ req.body.name
+            fs.rmdir(path,function(error){
+               if(error){
+                  //  console.log(error);
+                   if(error.code=='ENOTEMPTY'){
+                      res.send({success:0,msg:"删除失败：文件夹里还有东西哦"})
+                      return
+                   }
+               }
+               res.send({success:1,msg:"成功删除文件夹！"})
+               return;
+           })
+         }
+      }else{
+         res.send({success:0,msg:"删除失败：没有权限"})
+         return;
+      }
+   })
+})
 module.exports = router;

@@ -19,7 +19,7 @@ const mutations = {
    },
    isPhoneTog(state,bool){
       state.isPhone = bool
-      console.log(state.isPhone)
+      // console.log(state.isPhone)
    },
    receiveLoginState(state,v){
       state.loginState = v  // -1  0  1  2  3

@@ -2,7 +2,7 @@
    <div id="demo-wrapper">
       <div id="grid" v-if="show==0"> 
          <div class="demo" v-for="(item,index) in demos" :key="index" :class="[item.name]"
-         :style="{gridColumn:item.col,gridRow:item.row}">
+         :style="{gridColumn:item.col,gridRow:item.row}" @click="demoIn(item.finish,item.id)">
             <transition name="slide">
             <div class="bg" i="url('../assets/Collections/1.png')" v-if="item.show">
                <span class="text">
@@ -15,7 +15,7 @@
                   <div><span>使用：</span><br><span>{{item.use}}</span></div>
                   <mark></mark>
                   <div><span>点击次数：</span><br><span>{{item.number}}</span></div>
-               <button @click="demoIn(item.finish,item.id)"><i></i>
+               <button ><i></i>
                   {{$store.state.isPhone?'未适配移动设备':'点击进入'}}
                </button>
             </div></div>
@@ -24,7 +24,7 @@
       </div>
       <div v-html="style" v-for="(style,index) in styles" :key="index"></div>
       <snake v-if="show==1"></snake>
-      <wisdom v-if="show==2"></wisdom>
+      <disk v-if="show==2"></disk>
       <poker v-if="show==3"></poker>
    </div>
       
@@ -34,10 +34,10 @@
 <script>
    import snake from './Collections/snake.vue'
    import poker from './Collections/poker.vue'
-   import wisdom from './Collections/wisdom.vue'
+   import disk from './Collections/disk.vue'
    export default {
       name: "collection",
-      components: {snake,poker,wisdom},
+      components: {snake,poker,disk},
       methods:{
          showing(val){
             this.demos.forEach((item)=>{
@@ -76,8 +76,8 @@
                col:'',row:'1/6',color:'#7FB1FF',color2:'rgb(114,159,231)',finish:true,
                pCol:'1/2',pRow:'1/6',mCol:'1/2',mRow:'1/6',
             },{
-               name:'transfer',title:'文件存储站&图床',time:'19.11.5',use:'None',number:'--',id:2,show:false,
-               col:'',row:'',color:'#FFBC7F',color2:'#E7A568',finish:false,
+               name:'disk',title:'网  盘',time:'19.11.5',use:'--',number:'--',id:2,show:false,
+               col:'',row:'',color:'#FFBC7F',color2:'#E7A568',finish:true,
                pCol:'2/3',pRow:'1/8',mCol:'1/2',mRow:'14/21',
             },{
                name:'poker',title:' 斗地主 ',time:'19.10.30',use:'WebSocket',number:'--',id:3,show:false,

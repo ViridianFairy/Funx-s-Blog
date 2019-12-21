@@ -1,8 +1,6 @@
 <template>
    <div id="poker" :style="{width:width+'px',height:height+'px'}">
       <div id="chat-wrapper">
-         
-         
          <div id="chat" ref="chat">
             <transition-group name="msg"><div class="chat-item" v-for="item in chatData" :key="item.date">
                {{item.name}}：{{item.msg}}<span class="time"> {{item.date}}</span>

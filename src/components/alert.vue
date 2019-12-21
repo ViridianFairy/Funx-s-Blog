@@ -2,16 +2,25 @@
 
    <div id="z" @click="clickIn">
       <transition name="fade">
-         <div id="black" v-show="visible"></div>
+         <div id="black" v-show="visible && ['true','false','tips'].includes(type)"></div>
       </transition>
       <transition name="slide-fade">
-         <div class="alert" key="al" v-show="visible">
+         <div class="alert" key="al" v-show="visible && ['true','false','tips'].includes(type)">
             <p>
                <img v-if="type=='true'" src="../assets/Alert/true.svg" />
                <img v-if="type=='false'" src="../assets/Alert/false.svg" />
                <img v-if="type=='tips'" src="../assets/Alert/tips.svg" />
                <span :class="{greentext:type=='true',redtext:type=='false',bluetext:type=='tips'}">{{ msg }}</span>
             </p>
+         </div>
+      </transition>
+      <transition name="tiny">
+         <div id="tiny" v-show="visible && type.match('tiny')" :style="{left:mouse.x-130 + 'px',top:mouse.y+10 + 'px'}">
+         <span v-if="type=='tiny-clipboard'">
+            <span>{{msg.split('：')[0]}}：</span>
+            <span id="tiny-msg">{{msg.split('：')[1]}}</span>
+         </span>
+         <span v-else>{{msg}}</span>   
          </div>
       </transition>
    </div>
@@ -31,12 +40,24 @@
          return {
             type: "",
             msg: "",
-            visible: true
+            visible: true,
+            mouse:null,
          };
       },
       mounted() {
          //Vue.$alertNum ++;
          this.visible = true;
+         if(this.type=='tiny-clipboard'){
+            this.$nextTick(()=>{
+               var obj = document.getElementById('tiny-msg')
+               var selection = window.getSelection();
+               selection.removeAllRanges();
+               var range = new Range();
+               range.selectNodeContents(obj);
+               selection.addRange(range);
+            })
+
+         }
          window.setTimeout(() => {
             //Vue.$alertNum --;
             this.visible = false;
@@ -49,7 +70,7 @@
    #z {
       left: 0;
       top: 0;
-      position: relative;
+      position: absolute;
       z-index: 502;
       height: 100%;
    }
@@ -122,7 +143,24 @@
       transform: translateX(-50%)translateY(-135%);
       opacity: 0.5;
    }
-
+   .tiny-enter-active,.tiny-leave-active {
+      transition: all 0.15s cubic-bezier(0.02, 0.575, 0.1, 0.955);
+   }
+   .tiny-enter,.tiny-leave-to {
+      transform: translate(0,15%);
+      opacity: 0;
+   }
+   #tiny{
+      position: absolute;
+      line-height: 20px;
+      padding: 6px 10px;
+      background-color: rgba(0,0,0,.68);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all .2s;
+      /* transform: translate(-45%,0); */
+   }
    @media screen and (max-width: 768px) {
       .alert img {
          display: block;
