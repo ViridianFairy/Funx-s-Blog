@@ -1,19 +1,21 @@
 <template>
 <transition name="public-slide">
    <div id="disk-wrapper">
-      <div id="files-wrapper">
-         <div class="header">
-            <span>当前位置：
+      <div class="header">
+            <span class="header-addr">当前位置：
                <span v-for="(item,index) in pos.split('/')" :key="item" @click="explore(index)">{{index==0?'根目录':' / '+item}}</span>
             </span>
             <span>文件数：{{files.length}}</span>
-            <span class="header-text">拖动文件直接上传</span>
-            <div class="upload-wrapper">
-                              <input type="file" @change="getFiles" name="avatar" ref="upload"/>
-                              <!-- <input class="upload-text" disabled :placeholder="fileName"> -->
-                              <div class="upload"><button @click="$refs.upload.click()">上传</button></div>
-                           </div>
+            <span class="header-text"></span><!-- 拖动文件直接上传 -->
+            <div class="upload-wrapper" >
+               <input type="file" @change="getFiles" name="avatar" ref="upload" width="2.5"/>
+               <!-- <input class="upload-text" disabled :placeholder="fileName"> -->
+               <div class="upload" title="拖动也可以上传噢"><button @click="$refs.upload.click()">上传</button></div>
+            </div>
+            <button class="blue" style="margin-left:1.6rem" @click="previewChange($event)">{{previewText[previewMode]}}</button>
          </div>
+      <transition-group name="msg3">
+      <div class="files-wrapper" v-if="previewMode==0" key="1"> 
          <table>
             <col style="width:50%"/>  
             <col style="width:17%"/>  
@@ -78,12 +80,19 @@
             </div>
          </transition>
       </div>
+      <div class="files-wrapper" v-if="previewMode==1" key="2">
+         <div class="files" v-for="(item,i) in getWaterFiles" :key="item.name+item.time" @dblclick="explore(item,index)">
+            <div class="water">
+               <img :src="'http://funx.pro/resource/junk'+pos+'/'+item.name" :style="{width:water.width[i]}">
+            </div>
+         </div> 
+      </div>
+      </transition-group>
    </div>
 </transition>
 </template>
 
 <script>
-
    export default {
       name: "disk", 
       data(){
@@ -95,9 +104,69 @@
             renameId:-1,
             renameData:"",
             transName:'msg',
+            previewMode:0,
+            previewText:['详细信息','预览图'],
+            waterColNum:4,
+            water:{
+               width:[],
+               left:[],
+               top:[],
+            }
          }
       },
+      computed: {
+         getWaterFullWidth(){
+            return document.getElementById('disk-wrapper').offsetWidth
+         },
+         getWaterFiles(){
+            return this.files.filter(val => ['png','jpg','jpeg','svg'].includes(val.format))
+         },
+      },
       methods:{
+         getImg(fileUrl){
+            return new Promise((resolve, reject) => {
+                let img = new Image();
+                let res = {}
+                img.onload = function () {
+                    res = {
+                        width: this.width,
+                        height: this.height
+                    }
+                    resolve(res)
+                }
+                img.src = fileUrl
+            })
+         },
+         waterCal(){
+            var x = 0 ,pw = this.getWaterFullWidth / this.waterColNum;
+            var y = [] //垂直线上y的长度 0 1 2 3
+            for(let i=0; i < this.waterColNum; i++)
+               y.push(0)
+            for(let i in this.getWaterFiles){
+               let item = this.getWaterFiles[i]
+               let yId = getYId()
+               this.water.width[i] =  pw + 'px'
+               this.water.left[i] = yId*pw + 'px'
+               this.water.top[i] = y[yId]
+               y[i]
+            }
+            function getYId(){
+               let min = 9999
+               let k = -1
+               y.forEach((v,i)=>{
+                  if(v<min) k = i
+               })
+               return k
+            }
+            console.dir(this.water)
+         },
+         previewChange(event){
+            this.previewMode = (++this.previewMode)%(this.previewText.length)
+            this.$alert('切换至'+this.previewText[this.previewMode]+'模式','tiny',{x:event.pageX + 140, y:event.pageY+10})
+            if(this.previewMode == 1){
+               this.waterCal()
+            }
+         },
          select(index,always){
             if(!this.mouseChoose && !always) return;
             
@@ -494,6 +563,10 @@
          }
       }
    }
+   .header-addr{
+      width: auto;
+      transition: 0.2s all;
+   }
    .header{
       margin:0rem 0 1rem 2.4rem;
       font-size: 1.4rem;
@@ -532,10 +605,10 @@
       transition: transform 1.5s;
    }
    
-   .msg-leave-active,.msg2-leave-active{
+   .msg-leave-active,.msg2-leave-active,.msg3-leave-active{
       transition: all 0.08s ease-out;
    }
-   .msg-enter-active,.msg2-enter-active{
+   .msg-enter-active,.msg2-enter-active,.msg3-enter-active{
       transition: all 0.3s 0.08s ease-out;
    }
    .msg-leave-to,
@@ -548,23 +621,32 @@
       transform: translateX(-20px);
       opacity: 0;
    }
-   .msg-move,.msg2-move{
+   .msg3-leave-to{
+      transform: translateY(20px);
+      opacity: 0;
+   }
+   .msg3-enter{
+      transform: translateY(-20px);
+      opacity: 0;
+   }
+   .msg-move,.msg2-move,.msg3-move{
       transition: all 0.25s
    }
    .upload-wrapper{
       height:3rem;
-      margin: 0 !important;
+      margin-left: -1rem;
       display: inline-block;
       position: relative;
    }
    .upload{
       margin: 0 !important;
       position: relative;
-      color:rgb(255, 214, 175)
+      color:rgb(255, 214, 175);
+      transition: 0.2s all;
    }
    input.upload-text{
       position: absolute;
-      width: 10.5rem;
+      width: 2.5rem;
       border: 0.1rem solid rgb(253, 221, 190);
    }
    .upload button{
@@ -574,7 +656,11 @@
       padding: 0.45rem 1rem;
       background-color: #FFB876;
    }
-      input[type="file"]{
+   .upload button:hover{
+      background-color: rgb(231, 170, 112);
+   }
+   input[type="file"]{
+      width:2.5rem;
       opacity: 0;
       position: absolute;
    }
