@@ -1,4 +1,5 @@
 <template>
+   <transition name="public-slide">
    <div id="demo-wrapper">
       <div id="grid" v-if="show==0"> 
          <div class="demo" v-for="(item,index) in demos" :key="index" :class="[item.name]"
@@ -23,26 +24,30 @@
          </div>
       </div>
       <div v-html="style" v-for="(style,index) in styles" :key="index"></div>
-      <snake v-if="show==1"></snake>
+      <!-- <snake v-if="show==1"></snake>
       <disk v-if="show==2"></disk>
-      <poker v-if="show==3"></poker>
+      <gossip v-if="show==3"></gossip> -->
    </div>
+   </transition>
       
-  
+
 </template>
 
 <script>
+// show已经弃用
    import snake from './Collections/snake.vue'
-   import poker from './Collections/poker.vue'
+   import gossip from './Collections/gossip.vue'
    import disk from './Collections/disk.vue'
    export default {
       name: "collection",
-      components: {snake,poker,disk},
+      components: {snake,gossip,disk},
       methods:{
          showing(val){
             this.demos.forEach((item)=>{
                if(val==item.id){
-                  location.hash = `#${item.name}`
+                  // location.hash = `${item.name}`
+                  console.log(item.name)
+                  this.$router.push(`/demo/${item.name}`)
                   this.show = val;
                   return;
                }
@@ -80,8 +85,8 @@
                col:'',row:'',color:'#FFBC7F',color2:'#E7A568',finish:true,
                pCol:'2/3',pRow:'1/8',mCol:'1/2',mRow:'14/21',
             },{
-               name:'poker',title:' 斗地主 ',time:'19.10.30',use:'WebSocket',number:'--',id:3,show:false,
-               col:'',row:'',color:'#FF8F7F',color2:'#E88172',finish:false,
+               name:'gossip',title:'gossip',time:'19.10.30',use:'WebSocket',number:'--',id:3,show:false,
+               col:'',row:'',color:'#FF8F7F',color2:'#E88172',finish:true,
                pCol:'1/2',pRow:'8/12',mCol:'1/2',mRow:'8/12',
             }
             ],
@@ -119,7 +124,7 @@
             </style>`)
             setTimeout(()=>{
                item.show = true
-            },(index+1)*90)
+            },(index+2.2)*90)
          })
       },
       watch:{

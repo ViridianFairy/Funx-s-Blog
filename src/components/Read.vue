@@ -1,4 +1,5 @@
 <template>
+<transition name='public-slide' v-if="!loading">
   <div id="read-wrapper" name="article" >
      <div id="read-colorful"
      :style="{backgroundImage:`linear-gradient(to right,rgb(255, 255, 255) 15%,rgba(255, 255, 255, 0) 50%),
@@ -31,6 +32,7 @@
     <div id="read-body" v-html="article.body"></div>
     
   </div>
+</transition>
 </template>
 <script>
 import loading from "./loading";
@@ -53,7 +55,7 @@ export default {
           this.article = res.data[0];
           //debugger;
           this.article.body = marked(res.data[0].body);
-
+          this.loading=false
           //vuex
           this.$store.state.invalidArticle = false;
           if (this.article.lookNum == -1)
@@ -107,7 +109,8 @@ export default {
   data() {
     return {
       article: {},
-      isAdmin: 0
+      isAdmin: 0,
+      loading:true,
     };
   },
   created() {

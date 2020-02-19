@@ -103,12 +103,21 @@ router.post('/api/disk/getPublic',(req,res)=>{
          }
          fs.stat(path.join(pathName,files[i]),(err,info)=>{
             if(1){ //info.isFile()
+               var realSize = Math.ceil(info.size/1024)
+               if(realSize >= 1024){
+                  realSize /= 1024
+                  realSize = realSize.toFixed(2)
+                  realSize += ' MB'
+               }else{
+                  realSize += ' KB'
+               }
                let obj = {
                   isFile:info.isFile(),
                   name:files[i],
-                  size:String(Math.ceil(info.size/1024)).replace(/\B(?=(?:\d{3})+\b)/g, ',') + ' KB',
-                  time:info.atime,
-                  changeTime:Time.getFuzzyTime(info.atime),
+                  //size:String().replace(/\B(?=(?:\d{3})+\b)/g, ',') ,
+                  size:realSize,
+                  time:info.mtime,
+                  changeTime:Time.getFuzzyTime(info.mtime),
                }
                data.push(obj)
                iter(i+1)

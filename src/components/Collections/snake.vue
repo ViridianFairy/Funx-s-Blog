@@ -158,7 +158,6 @@
       </div>
    </div>
 </template>
-
 <script>
    var PI = 3.141
    import Velocity from 'velocity-animate'
@@ -1343,7 +1342,7 @@
       transition: all 0.5s ease-in-out;
    }
    .slide-fade-leave-active {
-      transition: all 0.5s ease-in-out;
+      transition: all 0.2s ease-in-out;
    }
    .slide-fade-enter,
    .slide-fade-leave-to {

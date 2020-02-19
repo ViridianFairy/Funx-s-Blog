@@ -1,4 +1,5 @@
 <template>
+<transition name='public-slide' v-if="!loading">
    <div id="big-wrapper">
       <div style="float:right;margin:1rem 1rem -0.7rem 0;color:#ddd;font-size:1.2rem;">
          暂时凑数，来源：知乎收藏热榜，10分钟更新一次。
@@ -24,6 +25,7 @@
          </div>
       </article>
    </div>
+</transition>
 </template>
 
 <script>
@@ -33,6 +35,7 @@
       components: {Palette},
       data() {
          return {
+           loading:true,
            bihus:[],
            shows:[]
          };
@@ -57,6 +60,7 @@
       mounted() {
         this.$http.post('/collection/init').then(res=>{
            this.bihus = res.data
+           this.loading=false
            this.bihus.forEach(()=>{
               this.shows.push(false)
            })

@@ -680,7 +680,20 @@ router.post('/api/disk/delete',(req,res)=>{
                if(error){
                   //  console.log(error);
                    if(error.code=='ENOTEMPTY'){
-                      res.send({success:0,msg:"删除失败：文件夹里还有东西哦"})
+                     (function delDir(p) {
+                        var list = fs.readdirSync(p)
+                        list.forEach((v, i) => {
+                          var url = p + '/' + v
+                          var stats = fs.statSync(url)
+                          if (stats.isFile()) {
+                            fs.unlinkSync(url)
+                          } else {
+                            arguments.callee(url)
+                          }
+                        })
+                        fs.rmdirSync(p)
+                      })(path)
+                      res.send({success:1,msg:"成功删除非空文件夹！"})
                       return
                    }
                }

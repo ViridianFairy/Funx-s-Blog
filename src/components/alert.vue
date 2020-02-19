@@ -2,25 +2,31 @@
 
    <div id="z" @click="clickIn">
       <transition name="fade">
-         <div id="black" v-show="visible && ['true','false','tips'].includes(type)"></div>
+         <div id="black" v-show="visible && (type.match('true')||type.match('false')||type.match('tips'))"></div>
       </transition>
       <transition name="slide-fade">
-         <div class="alert" key="al" v-show="visible && ['true','false','tips'].includes(type)">
-            <p>
-               <img v-if="type=='true'" src="../assets/Alert/true.svg" />
-               <img v-if="type=='false'" src="../assets/Alert/false.svg" />
-               <img v-if="type=='tips'" src="../assets/Alert/tips.svg" />
-               <span :class="{greentext:type=='true',redtext:type=='false',bluetext:type=='tips'}">{{ msg }}</span>
-            </p>
+         <div class="alert" key="al" v-show="visible && (type.match('true')||type.match('false')||type.match('tips'))">
+            <div style="margin:1.2rem 0.5rem 1.2rem 0">
+               <img v-if="type.match('true')" src="../assets/Alert/true.svg" />
+               <img v-if="type.match('false')" src="../assets/Alert/false.svg" />
+               <img v-if="type.match('tips')" src="../assets/Alert/tips.svg" />
+            </div>
+            <div style="margin:2.1rem 0.5rem 0 0">
+               <span :class="{greentext:type.match('true'),
+               redtext:type.match('false'),bluetext:type.match('tips')}">{{ msg }}</span>
+            </div>
          </div>
       </transition>
       <transition name="tiny">
          <div id="tiny" v-show="visible && type.match('tiny')" :style="{left:mouse.x-130 + 'px',top:mouse.y+10 + 'px'}">
-         <span v-if="type=='tiny-clipboard'">
-            <span>{{msg.split('：')[0]}}：</span>
+         <span v-if="type.match('tiny-clipboard')">
+            <span style="white-space:pre">{{msg.split('：')[0]}}：
+</span>
             <span id="tiny-msg">{{msg.split('：')[1]}}</span>
          </span>
-         <span v-else>{{msg}}</span>   
+         <span v-else>
+            <span v-for="i in msg.split('')">{{i}}</span>
+         </span>   
          </div>
       </transition>
    </div>
@@ -85,7 +91,9 @@
       background-image: linear-gradient(bottom,
          rgba(0, 0, 0, 0.00) 0%,rgba(0, 0, 0, 0.2) 50%,rgba(0, 0, 0, 0.5) 90%);
    } 
-
+   #tiny-msg{
+      white-space: pre;
+   }
    .alert {
       z-index: 503;
       position: fixed;
@@ -99,13 +107,14 @@
       border-radius: 0.5rem;
       border: 1px solid rgb(218, 237, 251);
       box-shadow: 0px 1px 5px 1px rgba(44, 44, 44, 0.194);
+      display: flex;
    }
 
    .alert img {
       width: 8rem;
    }
 
-   .alert p {
+   .alert {
       text-align: left;
       font-weight: bold;
       color: rgb(92, 92, 92);
@@ -115,7 +124,8 @@
    .alert span {
       font-size: 1.8rem;
       vertical-align: 2rem;
-      line-height: 1.5;
+      line-height: 0;
+      white-space: pre;
    }
 
    .greentext {

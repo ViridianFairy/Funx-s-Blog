@@ -37,8 +37,8 @@ import Alert from "./components/alert";
 const alertBox = Vue.extend(Alert);
 //Vue.prototype.$alertNum = 0;
 Vue.prototype.$alert = function(msg, type, Obj) {
-
-   if (document.getElementsByClassName('alert').length >= 2) return;
+   if (document.getElementsByClassName('alert').length >= 2 && !type.match('overload')) return;
+   console.log('conti')
    if (type == "") type = "true";
    var a = new alertBox({
       data: {

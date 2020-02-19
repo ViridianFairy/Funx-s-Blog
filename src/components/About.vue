@@ -58,6 +58,9 @@ export default {
          {ver:"",time:"2019.11.8",body:[
             "计划：Skeleton 更多懒加载",
          ]},
+         {ver:"",time:"2019.12.2",body:[
+            "网盘",
+         ]},
       ]
     }
   },mounted() {

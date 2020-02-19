@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Lottie.js</title>
+<style>
+body {
+    background-color: rgba(132, 185, 190, 0);
+    overflow: hidden;
+    text-align: center;
+}
+body,
+html {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+#svg-wrapper{
+   width:100vw;
+   height: auto;
+}
+#atsuko{
+   position: relative;
+   
+   
+   height: auto;
+   
+   left:0;
+   top:0;
+}
+#atsuko svg{
+   max-width: 750px;
+   max-height: 550px;
+   width:100vw;
+   margin:0 auto;
+}
+</style>
+</head>
+<body>
+<div id="svg-wrapper">
+   <div id="atsuko"></div>
+</div>
+
+<script src='lottie.min.js'></script>
+<script>
+//  var bg = lottie.loadAnimation({
+//         wrapper:document.querySelector('#bg'),
+//         animType: 'svg',
+//         loop: true,
+//         prerender: true,
+//         autoplay: true,
+//         path: './svg-bg.json',
+//         speed:0.5
+//     });
+var atsuko = lottie.loadAnimation({
+        wrapper:document.querySelector('#atsuko'),
+        animType: 'svg',
+        loop: false,
+        prerender: true,
+        autoplay: true,
+        path: './svg.json'
+    });
+var logo = lottie.loadAnimation({
+        wrapper:document.querySelector('#logo'),
+        animType: 'svg',
+        loop: false,
+        prerender: true,
+        autoplay: false,
+        path: './svg-logo.json',
+        speed:0.3
+    });
+var speed = 0.3;
+atsuko.addEventListener('complete',()=>{
+   //console.log('over了');
+   speed = -speed;
+   atsuko.setSpeed(speed)
+   //console.log(speed)
+   atsuko.play();
+})
+</script>
+</body>
+</html>
+<!--
+  
+
+
+-->

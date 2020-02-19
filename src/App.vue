@@ -12,7 +12,7 @@
          </div>
          <div id="home-big-wrapper">
             <div id="home-wrapper" :class="{about:expand}">
-               <transition name="slide-fade">
+               <transition name="public-slide">
                   <router-view
                      name="left"
                      :key="key"
@@ -20,11 +20,13 @@
                   ></router-view>
                </transition>
             </div>
-            <div id="home-side" v-if="!expand">
-               <transition name="init">
-                  <router-view name="right" :key="key"></router-view>
-               </transition>
-            </div>
+            <transition name="compress">
+               <div id="home-side" v-if="!expand">
+                  <transition name="init">
+                     <router-view name="right" :key="key"></router-view>
+                  </transition>
+               </div>
+            </transition>
          </div>
          <transition name="slide-fade">
             <router-view name="bottom" :key="key"></router-view>
@@ -105,20 +107,40 @@
                case "/collection":
                   this.$store.state.path = [{ name: "收藏", link: "/collection" }];
                   break;
+               // case "/demo":
+               //    this.expand = true;
+               //    this.$store.state.path = [{ name: "Demo", link: "/demo" }];
+               //    switch(location.hash){
+               //       case '#snake':
+               //          this.$store.state.path.splice(2,0,{name:"SnakeGame", link: "/demo#snake"})
+               //          break;
+               //       case '#poker':
+               //          this.$store.state.path.splice(2,0,{name:"PokerGame", link: "/demo#poker"})
+               //          break;
+               //       case '#disk':
+               //          this.$store.state.path.splice(2,0,{name:"网盘", link: "/demo#disk"})
+               //          break;
+               //    }
+               //    break;
                case "/demo":
                   this.expand = true;
                   this.$store.state.path = [{ name: "Demo", link: "/demo" }];
-                  switch(location.hash){
-                     case '#snake':
-                        this.$store.state.path.splice(2,0,{name:"SnakeGame", link: "/demo#snake"})
-                        break;
-                     case '#poker':
-                        this.$store.state.path.splice(2,0,{name:"PokerGame", link: "/demo#poker"})
-                        break;
-                     case '#disk':
-                        this.$store.state.path.splice(2,0,{name:"网盘", link: "/demo#disk"})
-                        break;
-                  }
+                  break;
+               case "/demo/snake":
+                  this.expand = true;
+                  this.$store.state.path.splice(2,0,{name:"SnakeGame", link: "/demo/snake"})
+                  break;
+               case "/demo/gossip":
+                  this.expand = true;
+                  this.$store.state.path.splice(2,0,{name:"gossip", link: "/demo/gossip"})
+                  break;
+               case "/demo/disk":
+                  this.expand = true;
+                  this.$store.state.path.splice(2,0,{name:"网盘", link: "/demo/disk"})
+                  break;
+               case "/404":
+                  this.expand = true;
+                  this.$store.state.path = [{ name: "404", link: "/404" }];
                   break;
                case "/about":
                   this.expand = true;
@@ -155,6 +177,7 @@
          }, 0);
       },
       mounted() {
+         document.getElementById('appLoading').remove()
          this.mainShow = true;
          setTimeout(() => {
             this.naviShow = true;
@@ -228,6 +251,7 @@
       position: relative;
    }
    #home-wrapper {
+      transition: 0.3s ease-out;
       border: 1px solid #f1f1f1;
       border-top: none;
       box-shadow: -5px 0px 5px -5px rgba(50, 50, 50, 0.15),
@@ -239,6 +263,7 @@
    }
    #home-side {
       /* position: relative; */
+      transition: 0.4s ease-out;
       height: 100%;
       width: 20%;
       border: 1px solid #f1f1f1a7;
@@ -273,9 +298,26 @@
       text-align: center;
       margin: 0.2rem auto 0.2rem 1rem;
    }
+   .public-slide-enter-active {
+      transition: all 0.45s ease-in-out;
+   }
+   .public-slide-leave-active {
+      transition: all 0.15s ease-in-out;
+   }
+   .public-slide-enter{
+      transform: translateX(15px);
+      opacity: 0;
+   }
+   .public-slide-leave-to{
+      transform: translateX(-15px);
+      opacity: 0;
+   }
    /*-------------------------------------
    重置和补丁
 -------------------------------------*/
+   *{
+      font-family:'Microsoft YaHei','arial'
+   }
    body {
       margin: 0;
       padding: 0;
@@ -339,6 +381,14 @@
    .init-enter,
    .init-leave {
       opacity: 0;
+   }
+   .compress-enter-active,.compress-leave-active {
+      transition: all 0.5s;
+   }
+   .compress-enter,
+   .compress-leave {
+      opacity: 0;
+      width:0;
    }
    
    

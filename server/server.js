@@ -1,22 +1,22 @@
 const express = require("express");
 const app = express();
 const Router = require("./api")
-const Poker = require("./poker")
 const Router_upload= require("./upload")
-const Router_wisdom= require("./wisdom")
+const Gossip = require('./gossip.js')
+// const Autoappr= require("./automatic/autoappr.js")
 app.use(require("cors")());
 app.use(express.json());
 // begin
 app.use(Router)
 app.use(Router_upload)
-app.use(Router_wisdom)
-app.use(Poker.router)
+app.use(Gossip.router)
 
 // end
 app.listen(3001,'0.0.0.0', () => {
    console.log("success");
 });
-Poker.server.listen(3000)
+Gossip.server.listen('3002')
+// Autoappr.server.listen(3000)
 
 
 

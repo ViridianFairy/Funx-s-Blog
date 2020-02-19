@@ -1,4 +1,5 @@
 <template>
+<transition name="public-slide">
    <div id="disk-wrapper">
       <div id="files-wrapper">
          <div class="header">
@@ -6,7 +7,12 @@
                <span v-for="(item,index) in pos.split('/')" :key="item" @click="explore(index)">{{index==0?'根目录':' / '+item}}</span>
             </span>
             <span>文件数：{{files.length}}</span>
-            <span>拖动文件直接上传</span>
+            <span class="header-text">拖动文件直接上传</span>
+            <div class="upload-wrapper">
+                              <input type="file" @change="getFiles" name="avatar" ref="upload"/>
+                              <!-- <input class="upload-text" disabled :placeholder="fileName"> -->
+                              <div class="upload"><button @click="$refs.upload.click()">上传</button></div>
+                           </div>
          </div>
          <table>
             <col style="width:50%"/>  
@@ -17,14 +23,13 @@
                <span v-if="choose.filter(val=>val>0).length==0">文件名</span>
                <span v-else>
                已选中 {{choose.filter(val=>val>0).length}} 个文件&nbsp;
-                <img class="oper-img" src="../../assets/Collections/Disk/下移.svg" draggable='false'>&nbsp;
-                <img class="oper-img" src="../../assets/Collections/Disk/删除.svg" draggable='false'>&nbsp;
-                <img class="oper-img" src="../../assets/Collections/Disk/分享.svg" draggable='false'>&nbsp;
+                <img @click="download([],$event)" class="oper-img" src="../../assets/Collections/Disk/下移.svg" draggable='false'>&nbsp;
+                <img @click="delet([])" class="oper-img" src="../../assets/Collections/Disk/删除.svg" draggable='false'>&nbsp;
+                <img @click="share($event,[])" class="oper-img" src="../../assets/Collections/Disk/分享.svg" draggable='false'>&nbsp;
             </span>
             </th>
-            <th>大小</th><th>最后修改时间</th><th>操作</th></tr>
-            
-         <tbody is="transition-group" name="msg" appear>
+            <th>大小</th><th>最后修改</th><th>操作</th></tr>
+         <tbody is="transition-group" :name="transName"  mode="out-in">
             <tr class="files" v-for="(item,index) in files" :key="item.name+item.time" @dblclick="explore(item,index)">
                <td class="format">
                   <!--代码 文本 图片 办公三件套 压缩 音乐 视频 -->
@@ -37,7 +42,7 @@
                   <img v-else-if="['doc','docx'].includes(item.format)" src="../../assets/Collections/Disk/n-word.svg" draggable='false'>
                   <img v-else-if="['zip','rar'].includes(item.format)" src="../../assets/Collections/Disk/n-zip.svg" draggable='false'>
                   <img v-else-if="['mp3','flac'].includes(item.format)" src="../../assets/Collections/Disk/audio.svg" draggable='false'>
-                  <img v-else-if="['mp4','avi'].includes(item.format)" src="../../assets/Collections/Disk/video.svg" draggable='false'>
+                  <img v-else-if="['mp4','avi','mov','MOV'].includes(item.format)" src="../../assets/Collections/Disk/video.svg" draggable='false'>
                   <img v-else-if="['txt'].includes(item.format)" src="../../assets/Collections/Disk/n-txt.svg" draggable='false'>
                   <img v-else-if="['cpp','html','js','c','css'].includes(item.format)" src="../../assets/Collections/Disk/n-txt.svg" draggable='false'>
                   <img v-else-if="['png','jpg','jpeg','svg'].includes(item.format)" src="../../assets/Collections/Disk/image.svg" draggable='false'>
@@ -56,8 +61,8 @@
                <td><span v-if="item.isFile">{{item.size}}</span><span v-else>--</span></td> 
                <td>{{item.changeTime}}</td>
                <td class="oper">
-                  <img v-if="item.isFile" @click="download(index)" src="../../assets/Collections/Disk/下移.svg" draggable='false'>
-                  <img @click="delet(index)" src="../../assets/Collections/Disk/删除.svg" draggable='false'>
+                  <img v-if="item.isFile" @click="download(index,$event)" src="../../assets/Collections/Disk/下移.svg" draggable='false'>
+                  <img @click="delet(index)" class="delete-icon" src="../../assets/Collections/Disk/删除.svg" draggable='false'>
                   <img v-if="item.isFile" @click="share($event,index)" src="../../assets/Collections/Disk/分享.svg" draggable='false'>
                </td>
                
@@ -74,6 +79,7 @@
          </transition>
       </div>
    </div>
+</transition>
 </template>
 
 <script>
@@ -88,6 +94,7 @@
             mouseChoose:false,
             renameId:-1,
             renameData:"",
+            transName:'msg',
          }
       },
       methods:{
@@ -95,14 +102,28 @@
             if(!this.mouseChoose && !always) return;
             
             var stat = !this.choose[index]
-            this.choose.splice(index,1,stat)#
+            this.choose.splice(index,1,stat)
          },
          cancalRename(){
             this.renameId = -1;
          },
          share(event, index){
+            if(Array.isArray(index)){
+               index = this.choose
+               var text = ''
+               for(let i=0;i<index.length;i++){
+                  if(!index[i]) continue;
+                  if(this.files[i].isFile==false) continue;
+                  text += 'funx.pro/resource/junk'+this.pos+'/'+this.files[i].name+'\n';
+               }
+               if(text=='')
+                  text='文件夹无链接'
+               this.$alert('右键复制：'+text,'tiny-clipboard',{x:event.pageX, y:event.pageY})
+               return;
+            }else{
             var text='funx.pro/resource/junk'+this.pos+'/'+this.files[index].name;
             this.$alert('右键复制：'+text,'tiny-clipboard',{x:event.pageX, y:event.pageY})
+            }
          },
          rename(index){
             this.renameData = this.files[index].name
@@ -146,6 +167,7 @@
             })
          },
          delet(index){
+
             this.$http
             .post("/disk/delete",{
                pos:this.pos,
@@ -161,11 +183,38 @@
                }else{
                   this.$alert(res.data.msg,"false");
                }
-               
             })
          },
-         download(index){
-            var x=new XMLHttpRequest();
+         download(index,e){
+            var hasFile = false;
+            if(Array.isArray(index)){
+               index = this.choose
+               for(let i=0;i<index.length;i++){
+                  console.log('111')
+                  if(index[i]==0) continue;
+                  if(this.files[i].isFile==false) continue;
+                  var x=new XMLHttpRequest();
+                  x.open("GET", 'http://funx.pro/resource/junk'+this.pos+'/'+this.files[i].name, true);
+                  x.responseType = 'blob';
+               x.onload=(e)=>{
+                  hasFile = true
+                  var url = window.URL.createObjectURL(x.response)
+                  var a = document.createElement('a');
+                  a.href = url
+                  a.download = this.files[i].name
+                  a.click()
+               }
+               x.send();
+               }
+               this.$alert(`开始下载文件（未完成，后端压缩包）`,'tiny-overload',{x:e.pageX, y:e.pageY})
+               if(hasFile){
+                  //this.$alert(`开始下载文件`,'tiny-overload',{x:e.pageX, y:e.pageY})
+               }else{
+                  //this.$alert(`无文件可下载，也许你选择了文件夹`,'tiny-overload',{x:e.pageX, y:e.pageY})
+               }
+               return;
+            }else{
+                var x=new XMLHttpRequest();
             x.open("GET", 'http://funx.pro/resource/junk'+this.pos+'/'+this.files[index].name, true);
             x.responseType = 'blob';
             x.onload=(e)=>{
@@ -176,9 +225,13 @@
                 a.click()
             }
             x.send();
+            this.$alert(`开始下载文件`,'tiny-overload',{x:e.pageX, y:e.pageY})
+            }
+           
          },
          explore(item,index){
             if(typeof item == 'number'){
+               this.transName = 'msg2'
                var arr = this.pos.split('/')
                var tpos = ''
                for(let i=1;i<=item;i++){
@@ -191,7 +244,8 @@
                this.refresh(true)
             }
             else if(!item.isFile){
-               this.pos += '/' + item.name  
+               this.transName = 'msg'
+               this.pos += '/' + item.name
                this.refresh(true)
             }else{
                //this.$alert("暂不支持预览哦","tips");
@@ -207,6 +261,7 @@
             .then(res => {
                this.files = res.data.data;
                if(first){
+                  this.choose = [];
                   this.files.forEach(()=>{
                      this.choose.push(0)
                   })
@@ -214,7 +269,33 @@
                   this.choose.unshift(0)
                }
             })
-         }
+         },
+         getFiles(e) {
+            e.preventDefault();
+            if(e.target.files[0].size >= 1024 * 1024 * 50){
+               this.$alert("大于50M啦","false");
+               return;
+            }
+            console.log(e.target.files[0])
+            var formData = new FormData()
+            this.fileName = e.target.files[0].name
+            formData.append('file', e.target.files[0])
+               formData.append('name', e.target.files[0].name)
+               formData.append('pos', this.pos)
+            this.$alert(`开始上传文件`,'tiny-overload',{x:e.pageX, y:e.pageY})
+            var config = {
+               headers: { 'Content-Type': 'multipart/form-data' }
+            }
+            this.$http.post('/disk/uploadPublic', formData, config ).then(res=>{
+               if(res.data.success==1){
+                  this.refresh()
+                  console.log('成功')
+                  this.$alert("上传成功！","true-overload");
+               }else{
+                     this.$alert(res.data.msg,"false-overload");
+                  }
+            })
+         },
       },
       mounted(){
          var box = document.getElementById("disk-wrapper")
@@ -225,25 +306,44 @@
             e.preventDefault();
             var fileList = e.dataTransfer.files;
             console.log(fileList)
-            if(fileList[0].size >= 1024 * 1024 *100){
-               this.$alert("不能大于100MB噢！","false");
-               return;
-            }
-            var formData = new FormData()
-            formData.append('file', fileList[0])
-            formData.append('name', fileList[0].name)
-            formData.append('pos', this.pos)
-            var config = {
-               headers: { 'Content-Type': 'multipart/form-data' }
-            }
-            this.$http.post('/disk/uploadPublic', formData, config ).then(res=>{
-               if(res.data.success==1){
-                  this.refresh()
-                  this.$alert("上传成功！","true");
-               }else{
-                  this.$alert(res.data.msg,"false");
+            this.$alert(`开始上传文件`,'tiny-overload',{x:e.pageX, y:e.pageY})
+            var msg = '';
+            var count = 0;
+            var success_count = 0;
+            for(let i=0;i<fileList.length;i++){
+               if(fileList[i].size >= 1024 * 1024 *100){
+                  this.$alert("不能大于100MB噢！","false-overload");
+                  return;
                }
-            })  
+               var formData = new FormData()
+               formData.append('file', fileList[i])
+               formData.append('name', fileList[i].name)
+               formData.append('pos', this.pos)
+               var config = {
+                  headers: { 'Content-Type': 'multipart/form-data' }
+               }
+               this.$http.post('/disk/uploadPublic', formData, config ).then(res=>{
+                  count++;
+                  if(res.data.success==1){
+                     success_count++;
+                     this.refresh()
+                     console.log('成功')
+                    // this.$alert("上传成功！","true-overload");
+                  }else{
+                     msg+=res.data.msg+'\n'
+                    // this.$alert(res.data.msg,"false-overload");
+                  }
+                  if(count == fileList.length){
+                     if(success_count==0)
+                        this.$alert(`上传失败${count-success_count}个\n`+msg,"false-overload");
+                     else if(success_count==count && count!=0)
+                        this.$alert(`成功上传${success_count}个文件`,"success-overload");
+                     else
+                        this.$alert(`成功上传${success_count}个文件，失败${count-success_count}个\n`+msg,"tips-overload");
+                  }
+               })
+            }
+  
          })
          box.addEventListener('click',(e)=>{
 
@@ -286,7 +386,12 @@
       padding:0.5rem 1rem;
       margin:-0.4rem 0;
    }
+   #disk-wrapper{
+      min-height:calc(100vh - 100px);
+   }
    table{
+      border: none !important;
+      border-top: 1px solid #f3f3f3 !important;
       table-layout:fixed;
       user-select: none;
       width:100%;
@@ -310,6 +415,7 @@
       tr:nth-child(2n-1){
          background-color:rgba(245, 253, 255, 0.9);
       }
+      
       tr{
          transition:0.2s all;
          &:hover{
@@ -374,6 +480,9 @@
          vertical-align: 0.25rem;
          margin-left: 0.9rem;
          margin-right: 0.9rem;
+//  overflow: hidden;
+//  text-overflow: ellipsis;
+//  white-space: nowrap;
          img{
             vertical-align: -0.6rem;
             margin-left: 0.2rem;
@@ -420,16 +529,70 @@
    }
    .files{
       font-size: 1.5rem;
+      transition: transform 1.5s;
    }
-   .msg-leave-active,.msg-enter-active{
-      transition: all 0.3s ease-out;
+   
+   .msg-leave-active,.msg2-leave-active{
+      transition: all 0.08s ease-out;
    }
-   .msg-leave {
-      // transform: translateX(-30px);
+   .msg-enter-active,.msg2-enter-active{
+      transition: all 0.3s 0.08s ease-out;
+   }
+   .msg-leave-to,
+   .msg2-enter{
+      transform: translateX(20px);
       opacity: 0;
    }
-   .msg-enter{
-      transform: translateX(-30px);
+   .msg-enter,
+   .msg2-leave-to{
+      transform: translateX(-20px);
       opacity: 0;
    }
+   .msg-move,.msg2-move{
+      transition: all 0.25s
+   }
+   .upload-wrapper{
+      height:3rem;
+      margin: 0 !important;
+      display: inline-block;
+      position: relative;
+   }
+   .upload{
+      margin: 0 !important;
+      position: relative;
+      color:rgb(255, 214, 175)
+   }
+   input.upload-text{
+      position: absolute;
+      width: 10.5rem;
+      border: 0.1rem solid rgb(253, 221, 190);
+   }
+   .upload button{
+      margin-top: -0.10rem;
+      margin-right: 0;
+      margin-left:0.1rem;
+      padding: 0.45rem 1rem;
+      background-color: #FFB876;
+   }
+      input[type="file"]{
+      opacity: 0;
+      position: absolute;
+   }
+   @media screen and (max-width: 768px) {
+      .header-text{
+         display: none;
+      }
+      .header{
+         margin-top: 1rem;
+      }
+      .attach{
+         img:nth-child(2),img:nth-child(1){
+            display: none;
+         }
+      }
+      .delete-icon{
+         display: none;
+      }
+   }
+   
 </style>

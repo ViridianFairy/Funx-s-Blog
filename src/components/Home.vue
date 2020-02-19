@@ -1,5 +1,6 @@
 <template>
-   <div>
+<transition name='public-slide' v-if="!loading">
+   <div id="big">
       <div class="home-item" v-for="item in articles" :key="item.title">
             <router-link :to="'/read?id='+item._id">
                <h1>{{ item.title }}</h1>
@@ -19,6 +20,7 @@
          </p>
       </div>
    </div>
+</transition>
 </template>
 
 <script>
@@ -27,6 +29,7 @@
       components: {},
       data() {
          return {
+            loading:true,
             articles: {}
          };
       },
@@ -35,6 +38,7 @@
             .post("/articles",{ _id: this.Cookies.get("_id")} )
             .then(res => {
                this.articles = res.data;
+               this.loading = false
             })
             .catch(e => {});
       },

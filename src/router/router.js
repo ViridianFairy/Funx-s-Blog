@@ -12,8 +12,16 @@ import sideCategory from "../components/side-category.vue"
 import sideReadlinks from "../components/side-readlinks.vue"
 import Collection from "../components/Collection";
 import Demo from "../components/Demo";
+import nothing from "../components/404";
+import disk from "../components/Collections/disk";
+import gossip from "../components/Collections/gossip";
+import snake from "../components/Collections/snake";
+import autoappr from "../components/Collections/autoappr";
 Vue.use(VueRouter);
 const routes = [
+   {
+      path:'/d',redirect:'/demo/disk'
+   },
    {
       path: "/",
       components: {
@@ -69,6 +77,34 @@ const routes = [
          left: Demo,
          right: sideDefault,
       }
+   },
+   {
+      path: "/demo/disk",
+      components: {
+         left: disk,
+         right: null,
+      }
+   },
+   {
+      path: "/demo/gossip",
+      components: {
+         left: gossip,
+         right: null,
+      }
+   },
+   {
+      path: "/demo/snake",
+      components: {
+         left: snake,
+         right: null,
+      }
+   },
+   {
+      path: "/404",
+      components: {
+         left: nothing,
+         right: null,
+      }
    }
 ];
 const router = new VueRouter({
@@ -80,7 +116,8 @@ router.beforeEach((to, from, next) => {
    document.documentElement.scrollTop = 0
    window.pageYOffset = 0
    if (to.matched.length === 0) {  //如果未匹配到路由
-      from.path ? next({ path: from.path }) : next('/');   //如果上级也未匹配到路由则跳转主页面，如果上级能匹配到则转上级路由
+      //from.path ? next({ path: from.path }) : 
+      next('/404');   //如果上级也未匹配到路由则跳转主页面，如果上级能匹配到则转上级路由
    } else {
       next();    //如果匹配到正确跳转
    }
