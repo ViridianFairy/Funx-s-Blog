@@ -2,17 +2,24 @@
 <transition name="public-slide">
    <div id="disk-wrapper">
       <div class="header">
-            <span class="header-addr">当前位置：
-               <span v-for="(item,index) in pos.split('/')" :key="item" @click="explore(index)">{{index==0?'根目录':' / '+item}}</span>
+            <span class="header-addr">
+               <span class="delete-icon">当前位置：</span>
+               <span v-for="(item,index) in pos.split('/')" :key="item" @click="explore(index);
+               previewMode=0;buttonRad = '0.4rem';">{{index==0?'根目录':' / '+item}}</span>
             </span>
-            <span>文件数：{{files.length}}</span>
+            <span class="delete-icon">文件数：{{files.length}}</span>
             <span class="header-text"></span><!-- 拖动文件直接上传 -->
-            <div class="upload-wrapper" >
+            <div class="upload-wrapper" style="margin-right:1.6rem;" >
                <input type="file" @change="getFiles" name="avatar" ref="upload" width="2.5"/>
                <!-- <input class="upload-text" disabled :placeholder="fileName"> -->
-               <div class="upload" title="拖动也可以上传噢"><button @click="$refs.upload.click()">上传</button></div>
+               <div class="upload" title="拖动也可以上传噢" >
+                  <button @click="$refs.upload.click()">上传</button>
+               </div>
             </div>
-            <button class="blue" style="margin-left:1.6rem" @click="previewChange($event)">{{previewText[previewMode]}}</button>
+            <button class="simp-green colnum2"  @click="addColNum(-1)" v-if="previewMode==1">-</button>
+            <button class="simp-blue" id="prev" :style="{'border-radius':buttonRad}"
+               @click="previewChange($event)">{{previewText[previewMode]}}</button>
+            <button class="simp-green colnum1"  v-if="previewMode==1" @click="addColNum(1)">+</button>
          </div>
       <transition-group name="msg3">
       <div class="files-wrapper" v-if="previewMode==0" key="1"> 
@@ -81,11 +88,7 @@
          </transition>
       </div>
       <div class="files-wrapper" v-if="previewMode==1" key="2">
-         <div class="files" v-for="(item,i) in getWaterFiles" :key="item.name+item.time" @dblclick="explore(item,index)">
-            <div class="water">
-               <img :src="'http://funx.pro/resource/junk'+pos+'/'+item.name" :style="{width:water.width[i]}">
-            </div>
-         </div> 
+         <water :imgs="getWaterFiles" :path="getPath" :col=waterColNum ></water>
       </div>
       </transition-group>
    </div>
@@ -93,10 +96,15 @@
 </template>
 
 <script>
+   import water from '../plugins/water'
    export default {
-      name: "disk", 
+      name: "disk",
+      components: {
+         water
+      },
       data(){
          return {
+            buttonRad:'0.4rem',
             files:[],
             pos:"",
             choose:[],
@@ -107,11 +115,6 @@
             previewMode:0,
             previewText:['详细信息','预览图'],
             waterColNum:4,
-            water:{
-               width:[],
-               left:[],
-               top:[],
-            }
          }
       },
       computed: {
@@ -121,55 +124,28 @@
          getWaterFiles(){
             return this.files.filter(val => ['png','jpg','jpeg','svg'].includes(val.format))
          },
+         getPath(){
+            return 'http://funx.pro/resource/junk'+this.pos+'/'
+         }
       },
       methods:{
-         getImg(fileUrl){
-            return new Promise((resolve, reject) => {
-                let img = new Image();
-                let res = {}
-                img.onload = function () {
-                    res = {
-                        width: this.width,
-                        height: this.height
-                    }
-                    resolve(res)
-                }
-                img.src = fileUrl
-            })
+         addColNum(n){
+            this.waterColNum += n
+            if(this.waterColNum ==0 ) this.waterColNum = 1
+            if(this.waterColNum ==10 ) this.waterColNum = 9
          },
-         waterCal(){
-            var x = 0 ,pw = this.getWaterFullWidth / this.waterColNum;
-            var y = [] //垂直线上y的长度 0 1 2 3
-            for(let i=0; i < this.waterColNum; i++)
-               y.push(0)
-            for(let i in this.getWaterFiles){
-               let item = this.getWaterFiles[i]
-               let yId = getYId()
-               this.water.width[i] =  pw + 'px'
-               this.water.left[i] = yId*pw + 'px'
-               this.water.top[i] = y[yId]
-               y[i]
-            }
-            function getYId(){
-               let min = 9999
-               let k = -1
-               y.forEach((v,i)=>{
-                  if(v<min) k = i
-               })
-               return k
-            }
-            console.dir(this.water)
-         },
-         previewChange(event){
-            this.previewMode = (++this.previewMode)%(this.previewText.length)
-            this.$alert('切换至'+this.previewText[this.previewMode]+'模式','tiny',{x:event.pageX + 140, y:event.pageY+10})
-            if(this.previewMode == 1){
-               this.waterCal()
-            }
+         previewChange(event, val){
+            if(val)
+               this.previewMode = val
+            else
+               this.previewMode = (++this.previewMode)%(this.previewText.length)
+            if(this.previewMode ==1 ) this.buttonRad = '0'
+            if(this.previewMode ==0 ) this.buttonRad = '0.4rem'
+            if(!val)
+               this.$alert('切换至'+this.previewText[this.previewMode]+'模式','tiny',{x:event.pageX + 140, y:event.pageY+10})
          },
          select(index,always){
             if(!this.mouseChoose && !always) return;
-            
             var stat = !this.choose[index]
             this.choose.splice(index,1,stat)
          },
@@ -438,9 +414,27 @@
             this.mouseChoose = false;      
             // console.log(this.mouseChoose)
          })
+         if(this.$route.query.p){
+            setTimeout(()=>{
+               document.getElementById('prev').click()
+            },400)
+         }  
+            
       },
       created(){
-         
+         var obj = this.$route.query
+         if(obj.l){
+            obj.l.split('/').forEach((v)=>{
+               if(v=='..') window.close()
+               if(v!='..') this.explore({name:v})
+            })
+         }
+         if(obj.p){
+            obj.p.split('/').forEach((v)=>{
+               if(v=='..') window.close()
+               if(v!='..') this.explore({name:v})
+            })
+         }
       }
    };
 
@@ -457,6 +451,16 @@
    }
    #disk-wrapper{
       min-height:calc(100vh - 100px);
+   }
+   .colnum1{
+      
+      padding: 0.5rem 0.8rem;
+      border-radius:0 0.5rem 0.5rem 0;
+   }
+   .colnum2{
+      
+      padding: 0.5rem 0.9rem;
+      border-radius:0.5rem 0  0 0.5rem;
    }
    table{
       border: none !important;
@@ -654,15 +658,21 @@
       margin-right: 0;
       margin-left:0.1rem;
       padding: 0.45rem 1rem;
-      background-color: #FFB876;
+      background-color: rgb(253, 214, 178);
    }
    .upload button:hover{
-      background-color: rgb(231, 170, 112);
+      background-color: rgb(255, 199, 147);
    }
    input[type="file"]{
       width:2.5rem;
       opacity: 0;
       position: absolute;
+   }
+   .water{
+      position:absolute;
+   }
+   .water-wrapper{
+      position:relative;
    }
    @media screen and (max-width: 768px) {
       .header-text{

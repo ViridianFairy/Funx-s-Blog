@@ -3,3 +3,19 @@ baseURL = "http://106.15.200.151"
 module.exports = {
    baseURL
 }
+/*
+
+
+"chromedriver": "^78.0.1",
+"gm": "^1.23.1",
+    "selenium-webdriver": "^4.0.0-alpha.5",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "tesseract.js": "^2.0.1",
+    "puppeteer": "^2.0.0",
+
+        "vue-socket.io": "^3.0.7",
+        "iconv-lite": "^0.5.0",
+
+"mavon-editor": "^2.7.6",
+*/

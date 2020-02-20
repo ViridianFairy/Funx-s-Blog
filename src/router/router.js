@@ -14,9 +14,9 @@ import Collection from "../components/Collection";
 import Demo from "../components/Demo";
 import nothing from "../components/404";
 import disk from "../components/Collections/disk";
-import gossip from "../components/Collections/gossip";
+// import gossip from "../components/Collections/gossip";
 import snake from "../components/Collections/snake";
-import autoappr from "../components/Collections/autoappr";
+// import autoappr from "../components/Collections/autoappr";
 Vue.use(VueRouter);
 const routes = [
    {
@@ -85,13 +85,13 @@ const routes = [
          right: null,
       }
    },
-   {
-      path: "/demo/gossip",
-      components: {
-         left: gossip,
-         right: null,
-      }
-   },
+   // {
+   //    path: "/demo/gossip",
+   //    components: {
+   //       left: gossip,
+   //       right: null,
+   //    }
+   // },
    {
       path: "/demo/snake",
       components: {

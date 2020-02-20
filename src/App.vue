@@ -234,11 +234,29 @@
    .green:hover {
       background-color: #30a852;
    }
+   .simp-green {
+      background-color: #7acd92;
+   }
+   .simp-green:hover {
+      background-color: #4cbb6c;
+   }
    .red {
       background-color: #c74343;
    }
    .red:hover {
       background-color: rgb(183, 54, 54);
+   }
+   .simp-orange {
+      background-color: #b7ac34;
+   }
+   .simp-orange:hover {
+      background-color: #30a852;
+   }
+   .simp-blue {
+      background-color: rgb(149, 220, 236);
+   }
+   .simp-blue:hover {
+      background-color: rgb(120, 208, 228);
    }
    /*-------------------------------------
    路由包裹

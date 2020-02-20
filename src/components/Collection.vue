@@ -29,10 +29,10 @@
 </template>
 
 <script>
-   import Palette from './Collections/palette.vue'
+   //import Palette from './Collections/palette.vue'
    export default {
       name: "collection",
-      components: {Palette},
+      components: {},
       data() {
          return {
            loading:true,
