@@ -8,8 +8,8 @@
                previewMode=0;buttonRad = '0.4rem';">{{index==0?'根目录':' / '+item}}</span>
             </span>
             <span class="delete-icon">文件数：{{files.length}}</span>
-            <span class="header-text"></span><!-- 拖动文件直接上传 -->
-            <div class="upload-wrapper" style="margin-right:1.6rem;" >
+            <span class="header-text">拖动文件上传</span><!--  -->
+            <div class="upload-wrapper" style="margin:0 1.6rem 0 0.2rem" >
                <input type="file" @change="getFiles" name="avatar" ref="upload" width="2.5"/>
                <!-- <input class="upload-text" disabled :placeholder="fileName"> -->
                <div class="upload" title="拖动也可以上传噢" >
@@ -20,6 +20,8 @@
             <button class="simp-blue" id="prev" :style="{'border-radius':buttonRad}"
                @click="previewChange($event)">{{previewText[previewMode]}}</button>
             <button class="simp-green colnum1"  v-if="previewMode==1" @click="addColNum(1)">+</button>
+            <!--<button class="simp-green" id="proto" style="margin-left:1.6rem" :style="{color:buttonColor}"
+               @click="protoChange($event)">{{protoText[proto]}}</button>-->
          </div>
       <transition-group name="msg3">
       <div class="files-wrapper" v-if="previewMode==0" key="1"> 
@@ -115,6 +117,10 @@
             previewMode:0,
             previewText:['详细信息','预览图'],
             waterColNum:4,
+            protoText:['http','https'],
+            proto:0,
+            buttonColor:'',
+            Link:['http://funx.pro/resource/junk','https://ncov.funx.pro']
          }
       },
       computed: {
@@ -125,10 +131,28 @@
             return this.files.filter(val => ['png','jpg','jpeg','svg'].includes(val.format))
          },
          getPath(){
-            return 'http://funx.pro/resource/junk'+this.pos+'/'
+            return this.Link[this.proto]+this.pos+'/'
          }
       },
       methods:{
+         protoChange(event, val){
+            this.pos = ""
+            var t = this.previewMode
+            this.previewMode = -1
+            setTimeout(()=>{
+               this.previewMode = t
+            })
+            if(val)
+               this.proto = val
+            else
+               this.proto = (++this.proto)%(this.protoText.length)
+            if(this.proto ==1 ){
+               this.buttonColor = '#2e9f20'
+            }
+            if(this.proto ==0 ) this.buttonColor = 'white'
+            if(!val)
+               this.$alert('进入'+this.protoText[this.proto]+'协议资源','tiny',{x:event.pageX + 140, y:event.pageY+10})
+         },
          addColNum(n){
             this.waterColNum += n
             if(this.waterColNum ==0 ) this.waterColNum = 1
@@ -159,14 +183,14 @@
                for(let i=0;i<index.length;i++){
                   if(!index[i]) continue;
                   if(this.files[i].isFile==false) continue;
-                  text += 'funx.pro/resource/junk'+this.pos+'/'+this.files[i].name+'\n';
+                  text += this.Link[this.proto] +this.pos+'/'+this.files[i].name+'\n';
                }
                if(text=='')
                   text='文件夹无链接'
                this.$alert('右键复制：'+text,'tiny-clipboard',{x:event.pageX, y:event.pageY})
                return;
             }else{
-            var text='funx.pro/resource/junk'+this.pos+'/'+this.files[index].name;
+            var text= this.Link[this.proto] +this.pos+'/'+this.files[index].name;
             this.$alert('右键复制：'+text,'tiny-clipboard',{x:event.pageX, y:event.pageY})
             }
          },
@@ -239,7 +263,7 @@
                   if(index[i]==0) continue;
                   if(this.files[i].isFile==false) continue;
                   var x=new XMLHttpRequest();
-                  x.open("GET", 'http://funx.pro/resource/junk'+this.pos+'/'+this.files[i].name, true);
+                  x.open("GET", this.Link[this.proto] +this.pos+'/'+this.files[i].name, true);
                   x.responseType = 'blob';
                x.onload=(e)=>{
                   hasFile = true
@@ -260,7 +284,7 @@
                return;
             }else{
                 var x=new XMLHttpRequest();
-            x.open("GET", 'http://funx.pro/resource/junk'+this.pos+'/'+this.files[index].name, true);
+            x.open("GET", this.Link[this.proto] +this.pos+'/'+this.files[index].name, true);
             x.responseType = 'blob';
             x.onload=(e)=>{
                 var url = window.URL.createObjectURL(x.response)

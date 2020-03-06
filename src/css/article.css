@@ -23,17 +23,24 @@
    color:rgba(59, 139, 157, 0.778);
 }
 #home-wrapper th{
-   color:#909399;
-   padding: 0.8rem 0;
+   color:#778c90;
+   padding: 0.4rem 0.5rem;
+   
 }
 #home-wrapper td{
    font-size: 1.5rem;
    height: 100%;
    color:#54575c;
-   padding: 0.9rem 0;
-   border-top: 1px dashed #ebeef5;
+   padding: 0.6rem 0.5rem;
+   border-top: 1px dashed #d5dee9;
+   border-left: 1px dashed #e0eaf6;
+   text-align: center;
+}
+#home-wrapper table *:nth-child(1){
+   border-left: none;
 }
 #home-wrapper table{
+   width: 100%;
    border: 1px solid #ebebeb;
     border-radius: 3px;
     transition: 0.3s all;
@@ -102,17 +109,19 @@ blockquote p{
 }
 h2{
    margin-left:0rem;
-   color:rgb(58, 58, 58);
+   color:rgb(35, 72, 91);
    font-size: 2.5rem;
    padding-bottom: 0.5rem;
    border-bottom: dashed 1px rgb(224, 224, 224);
+   letter-spacing: 0.12rem;
 }
 h2:hover,h3:hover{
    cursor:default;
-   color:rgb(17, 70, 75);
+   color:rgb(58, 105, 109);
 }
 h2:hover::before,h3:hover::before{
-   color:rgb(19, 112, 127);
+   
+   opacity: 0.7;
 }
 h2::before{
    font:normal normal normal 14px/1 FontAwesome;
@@ -122,7 +131,7 @@ h2::before{
    color:rgb(49, 111, 126);
 }
 h3{
-   color:rgb(55, 55, 55);
+   color:rgb(70, 114, 118);
    font-size: 2rem;
    margin:0.8rem 0;
    margin-left:0rem;
@@ -137,7 +146,7 @@ h3{
 ul{
    list-style: disc;
 }
-ul li{
+ul li,ol li{
    margin-left:3rem;
 }
 dd{

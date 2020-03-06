@@ -14,10 +14,10 @@
          </h2>
          <h3 v-for="unit in item.body">{{unit}}</h3>
       </div>
-      <div class="item" style="margin-bottom:1.5rem ;"><h2>
+      <!--<div class="item" style="margin-bottom:1.5rem ;"><h2>
          <img src="../assets/About/overall.svg" class="icn" style="width: 3.1rem">
          Vue-cli Vue-router Vuex Nodejs Express
-      </h2></div>
+      </h2></div>-->
   </div>
 </template>
 
@@ -107,7 +107,10 @@ export default {
       height: 55rem;
       margin:0 auto 3rem auto;
       transform-origin: 0 0 0;
-      
+      transition: all 0.2s;
+      &:hover{
+         filter: drop-shadow(3px 2px 3px rgb(116, 116, 116))
+      }
    }
    #iframe-wrapper{
       margin-bottom: 3.25rem;

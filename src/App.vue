@@ -31,7 +31,7 @@
          <transition name="slide-fade">
             <router-view name="bottom" :key="key"></router-view>
          </transition>
-         <div id="footer" v-show="footShow" @click="footText='你不服？'">
+         <div id="footer" v-show="footShow">
             {{footText}}<br />
          </div>
       </div>
@@ -54,7 +54,7 @@
             footShow: false,
             naviShow: false,
             expand: false,
-            footText:"COPYRIGHT © 1998 - 2019 WOSHINIDIE. ALL RIGHTS RESERVED."
+            footText:"©1998-2019 JiaLiDun, Inc. All rights reserved 鲁ICP备19053264号-1"
          };
       },
       computed: {
@@ -314,7 +314,7 @@
       color: rgb(213, 221, 226);
       font-size: 1rem;
       text-align: center;
-      margin: 0.2rem auto 0.2rem 1rem;
+      margin: 0.8rem auto 0.8rem 1rem;
    }
    .public-slide-enter-active {
       transition: all 0.45s ease-in-out;

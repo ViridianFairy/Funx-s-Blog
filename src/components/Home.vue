@@ -132,7 +132,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       color: #424242;
-      max-height: 4.4rem;
+      max-height: 4.8rem;
    }
    .home-item p:nth-of-type(3) {
       margin-top: 1.1rem;
