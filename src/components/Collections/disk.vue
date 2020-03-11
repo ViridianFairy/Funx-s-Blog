@@ -56,7 +56,7 @@
                   <img v-else-if="['mp4','avi','mov','MOV'].includes(item.format)" src="../../assets/Collections/Disk/video.svg" draggable='false'>
                   <img v-else-if="['txt'].includes(item.format)" src="../../assets/Collections/Disk/n-txt.svg" draggable='false'>
                   <img v-else-if="['cpp','html','js','c','css'].includes(item.format)" src="../../assets/Collections/Disk/n-txt.svg" draggable='false'>
-                  <img v-else-if="['png','jpg','jpeg','svg'].includes(item.format)" src="../../assets/Collections/Disk/image.svg" draggable='false'>
+                  <img v-else-if="['png','jpg','jpeg','svg','webp'].includes(item.format)" src="../../assets/Collections/Disk/image.svg" draggable='false'>
                   <img v-else-if="!item.isFile" src="../../assets/Collections/Disk/fold.svg" draggable='false'>
                   <img v-else src="../../assets/Collections/Disk/unknown.svg" draggable='false'>   
                   <span class="name" v-if="renameId==index">
@@ -128,7 +128,7 @@
             return document.getElementById('disk-wrapper').offsetWidth
          },
          getWaterFiles(){
-            return this.files.filter(val => ['png','jpg','jpeg','svg'].includes(val.format))
+            return this.files.filter(val => ['png','jpg','jpeg','svg','webp'].includes(val.format))
          },
          getPath(){
             return this.Link[this.proto]+this.pos+'/'
@@ -504,7 +504,9 @@
          font-size: 1.35rem!important;
          padding: 0.45rem!important;
          padding-left: 2%!important;
-         text-align: left;
+         text-align: left!important;
+         border-left: none!important;
+         border-top: 1px dashed #dfe1e381!important;
       }
       tr:nth-child(2n){
          background-color:rgba(255, 255, 255, 0.9);

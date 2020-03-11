@@ -59,13 +59,13 @@
       margin:0;
    }
    .home-item > img {
-      height: 10rem;
+      height: 11.5rem;
       float: right;
-      width: calc(10rem *1.5);
+      width: calc(11.5rem *1.5);
       border-radius: 4px;
       border: 1px solid #f0f0f0;
       margin-left: 1rem;
-      margin-top: 2rem;
+      margin-top: 1rem;
       
       
    }
