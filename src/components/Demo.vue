@@ -17,7 +17,7 @@
                   <mark></mark>
                   <div><span>点击次数：</span><br><span>{{item.number}}</span></div>
                <button ><i></i>
-                  {{$store.state.isPhone?'未适配移动设备':'点击进入'}}
+                  {{$store.state.isPhone?'点击进入':'点击进入'}}
                </button>
             </div></div>
             </transition>
@@ -35,8 +35,8 @@
 
 <script>
 // show已经弃用
-   import snake from './Collections/snake.vue'
-   //import gossip from './Collections/gossip.vue'
+	import snake from './Collections/snake.vue'
+   // import daily from './Collections/daily.vue'
    import disk from './Collections/disk.vue'
    export default {
       name: "collection",
@@ -78,18 +78,19 @@
             show:0,
             demos:[{
                name:'snake',title:' 贪吃蛇 ',time:'19.10.10',use:'ZRender',number:'--',id:1,show:false,
-               col:'',row:'1/6',color:'#7FB1FF',color2:'rgb(114,159,231)',finish:true,
-               pCol:'1/2',pRow:'1/6',mCol:'1/2',mRow:'1/6',
+					col:'',row:'',color:'#FFBC7F',color2:'#E7A568',finish:true,
+					pCol:'3/3',pRow:'1/5',mCol:'1/2',mRow:'14/18',
+               
             },{
                name:'disk',title:'disk',time:'19.10.30',use:'--',number:'--',id:3,show:false,
                col:'',row:'',color:'#FF8F7F',color2:'#E88172',finish:true,
-               pCol:'2/3',pRow:'1/8',mCol:'1/2',mRow:'8/12',
+               pCol:'2/3',pRow:'1/8',mCol:'1/2',mRow:'7/12',
+            },
+            {
+					name:'daily',title:'daily',time:'20.8.21',use:'别人做的',number:'--',id:2,show:false,
+					col:'',row:'1/6',color:'#7FB1FF',color2:'rgb(114,159,231)',finish:true,
+               pCol:'1/2',pRow:'1/6',mCol:'1/2',mRow:'1/5',
             }
-            // {
-            //    name:'disk',title:'网  盘',time:'19.11.5',use:'--',number:'--',id:2,show:false,
-            //    col:'',row:'',color:'#FFBC7F',color2:'#E7A568',finish:true,
-            //    pCol:'2/3',pRow:'1/8',mCol:'1/2',mRow:'14/21',
-            // }
             ],
          };
       },

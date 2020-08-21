@@ -130,6 +130,10 @@
                   this.expand = true;
                   this.$store.state.path.splice(2,0,{name:"SnakeGame", link: "/demo/snake"})
                   break;
+               case "/demo/daily":
+                  this.expand = true;
+                  this.$store.state.path.splice(2,0,{name:"Daily", link: "/demo/daily"})
+                  break;
                case "/demo/gossip":
                   this.expand = true;
                   this.$store.state.path.splice(2,0,{name:"gossip", link: "/demo/gossip"})

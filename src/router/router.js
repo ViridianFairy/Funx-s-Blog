@@ -16,11 +16,15 @@ import nothing from "../components/404";
 import disk from "../components/Collections/disk";
 // import gossip from "../components/Collections/gossip";
 import snake from "../components/Collections/snake";
+import daily from "../components/Collections/daily";
 // import autoappr from "../components/Collections/autoappr";
 Vue.use(VueRouter);
 const routes = [
    {
       path:'/d',redirect:'/demo/disk'
+   },
+   {
+      path:'/a',redirect:'/demo/daily'
    },
    {
       path: "/",
@@ -76,6 +80,13 @@ const routes = [
       components: {
          left: Demo,
          right: sideDefault,
+      }
+	},
+	{
+      path: "/demo/daily",
+      components: {
+         left: daily,
+         right: null,
       }
    },
    {
