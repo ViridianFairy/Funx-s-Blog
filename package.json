@@ -23,7 +23,7 @@
     "marked": "^0.7.0",
     
     "mongoose": "^5.7.1",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "node-schedule": "^1.3.2",
 
     "saslprep": "^1.0.3",
