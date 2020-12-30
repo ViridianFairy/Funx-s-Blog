@@ -4,7 +4,7 @@ import router from "./router/router";
 import axios from "axios";
 import Cookies from "js-cookie";
 import store from "./store/store";
-const baseURL = `${require('./config').baseURL}:3001/api` 
+const baseURL = `${require('./config').baseURL}:3001/api` //3001
 // import "highlight.js/styles/solarized-dark.css";
 // import hljs from "highlight.js";
 Vue.config.productionTip = false;

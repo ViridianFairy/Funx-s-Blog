@@ -25,6 +25,7 @@ const mutations = {
       state.loginState = v  // -1  0  1  2  3
    },
    articleLoaded(state,title){
+		console.log("articleLoaded触发，" + state.read.linksBool)
       state.read.linksBool = !state.read.linksBool
       state.title = title
    }

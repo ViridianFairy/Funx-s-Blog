@@ -3,11 +3,13 @@
     <div id="links-title" @click="jumpTop">目录</div>
     <div id="links-wrapper">
       <div class="links-h2" v-for="(item,bigIndex) in domList" :key="item.name">
-         <transition-group name="slide-fade">
-         <i @click="toggle(bigIndex)" v-show="!item.show" :key="'2'"></i>
-         <i @click="toggle(bigIndex)" v-show="item.show" :key="'1'"></i></transition-group>
-         
-         <span :onclick="`window.myAnchor('${item.link}')`">{{item.name}}</span>
+			<div class="h2" :style="{'animation': 'move 0.2s linear 0s normal'}">
+				<transition-group name="slide-fade">
+         	<i @click="toggle(bigIndex)" v-show="!item.show" :key="'2'"></i>
+         	<i @click="toggle(bigIndex)" v-show="item.show" :key="'1'"></i>
+				</transition-group>
+				<span :onclick="`window.myAnchor('${item.link}')`">{{item.name}}</span>
+			</div>
             <div class="child-wrapper">
               <div class="links-h3" v-for="(child,index) in item.data" :key="child.link"
                 :onclick="`window.myAnchor('${child.link}')`" :ref="'a'+bigIndex">
@@ -46,7 +48,7 @@ export default {
       document.getElementById("bg-navi").style.top = "0rem";
    },
    init() {
-      var a = document.getElementsByClassName("readlinks");
+		var a = document.getElementsByClassName("readlinks");
       var arr = []
       Array.prototype.forEach.call(a,(item,index)=>{
          if(item.tagName.toLowerCase()=='h2'){
@@ -59,35 +61,53 @@ export default {
          }else{
             arr[arr.length-1].data.push({name:item.innerText,link:item.getAttribute('name')})
          }
-      })
-      this.domList = arr;
+		})
+		this.domList = arr;
+		console.log(arr[0])
       this.$nextTick(() => {
          let doms = document.querySelectorAll('.child-wrapper')
          for(let i=0;i<doms.length;i++){
             let dom = doms[i]
             this.domList[i].height = dom.offsetHeight + 'px'
             this.domList[i].dom = doms[i]
-            dom.style.height = this.domList[i].height
-         }
+				dom.style.height = this.domList[i].height
+				dom.style.transition = `all ${0.15*i+0.3}s cubic-bezier(0.250, 0.460, 0.450, 0.940)`
+				dom.style.transform = "translateX(-15px)"
+				dom.style.opacity = "1"
+			}
      })
     }
   },
   mounted() {
-     
+     window.setTimeout(() => {
+			this.init();
+		}, 30);
   },
   computed: {
     links() {
       return this.$store.state.read.linksBool;
-    }
+	 },
+	 getH2Style(i){
+		 return 
+	 }
   },
   watch: {
     links() {
-      this.init();
+      window.setTimeout(() => {
+			this.init();
+		}, 30);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+	.h2{
+		
+	}
+	@keyframes move{
+		from{ transform: translateX(15px);}
+		to{transform: translateX(0);}
+	}
    .links-h2 {
      color: rgb(58, 58, 58);
      font-size: 2.2rem;
@@ -219,6 +239,7 @@ export default {
    }
    .child-wrapper {
      overflow: hidden;
+	  opacity: 0.3;
      transition: 0.3s all cubic-bezier(0.250, 0.460, 0.450, 0.940);
    }
    .slide-fade-enter-active {

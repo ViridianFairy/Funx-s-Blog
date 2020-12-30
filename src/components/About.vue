@@ -1,8 +1,8 @@
 <template>
   <div id="wrapper">
       <h1>关于...</h1>
-      <h2>
-         所以，你真的不想点一下下面吗
+      <h2 @click="jump">
+         点击跳转：项目GitHub地址
       </h2>
       <div id="sky"></div>
       <div id="iframe-wrapper" :style={height:iHeight}>
@@ -37,6 +37,9 @@ export default {
      }
   },
   methods: {
+	  jump(){
+		  window.open("https://github.com/ViridianFairy/Funx-s-Blog")
+	  },
      getVer(v,i){
         if(v!="") return v;
         var a= this.verBase+i
@@ -49,17 +52,24 @@ export default {
       src:"/funx.html",
       verBase:5,
       List:[
-         {ver:"",time:"2019.9.26",body:[
+         {
+				ver:"",time:"2019.9.26",body:[
             "第一版",
          ]},
          {ver:"",time:"2019.10.7",body:[
             "第二版",
          ]},
          {ver:"",time:"2019.11.8",body:[
-            "计划：Skeleton 更多懒加载",
+            "懒加载 暂时搁置",
          ]},
          {ver:"",time:"2019.12.2",body:[
-            "网盘",
+            "增加网盘",
+         ]},
+         {ver:"",time:"2020.2.5",body:[
+            "网盘图片瀑布墙",
+         ]},
+         {ver:"",time:"2020.3.x",body:[
+            "考研，项目结束",
          ]},
       ]
     }
@@ -109,7 +119,7 @@ export default {
       transform-origin: 0 0 0;
       transition: all 0.2s;
       &:hover{
-         filter: drop-shadow(3px 2px 3px rgb(116, 116, 116))
+         filter: drop-shadow(1px 1px 4px rgb(187, 187, 187))
       }
    }
    #iframe-wrapper{

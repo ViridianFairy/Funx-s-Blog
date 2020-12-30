@@ -296,7 +296,7 @@
     .mdContainer {
         font-size: 1.5rem;
         width: 100%;
-        height: 50rem;
+        height: calc(100vh - 27rem);
         border:1px #eaeaea solid;
         border-radius: 6px;
         &.fullPage {

@@ -20,18 +20,16 @@
                   ></router-view>
                </transition>
             </div>
-            <transition name="compress">
                <div id="home-side" v-if="!expand">
-                  <transition name="init">
+                  <transition name="right-slide" mode="out-in">
                      <router-view name="right" :key="key"></router-view>
                   </transition>
                </div>
-            </transition>
          </div>
          <transition name="slide-fade">
             <router-view name="bottom" :key="key"></router-view>
          </transition>
-         <div id="footer" v-show="footShow">
+         <div id="footer" v-show="footShow" @click="toSb">
             {{footText}}<br />
          </div>
       </div>
@@ -54,7 +52,7 @@
             footShow: false,
             naviShow: false,
             expand: false,
-            footText:"©1998-2019 JiaLiDun, Inc. All rights reserved 鲁ICP备19053264号-1"
+            footText:"©1998-2019 JiaLiDun, Inc. All rights reserved 鲁ICP备19053264号-2"
          };
       },
       computed: {
@@ -63,6 +61,9 @@
          }
       },
       methods: {
+			toSb(){
+				window.open("https://beian.miit.gov.cn/#/Integrated/index")
+			},
          cutTitle(a) {
             var len = 0;
             var i = 0;
@@ -403,6 +404,16 @@
    .init-enter,
    .init-leave {
       opacity: 0;
+   }
+   .right-slide-enter-active {
+      transition: all 0.5s;
+   }
+   .right-slide-leave-active {
+		transition: all 0.5s;
+   }
+   .right-slide-enter,
+   .right-slide-leave {
+      opacity: 0.2;
    }
    .compress-enter-active,.compress-leave-active {
       transition: all 0.5s;

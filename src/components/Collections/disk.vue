@@ -49,7 +49,7 @@
                      <img v-else src="../../assets/Collections/Disk/c1.svg" class="checkbox" 
                      @mouseover="select(index)" @mousedown="select(index,true)" draggable='false'>
                   <img v-if="['ppt','pptx'].includes(item.format)" src="../../assets/Collections/Disk/n-ppt.svg" draggable='false'>
-                  <img v-else-if="['xls','xlsx'].includes(item.format)" src="../../assets/Collections/Disk/n-excel.svg" draggable='false'>
+                  <img v-else-if="['xls','xlsx','json'].includes(item.format)" src="../../assets/Collections/Disk/n-excel.svg" draggable='false'>
                   <img v-else-if="['doc','docx'].includes(item.format)" src="../../assets/Collections/Disk/n-word.svg" draggable='false'>
                   <img v-else-if="['zip','rar'].includes(item.format)" src="../../assets/Collections/Disk/n-zip.svg" draggable='false'>
                   <img v-else-if="['mp3','flac'].includes(item.format)" src="../../assets/Collections/Disk/audio.svg" draggable='false'>
@@ -120,7 +120,7 @@
             protoText:['http','https'],
             proto:0,
             buttonColor:'',
-            Link:['http://funx.pro/resource/junk','https://ncov.funx.pro']
+            Link:['http://funx.site/resource/junk','https://ncov.funx.pro']
          }
       },
       computed: {

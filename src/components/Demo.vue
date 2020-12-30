@@ -57,7 +57,8 @@
             if(jud){
                this.showing(id)
             }else{
-               this.$alert("还没做完，别点了，再点我就秃了！","false")
+					window.open("http://webgl.106.15.200.151/");
+               // this.$alert("好兄弟，我还没做完！","false")
             }
          },
          gridToggle(val){
@@ -70,7 +71,7 @@
                   item.col = item.pCol
                }
             })
-         }
+			},
       },
       data() {
          return {
@@ -82,13 +83,13 @@
 					pCol:'3/3',pRow:'1/5',mCol:'1/2',mRow:'14/18',
                
             },{
-               name:'disk',title:'disk',time:'19.10.30',use:'--',number:'--',id:3,show:false,
+               name:'disk',title:'网  盘',time:'19.10.30',use:'Node',number:'--',id:3,show:false,
                col:'',row:'',color:'#FF8F7F',color2:'#E88172',finish:true,
                pCol:'2/3',pRow:'1/8',mCol:'1/2',mRow:'7/12',
             },
             {
-					name:'daily',title:'daily',time:'20.8.21',use:'别人做的',number:'--',id:2,show:false,
-					col:'',row:'1/6',color:'#7FB1FF',color2:'rgb(114,159,231)',finish:true,
+					name:'daily',title:'daily',time:'21.1.2',use:'three.js',number:'--',id:2,show:false,
+					col:'',row:'1/6',color:'#7FB1FF',color2:'rgb(114,159,231)',finish:false,
                pCol:'1/2',pRow:'1/6',mCol:'1/2',mRow:'1/5',
             }
             ],
@@ -108,10 +109,10 @@
             this.styles.push(`<style>
             .${item.name} .bg{
                box-shadow: 0px 12px 17px -5px ${item.color};
-               background-image:url('http://funx.pro/resource/junk/${item.name}.png');
+               background-image:url('http://106.15.200.151/resource/junk/${item.name}.png');
             }
             .${item.name} .text::before{
-               background-image:url('http://funx.pro/resource/junk/${item.name}.png');
+               background-image:url('http://106.15.200.151/resource/junk/${item.name}.png');
             }
             .${item.name} .info{
                box-shadow:0px 12px 16px -7px ${item.color};

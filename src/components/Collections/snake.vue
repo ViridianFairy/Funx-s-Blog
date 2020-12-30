@@ -196,11 +196,11 @@
             wallData:"",settings:{particularNum:12,resolution:0},
             paintMode:false,score:0,loadingDelay:200,cover:0,
             show:{maxScore:0,ranks:[],deadText:"",extraEndText:"",encoText:"",encoColor:"",enco:[
-               {level:[1],msg:["兄弟，卸游戏吧","手滑了，我懂你","起跑线上摔一下，无所谓的","兄弟，卸游戏吧"],color:"hsl(0,0%,56%)"},
-               {level:[2],msg:["兄弟，还得加油啊","还得继续冲冲冲","大神也有失手的时候","蛇：你是不是在演我？"],color:"hsl(0,9%,56%)"},
-               {level:[3,4],msg:["这感觉，有内味了","大的，小的，我全都要！","蛇：我真的..吃不动了.."],color:"hsl(0,18%,64%)"},
-               {level:[5,6],msg:["兄弟，你真的有点东西噢！","我还能再吃一百年！","蛇：累死老子了，终于停了！"],color:"hsl(0,27%,68%)"},
-               {level:[7],msg:["犹如天上降饭桶，真是人间贪吃神！","到底什么时候才能天亮啊！"],color:"hsl(0,36%,72%)"},
+               {level:[1],msg:["兄弟，卸游戏吧"],color:"hsl(0,0%,56%)"},
+               {level:[2],msg:["还得加油啊"],color:"hsl(0,9%,56%)"},
+               {level:[3,4],msg:["还得加油啊"],color:"hsl(0,18%,64%)"},
+               {level:[5,6],msg:["牛逼！"],color:"hsl(0,27%,68%)"},
+               {level:[7],msg:["牛逼！"],color:"hsl(0,36%,72%)"},
             ]},
             phone:{top:"50%"},test:{on:0,el:null}
          };
