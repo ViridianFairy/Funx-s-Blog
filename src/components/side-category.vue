@@ -3,8 +3,8 @@
       <div id="title">标签分布</div>
       <div id="labelChart" ref="labelChart"></div>
       <transition-group name="chart-fade">
-      <div class="label-text" v-for="item,i in categories" 
-       @mouseover="animateIn(i)" @mouseout="animateOut(i)" :key="i">
+      <div class="label-text" v-for="(item,i) in categories" 
+       @mouseover="animateIn(i)" @mouseout="animateOut(i)" :key="item">
          <span class="block" :style="{backgroundColor:pieColor[i]}" :ref="i"></span>
          {{item.label}} ({{item.data.length}})
       </div>

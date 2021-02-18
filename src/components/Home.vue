@@ -1,6 +1,7 @@
 <template>
-<transition name='public-slide' v-if="!loading">
-   <div id="big">
+<div>
+<transition name='public-slide'>
+   <div id="big" v-if="!loading">
       <div class="home-item" v-for="item in articles" :key="item.title">
             <router-link :to="'/read?id='+item._id">
                <h1>{{ item.title }}</h1>
@@ -21,12 +22,15 @@
       </div>
    </div>
 </transition>
+<loading v-if="loading"></loading>
+</div>
 </template>
 
 <script>
+  import loading from './loading'
    export default {
       name: "home",
-      components: {},
+      components: {loading},
       data() {
          return {
             loading:true,

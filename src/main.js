@@ -55,6 +55,19 @@ Vue.prototype.$alert = function(msg, type, Obj) {
 router.afterEach((to,from,next)=>{
    　window,scrollTo(0,0)
 })
+Vue.prototype.$throttle = function(fn,wait){
+   var timer = null;
+   return function(){
+       var context = this;
+       var args = arguments;
+       if(!timer){
+           timer = setTimeout(function(){
+               fn.apply(context,args);
+               timer = null;
+           },wait)
+       }
+   }
+}
 new Vue({
    el: "#app",
    render:h=>h(App),

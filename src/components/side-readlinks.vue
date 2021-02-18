@@ -13,7 +13,7 @@
             <div class="child-wrapper">
               <div class="links-h3" v-for="(child,index) in item.data" :key="child.link"
                 :onclick="`window.myAnchor('${child.link}')`" :ref="'a'+bigIndex">
-                <span>{{index+1}}. {{child.name}}</span>
+                <span>{{index+1}}. {{getName(child.name)}}</span>
               </div>
           </div>
       </div>
@@ -29,6 +29,7 @@ export default {
         domList:[]
      }
   },
+
   methods: {
    toggle(index){
       var dom = this.domList[index].dom
@@ -48,6 +49,7 @@ export default {
       document.getElementById("bg-navi").style.top = "0rem";
    },
    init() {
+     
 		var a = document.getElementsByClassName("readlinks");
       var arr = []
       Array.prototype.forEach.call(a,(item,index)=>{
@@ -63,7 +65,7 @@ export default {
          }
 		})
 		this.domList = arr;
-		console.log(arr[0])
+		// console.log(arr[0])
       this.$nextTick(() => {
          let doms = document.querySelectorAll('.child-wrapper')
          for(let i=0;i<doms.length;i++){
@@ -76,7 +78,12 @@ export default {
 				dom.style.opacity = "1"
 			}
      })
-    }
+    },
+    getName(a){
+       var pos = a.indexOf('、')
+      //  console.log(a.slice(pos))
+       return a.slice(pos+1)
+     },
   },
   mounted() {
      window.setTimeout(() => {
@@ -84,6 +91,7 @@ export default {
 		}, 30);
   },
   computed: {
+
     links() {
       return this.$store.state.read.linksBool;
 	 },

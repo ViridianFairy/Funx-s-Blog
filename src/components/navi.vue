@@ -395,8 +395,8 @@
             var oldY = this.scrolledY
             var newY = window.scrollY
             this.scrolledY = window.scrollY
-            if(newY > oldY) return 'down'
-            if(newY < oldY) return 'up'
+            if(newY - oldY > 0) return 'down'
+            if(newY -oldY < 0) return 'up'
             
          }
       },

@@ -19,65 +19,15 @@ html {
    width:100vw;
    height: auto;
 }
-#atsuko{
-   position: relative;
-   
-   
-   height: auto;
-   
-   left:0;
-   top:0;
-}
-#atsuko svg{
-   max-width: 750px;
-   max-height: 550px;
-   width:100vw;
-   margin:0 auto;
+#svg-wrapper img{
+   max-width: 450px;
 }
 </style>
 </head>
 <body>
 <div id="svg-wrapper">
-   <div id="atsuko"></div>
+   <img src="http://funx.site/resource/junk/data/404.png"/>
 </div>
-
-<script src='lottie.min.js'></script>
-<script>
-//  var bg = lottie.loadAnimation({
-//         wrapper:document.querySelector('#bg'),
-//         animType: 'svg',
-//         loop: true,
-//         prerender: true,
-//         autoplay: true,
-//         path: './svg-bg.json',
-//         speed:0.5
-//     });
-var atsuko = lottie.loadAnimation({
-        wrapper:document.querySelector('#atsuko'),
-        animType: 'svg',
-        loop: false,
-        prerender: true,
-        autoplay: true,
-        path: './svg.json'
-    });
-var logo = lottie.loadAnimation({
-        wrapper:document.querySelector('#logo'),
-        animType: 'svg',
-        loop: false,
-        prerender: true,
-        autoplay: false,
-        path: './svg-logo.json',
-        speed:0.3
-    });
-var speed = 0.3;
-atsuko.addEventListener('complete',()=>{
-   //console.log('over了');
-   speed = -speed;
-   atsuko.setSpeed(speed)
-   //console.log(speed)
-   atsuko.play();
-})
-</script>
 </body>
 </html>
 <!--

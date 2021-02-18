@@ -1,12 +1,15 @@
 <template>
    <div id="nothing">
-      <div>404 Not Found</div>
+      <!-- <div>404 Not Found</div> -->
       <!-- <span>面</span>
       <span>不</span>
       <span>见</span>
       <span>了</span>
       <span>...</span> -->
-      <iframe :src="src" frameborder="0"></iframe>
+      <!-- <iframe :src="src" frameborder="0"></iframe> -->
+      <div id="svg-wrapper">
+         <img src="http://funx.site/resource/junk/data/404.png"/>
+      </div>
    </div>
 </template>
 
@@ -34,12 +37,9 @@ export default {
   span{
      margin:0 0.4rem;
   }
-  iframe{
-     margin:0 auto;
-     margin-top: -2rem;
-     width:100vw;
-     height:60vh;
-     max-height:70rem;
-	  max-width:95rem;
+  #svg-wrapper img{
+     width: 100%;
+     max-width: 535px;
+     min-width: 300px;
   }
 </style>

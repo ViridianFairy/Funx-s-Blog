@@ -1,4 +1,5 @@
 <template>
+   <div class="loading-wrapper">
    <div id="appLoading">
       <div class="load-wrapp">
          <div class="load-3">
@@ -8,6 +9,7 @@
          </div>
       </div>
    </div>
+   </div>
 </template>
 
 <script>
@@ -16,6 +18,9 @@ export default {
  }
 </script>
 
-<style lang="" scoped>
-  
+<style scoped>
+.loading-wrapper{
+   margin-top: 5rem;
+   position: relative;
+}
 </style>

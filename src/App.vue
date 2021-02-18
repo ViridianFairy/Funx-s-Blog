@@ -145,7 +145,7 @@
                   break;
                case "/404":
                   this.expand = true;
-                  this.$store.state.path = [{ name: "404", link: "/404" }];
+                  this.$store.state.path = [{ name: "页面被吃了...", link: "/404" }];
                   break;
                case "/about":
                   this.expand = true;
