@@ -3,7 +3,7 @@
       <span id="title-text">标题：</span>
       <input id="title" v-model="article.title" />
       
-      <button @click="save" v-if="isAdmin">
+      <button @click="save(true)" v-if="isAdmin" >
          {{saveText}}
       </button>
       <img id="pic-img" :src="article.image">
@@ -18,10 +18,10 @@
             style="margin-right: 1rem;width:auto;padding:0 0.5rem">{{finishText}}
          </button>
          <span id="pic">
-            文章封面图：<input v-model="article.image" placeholder="输入外链" @focus="$event.currentTarget.select()"/>
+            封面：<input v-model="article.image" placeholder="输入外链" @focus="$event.currentTarget.select()"/>
          </span>
       </p>
-      <div class="editorContainer">
+      <div class="editorContainer" @keydown.ctrl.83.prevent="quickSave" >
             <markdown 
             :mdValuesP="getRaw"  
             :fullPageStatusP="false" 
@@ -30,7 +30,7 @@
             :navStatusP="true"
             :icoStatusP="true"  
             @childevent="childEventHandler"
-            
+             @keydown.ctrl.83.prevent="quickSave"
             ></markdown>
    </div>
    </div>
@@ -99,6 +99,12 @@
             .catch();
       },
       methods: {
+         quickSave(event){
+            // console.log('11')
+            event.preventDefault()
+            this.save(false)
+
+         },
          toggleFinish(){
             this.article.finish = !this.article.finish
             if(this.article.finish){
@@ -118,7 +124,7 @@
          deleteLabel(id) {
             this.article.label.splice(id, 1);
          },
-         save() {
+         save(refresh) {
             this.article.body = this.raw
             if(typeof this.$route.query.id == "undefined"){
                this.$http
@@ -142,8 +148,9 @@
                })
                .then(res => {
                   if (res.data.success == 1) {
-                     this.$alert("编辑成功！",'true');
-                     this.$router.push("/read?id=" + this.article._id);
+                     this.$alert("保存成功！",'true');
+                     if(refresh)
+                        this.$router.push("/read?id=" + this.article._id);
                   }
                })
                .catch();
@@ -227,7 +234,7 @@
       background-color: rgb(243, 136, 136);
    }
    #pic input {
-      width: calc(100% - 70rem);
+      width: calc(100% - 55rem);
       font-size: 1.2rem;
    }
    #pic-img{
@@ -241,7 +248,7 @@
       border-radius: 6px;
       border: 1px solid #dbdbdb;
       float:right;
-      opacity: 0;
+      opacity: 0.75;
       transition: 0.2s all;
    }
    #pic-img:hover{
@@ -249,8 +256,8 @@
    }
    @media screen and (max-width: 768px) {
       #pic-img{
-         width:7.5rem;
-         height: 5rem;
+         width:12rem;
+         height: 8rem;
       }
    }
 </style>

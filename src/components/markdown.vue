@@ -301,7 +301,7 @@
         border-radius: 6px;
         &.fullPage {
             position: fixed;
-            z-index: 1000;
+            z-index: 500;
             left: 0;
             top: 0;
             height:100%;

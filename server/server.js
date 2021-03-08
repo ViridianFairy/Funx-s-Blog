@@ -5,6 +5,11 @@ const Router_upload= require("./upload")
 const Gossip = require('./gossip.js')
 // const Autoappr= require("./automatic/autoappr.js")
 app.use(require("cors")());
+/*
+    origin:['http://localhost:8083'],
+    methods:['GET','POST'],
+    alloweHeaders:['Conten-Type', 'Authorization']
+*/
 app.use(express.json());
 // begin
 app.use(Router)
