@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -35,10 +36,13 @@ html {
 <body>
 <div id="svg-wrapper">
    <div id="atsuko"></div>
+   
    <div id="boom"></div>
    <div id="end"></div>
    <div id="bubble"></div>
 </div>
+
+
 <script src="https://cdn.bootcdn.net/ajax/libs/lottie-web/5.7.5/lottie.min.js"></script>
 <script>
 var main = lottie.loadAnimation({
@@ -67,24 +71,29 @@ var boom = lottie.loadAnimation({
         autoplay: false,
         speed:0.5
     });
-var end = lottie.loadAnimation({
-        wrapper:document.querySelector('#end'),
-        animType: 'svg',
-        prerender: true,
-        autoplay: false,
-        path: './svg-end1.json',
-        speed:0.5
-    });
+// var end = lottie.loadAnimation({
+//         wrapper:document.querySelector('#end'),
+//         animType: 'svg',
+//         prerender: true,
+//         autoplay: false,
+//         path: './svg-logo.json',
+//         speed:0.5
+//     });
+window.onload = function(){
+   setTimeout(()=>{
+      document.body.click()
+   },1500)
+}
 document.onclick = function () {
    
    bubble.addEventListener('loopComplete',()=>{
       document.querySelector('#bubble').style.display = 'none'
       document.querySelector('#boom').style.opacity = '1';
       boom.play()
-      boom.addEventListener('complete',()=>{
-         document.querySelector('#end').style.opacity = '1';
-         end.play()
-      })
+      // boom.addEventListener('complete',()=>{
+      //    document.querySelector('#end').style.opacity = '1';
+      //    end.play()
+      // })
    })
 }
 </script>

@@ -7,8 +7,8 @@
             <transition name="slide">
             <div class="bg" i="url('../assets/Collections/1.png')" v-if="item.show">
                <span class="text">
-                  <i v-for="(word,wordI) in item.name.split('')" :key="wordI"
-                     :a="item.title.split('')[wordI]">{{word}}</i>
+                  <i v-for="(word,wordI) in item.cnName.split('')" :key="wordI"
+                     :a="item.enName.split('')[wordI]">{{word}}</i>
                </span>
                <div class="info">
                   <div><span>时间：</span><br><span>{{item.time}}</span></div>
@@ -56,9 +56,13 @@
          demoIn(jud,id){
             if(jud){
                this.showing(id)
-            }else{
-					window.open("http://webgl.106.15.200.151/");
-               // this.$alert("好兄弟，我还没做完！","false")
+            }else if(id==2){
+					window.open("http://mc.funx.work/");
+               
+            }else if(id==4){
+               this.$alert("还没做完呢 QAQ","false")
+            }else if(id==5){
+               window.open('https://www.npmjs.com/package/byte-monitor-jssdk')
             }
          },
          gridToggle(val){
@@ -78,19 +82,29 @@
             styles:[],
             show:0,
             demos:[{
-               name:'snake',title:' 贪吃蛇 ',time:'19.10.10',use:'ZRender',number:'--',id:1,show:false,
+               name:'snake',cnName:"贪吃蛇游戏",enName:'SNAKE',time:'19.10.10',use:'ZRender',number:'--',id:1,show:false,
 					col:'',row:'',color:'#FFBC7F',color2:'#E7A568',finish:true,
 					pCol:'3/3',pRow:'1/5',mCol:'1/2',mRow:'14/18',
                
             },{
-               name:'disk',title:'网  盘',time:'19.10.30',use:'Node',number:'--',id:3,show:false,
+               name:'disk',cnName:'个人云盘',enName:'DISK',time:'19.10.30',use:'Node',number:'--',id:3,show:false,
                col:'',row:'',color:'#FF8F7F',color2:'#E88172',finish:true,
                pCol:'2/3',pRow:'1/8',mCol:'1/2',mRow:'7/12',
             },
             {
-					name:'daily',title:'daily',time:'21.1.2',use:'three.js',number:'--',id:2,show:false,
+					name:'daily',cnName:'《我的世界》游戏',enName:'为了毕业被迫抄的',time:'21.6.2',use:'three.js',number:'Github抄的',id:2,show:false,
 					col:'',row:'1/6',color:'#7FB1FF',color2:'rgb(114,159,231)',finish:false,
                pCol:'1/2',pRow:'1/6',mCol:'1/2',mRow:'1/5',
+            },
+            {
+					name:'react',cnName:'REACT',enName:'react',time:'21.9.16',use:'--',number:'--',id:4,show:false,
+					col:'',row:'',color:'#B9D888',color2:'rgb(121,178,47)',finish:false,
+               pCol:'1/2',pRow:'8/13',mCol:'1/2',mRow:'20/24',
+            },
+            {
+					name:'monitor',cnName:'前端监控系统 ',enName:'monitor',time:'21.8.20',use:'--',number:'--',id:5,show:false,
+					col:'',row:'',color:'#50A2CA',color2:'rgb(39,93,155)',finish:false,
+               pCol:'3/4',pRow:'7/11',mCol:'1/2',mRow:'20/24',
             }
             ],
          };
@@ -109,10 +123,10 @@
             this.styles.push(`<style>
             .${item.name} .bg{
                box-shadow: 0px 12px 17px -5px ${item.color};
-               background-image:url('http://106.15.200.151/resource/junk/${item.name}.png');
+               background-image:url('http://funx.work/resource/junk/Demo/${item.name}.png');
             }
             .${item.name} .text::before{
-               background-image:url('http://106.15.200.151/resource/junk/${item.name}.png');
+               background-image:url('http://funx.work/resource/junk/Demo/${item.name}.png');
             }
             .${item.name} .info{
                box-shadow:0px 12px 16px -7px ${item.color};
@@ -143,6 +157,7 @@
 
 <style lang="scss" scoped>
    #demo-wrapper{
+      // color:;
       margin: 0rem auto 0;
       padding-top: 0.5rem;
       .demo{
@@ -151,7 +166,7 @@
       #grid{
          margin: 0 2rem;
          grid-template-columns: repeat(3,minmax(1rem,1fr));
-         grid-template-rows: repeat(12,4rem);
+         grid-template-rows: repeat(14,4rem);
          justify-content:space-around;
          grid-gap: 0rem 2rem;
          display: grid;

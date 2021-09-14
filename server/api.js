@@ -7,7 +7,7 @@ const schedule = require("node-schedule")
 const Model = require("./Model")
 const OId = require('mongodb').ObjectId
 var fs= require("fs");
-mongoose.connect("mongodb://myblog:731016@106.15.200.151:27017/MyBlog",{
+mongoose.connect("mongodb://viridian:731016@1.117.59.223:27017/myblog",{
    useNewUrlParser: true,
    useUnifiedTopology: true 
 });

@@ -71,6 +71,9 @@ export default {
          {ver:"",time:"2020.3.x",body:[
             "考研，项目结束",
          ]},
+         {ver:"",time:"2021.9.14",body:[
+            "迁移服务器",
+         ]},
       ]
     }
   },mounted() {
@@ -119,7 +122,7 @@ export default {
       transform-origin: 0 0 0;
       transition: all 0.2s;
       &:hover{
-         filter: drop-shadow(1px 1px 4px rgb(187, 187, 187))
+         // filter: drop-shadow(1px 1px 4px rgb(187, 187, 187))
       }
    }
    #iframe-wrapper{

@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const Router = require("./api")
 const Router_upload= require("./upload")
-const Gossip = require('./gossip.js')
+// const Gossip = require('./gossip.js')
 // const Autoappr= require("./automatic/autoappr.js")
 app.use(require("cors")());
 /*
@@ -14,13 +14,13 @@ app.use(express.json());
 // begin
 app.use(Router)
 app.use(Router_upload)
-app.use(Gossip.router)
+// app.use(Gossip.router)
 
 // end
 app.listen(3001,'0.0.0.0', () => {
    console.log("success");
 });
-Gossip.server.listen('3002')
+// Gossip.server.listen('3002')
 // Autoappr.server.listen(3000)
 
 

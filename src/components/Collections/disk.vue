@@ -54,7 +54,7 @@
                   <img v-else-if="['zip','rar'].includes(item.format)" src="../../assets/Collections/Disk/n-zip.svg" draggable='false'>
                   <img v-else-if="['mp3','flac'].includes(item.format)" src="../../assets/Collections/Disk/audio.svg" draggable='false'>
                   <img v-else-if="['pdf'].includes(item.format)" src="../../assets/Collections/Disk/n-pdf.svg" draggable='false'>
-                  <img v-else-if="['mp4','avi','mov','MOV'].includes(item.format)" src="../../assets/Collections/Disk/video.svg" draggable='false'>
+                  <img v-else-if="['mp4','avi','mov'].includes(item.format)" src="../../assets/Collections/Disk/video.svg" draggable='false'>
                   <img v-else-if="['txt'].includes(item.format)" src="../../assets/Collections/Disk/n-txt.svg" draggable='false'>
                   <img v-else-if="['cpp','html','js','c','css'].includes(item.format)" src="../../assets/Collections/Disk/n-txt.svg" draggable='false'>
                   <img v-else-if="['png','jpg','jpeg','svg','webp'].includes(item.format)" src="../../assets/Collections/Disk/image.svg" draggable='false'>
@@ -121,7 +121,7 @@
             protoText:['http','https'],
             proto:0,
             buttonColor:'',
-            Link:['http://funx.site/resource/junk','https://ncov.funx.pro']
+            Link:['http://funx.work/resource/junk','https://ncov.funx.pro']
          }
       },
       computed: {
