@@ -5,13 +5,13 @@
 * 适配移动端
 * 博文摘要、按每日IP更新浏览量
 * 自动生成摘要与折叠导航栏
-### [点击跳转Funx Blog](http://funx.site) 
+### [点击跳转Funx Blog](http://funx.work) 
 
-* [基于云服务器的网盘](http://funx.site/demo/disk)：瀑布流预览, 拖动上传等 
-* [基于ZRenderjs的贪吃蛇游戏](http://funx.site/demo/snake)：难度递增、稳定不掉帧
-* [Lottiejs配合Ae制作复杂矢量动画](http://funx.site/about)，设计源文件位于**Design目录**下  
+* [基于云服务器的网盘](http://funx.work/demo/disk)：瀑布流预览, 拖动上传等 
+* [基于ZRenderjs的贪吃蛇游戏](http://funx.work/demo/snake)：难度递增、稳定不掉帧
+* [Lottiejs配合Ae制作复杂矢量动画](http://funx.work/about)，设计源文件位于**Design目录**下  
 
-![](http://funx.site/resource/junk/blog.jpg)
+![](http://funx.work/resource/junk/blog.jpg)
 
 
 
